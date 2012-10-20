@@ -40,7 +40,7 @@ public class StateGame implements Common{
 	private int eIndex, sIndex;
 
 	/*游戏关卡*/
-	public static short level = 1; 
+	public static short level = 2; 
 	/*奖励关卡*/
 	public short rewardLevel = 1;
 	
@@ -70,6 +70,7 @@ public class StateGame implements Common{
 		{13, 80, 2, 0},  
 		{14, 84, 2, -1},  
 		{15, 88, 2, 0},  
+		{16, 1, 1, -1},  //预留
 	};
 	
 	/*奖励关卡信息*/
@@ -106,17 +107,17 @@ public class StateGame implements Common{
 	/*防狼套装*/
 	private long proEndTime;
 	private long proStartTime;
-	private long protectInterval = 5;
+	private int protectInterval = 5;
 	public static boolean protectState;
 	
 	/*驱散竖琴*/
 	private long harpStartTime,harpEndTime;
-	private long harpInterval = 1;				//便于控制驱散竖琴的效果
+	private int harpInterval = 1;				//便于控制驱散竖琴的效果
 	public static boolean harpState;
 	
 	/*强力磁石*/
 	private long magnetStartTime,magnetEndTime;
-	private long magnetInterval = (long) 0.1;
+	private int magnetInterval = 1;
 	public static boolean magnetState;
 	
 	/*激光枪状态*/
@@ -125,7 +126,9 @@ public class StateGame implements Common{
 	/*无敌拳套*/
 	public boolean isUseGlove, isShowGlove, golveFlag=true;
 	private long gloveEndTime, gloveStartTime;
-	private int gloveInterval = 15;
+	private int gloveInterval = 20;
+	
+	public boolean down;	//南瓜是否降落
 	
 	/*玩家存档数据*/
 	public static int lifeNum;		//生命数
@@ -166,10 +169,10 @@ public class StateGame implements Common{
 			}else if(isAttack){ //普通攻击
 				weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
 				own.bombNum ++;
-				if(own.bombNum%2==0){
+				//if(own.bombNum%2==0){
 					isAttack = false;
 					startTime = System.currentTimeMillis()/1000;
-				}
+				//}
 			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM1)&& own.status ==ROLE_ALIVE){    	//时光闹钟
@@ -464,14 +467,19 @@ public class StateGame implements Common{
 	private void checkFourPosition() {
 		if(IS_FOUR_WOLF){
 			IS_FOUR_WOLF = false;
-			if(isRewardLevel){
-				rewardLevelFail = true;
-			}else{
-				own.status = ROLE_DEATH;
-				own.lifeNum --;
-				lifeNum = own.lifeNum;
+			if(!isRewardLevel){		//普通关卡四只狼逃脱
+				if(level%2!=0){
+					own.status = ROLE_DEATH;
+					own.lifeNum --;
+					lifeNum = own.lifeNum;
+					System.out.println("生命数减一");
+				}else{
+					down = true;
+				}
+			}else{				//奖励关卡四只狼逃脱
+				down = true;
 			}
-			System.out.println("生命数减一");
+			
 			for(int j = batches.npcs.size() - 1;j>=0;j--){
 				Role npc = (Role)batches.npcs.elementAt(j);
 				if(npc.position == ON_ONE_LADDER || npc.position ==ON_TWO_LADDER 
@@ -853,6 +861,7 @@ public class StateGame implements Common{
 	private int cloudIndex, cloud2Index;
 	private int down_cloudIndex, down_cloud2Index;
 	int x1 = 20, x2 = 550, x3 = 424;
+	int nanX = 256, nanY = 15, nanY2 = 25;
 	private void drawGamePlaying(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);
@@ -882,6 +891,7 @@ public class StateGame implements Common{
 		Image control = Resource.loadImage(Resource.id_control);
 		
 		g.drawImage(game_bg, 0, 0, 20);
+		int nanW = pumpkin.getWidth(), nanH = pumpkin.getHeight();
 		if((isRewardLevel && !isNextLevel) || isReward){		//画出奖励关卡界面
 			g.drawImage(pass_cloud, 50, 80, 20);
 			g.drawImage(pass_cloud, 216, 80, 20);
@@ -968,7 +978,19 @@ public class StateGame implements Common{
 				drawNum(g, num, 45+multiply.getWidth()+10, 12);
 			}
 			if((rewardLevel%2==1 && !isNextLevel) || (rewardLevel%2==0)&& isNextLevel){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
-				g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, 256, 25, 20);
+				if(down){
+					nanX += 2;
+					nanY2 += 10;
+					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY2, 20);
+					if(own.status==ROLE_ALIVE && Collision.checkSquareCollision(own.mapx, own.mapy, own.width, own.height, nanX, nanY2, nanW, nanH)){
+						own.status = ROLE_DEATH;
+						rewardLevelFail = true;
+						down = false;
+					}
+				}else{
+					nanX = 256; nanY2 =25;
+					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY2, 20);
+				}
 			}
 			
 		}else {
@@ -1003,12 +1025,21 @@ public class StateGame implements Common{
 			g.drawImage(multiply, 491+66, 147, 20);
 			
 			if((level%2==0 && !isNextLevel) || (level!=1 && level%2==1 && isNextLevel)){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
-				g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, 256, 15, 20);
-				//TODO 如果狼到达上面的总数为四只则南瓜掉落
-			/*	if (npc.status == ROLE_SUCCESS) {
-					g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, 256, 15, 20);	
+				if(down){
+					nanX += 2;
+					nanY += 10;
+					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY, 20);
+					if(own.status==ROLE_ALIVE && Collision.checkSquareCollision(own.mapx, own.mapy, own.width, own.height, nanX, nanY, nanW, nanH)){
+						own.status = ROLE_DEATH;
+						own.lifeNum --;
+						lifeNum = own.lifeNum;
+						down = false;
+						System.out.println("生命数减一");
+					}
+				}else{
+					nanX = 256; nanY =15;
+					g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, nanX, nanY, 20);
 				}
-				*/
 			}
 			int num =  LEVEL_INFO[level-1][1]-own.hitNum;
 			if(num<0){
