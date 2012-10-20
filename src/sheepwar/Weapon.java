@@ -49,7 +49,7 @@ public class Weapon implements Common {
 	
 	/*捕狼网持续时间*/
 	public static long netTimeS, netTimeE;
-	public static int netInterval = 3;
+	public static int netInterval = 1;
 	
 	/**
 	 * 创建普通武器 ---Shuriken
@@ -126,7 +126,6 @@ public class Weapon implements Common {
 					w.mapx = w.mapx+6-w.width/2;
 					w.mapy = w.mapy+6-w.height/2;
 					w.isUse = true;
-				}else{
 					netTimeS = System.currentTimeMillis()/1000;
 				}
 				g.drawImage(net2, w.mapx, w.mapy, 20);
@@ -143,6 +142,7 @@ public class Weapon implements Common {
 		w.height = 22;
 		w.width = 14;
 		w.speedX = 10;		
+		w.status = OBJECT_NOT_HIT;
 		booms.addElement(w);
 	}
 	
@@ -156,12 +156,12 @@ public class Weapon implements Common {
 		//System.out.println("子弹容量:"+ booms.size());
 		for(int i = booms.size() - 1;i>=0;i --){
 			w = (Weapon)booms.elementAt(i);
-			if(w.status == BOOM_NOT_HIT){
+			if(w.status == OBJECT_NOT_HIT){
 				w.mapx += w.speedX;
 				tempy = w.mapy;
 				tempx = w.mapx;
 				g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
-			}else if(w.status == BOOM_HIT){				//子弹被飞镖击中的时候
+			}else if(w.status == OBJECT_NOT_HIT){				//子弹被飞镖击中的时候
 				tempy = w.mapy;
 				tempx = w.mapx;
 				if(w.frame<3){					//画出子弹被击中后粉碎的效果
@@ -289,33 +289,36 @@ public class Weapon implements Common {
 			}
 		}
 	}
-	
-	/*显示强力磁石效果*/
-	//private int magFlag;
+	/*
+	显示强力磁石效果
+	private int magFlag;
 	public void showMagnetEffect(SGraphics g,Batches batches) {
 		Image magnetEffect = Resource.loadImage(Resource.id_prop_7_effect);
+		int effectW = magnetEffect.getWidth()/2, effectH = magnetEffect.getHeight();
 		for(int j = batches.npcs.size() - 1;j>=0;j--){
 			Role npc = (Role)batches.npcs.elementAt(j);
-			if(npc.status2 == ROLE_IN_AIR && npc.status != ROLE_SUCCESS/*&& npc.mapy>30*/ && StateGame.magnetState){
-				/*if (magFlag <= 10) {		//调整帧数大小---10-17
+			if(npc.status2 == ROLE_IN_AIR && npc.status != ROLE_SUCCESS&& npc.mapy>30 && StateGame.magnetState){
+				if (magFlag <= 10) {		//调整帧数大小---10-17
 					magFlag++;
+					npc.frame=0;
 				} else {
-					npc.frame = (npc.frame + 1)%2;
+					npc.frame = 1;
 					magFlag = 0;
-				}*/
-				npc.frame = (npc.frame+1)%2;
-				g.drawRegion(magnetEffect, npc.frame*magnetEffect.getWidth()/2, 0, magnetEffect.getWidth()/2, magnetEffect.getHeight(), 
-						0, npc.mapx, npc.mapy, 20);
-				stateGame.hitWolf(npc);
-				batches.npcs.removeElement(npc);
+				}
+				System.out.println("frame:"+npc.frame);
+				g.drawRegion(magnetEffect, npc.frame*effectW, 0, effectW, effectH, 0, npc.mapx, npc.mapy, 20);
+				if(npc.frame==1){
+					stateGame.hitWolf(npc);
+					//batches.npcs.removeElement(npc);
+				}
 			}
 		}
-	}
+	}*/
 
 	/*水果*/
 	public void createFruit(Role redWolf){
 		Weapon fruit = new Weapon();
-		fruit.status = FRUIT_NOT_HIT;
+		fruit.status = OBJECT_NOT_HIT;
 		fruit.width = 35;
 		fruit.height = 45;
 		fruit.speedX = 3;
@@ -349,7 +352,7 @@ public class Weapon implements Common {
 			w = (Weapon)fruits.elementAt(i);
 			fruitImg = Resource.loadImage(w.id);
 			int fruitW = fruitImg.getWidth()/3, fruitH = fruitImg.getHeight();
-			if(w.status == FRUIT_NOT_HIT){
+			if(w.status == OBJECT_NOT_HIT){
 				w.mapy += w.speedY;
 				w.mapx += w.speedX;
 				tempy = w.mapy;

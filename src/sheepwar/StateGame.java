@@ -12,6 +12,7 @@ public class StateGame implements Common{
 	
 	public static Exploder[] exploders = new Exploder[12];
 	public static ShowScore[] ss = new ShowScore[12];
+	public static MagnetEffect[] mf = new MagnetEffect[12];
 //	public SGraphics g ;
 	
 	/*从下往上判断四个梯子上是否有狼，从右到左*/
@@ -34,13 +35,12 @@ public class StateGame implements Common{
 	public Batches batches;
 	public Weapon weapon;
 	public static Role own; 
-	public ShowScore singSocre;
 	
 	public static Role npc;
-	private int eIndex, sIndex;
+	private int eIndex, sIndex, mIndex;
 
 	/*游戏关卡*/
-	public static short level = 2; 
+	public static short level = 1; 
 	/*奖励关卡*/
 	public short rewardLevel = 1;
 	
@@ -70,7 +70,7 @@ public class StateGame implements Common{
 		{13, 80, 2, 0},  
 		{14, 84, 2, -1},  
 		{15, 88, 2, 0},  
-		{16, 1, 1, -1},  //预留
+		{16, 0, 5, -1},  //预留
 	};
 	
 	/*奖励关卡信息*/
@@ -92,17 +92,30 @@ public class StateGame implements Common{
 	/*控制子弹发射的变量*/
 	private long startTime, endTime;
 	private boolean isAttack = true;
-	private int bulletInterval = 2;   
+	private int bulletInterval = 2000;  //单位毫秒
+	
+	/*两连发*/
+	//private long repeatingT;
+	private int repeatingInterval = 200; //单位毫秒
+	private boolean isRepeating;
+	
+	/*四连发*/
+	private long repeatingSTime, repeatingETime;
+	private int repeatingInterval2 = 100;	//单位毫秒
+	private boolean isFourRepeating;
+	private boolean second;
+	private boolean third;
+	private boolean fourth;
 	
 	/*时光闹钟*/
 	public static boolean pasueState;
 	private long pasueTimeS,  pasueTimeE;
-	private int pasueInterval = 10;
+	private int pasueInterval = 10; 	//单位秒
 	
 	/*加速*/
-	public static boolean speedFlag;
-	private long addSpeedTime,addSpeedTime2;
-	private int speedLiquidInterval = 30;
+	//public static boolean speedFlag;
+	//private long addSpeedTime,addSpeedTime2;
+	//private int speedLiquidInterval = 30;
 	
 	/*防狼套装*/
 	private long proEndTime;
@@ -171,8 +184,14 @@ public class StateGame implements Common{
 				own.bombNum ++;
 				//if(own.bombNum%2==0){
 					isAttack = false;
-					startTime = System.currentTimeMillis()/1000;
+					startTime = System.currentTimeMillis();
 				//}
+				if(!isFourRepeating){  //判断是否用了四连发道具,
+					isRepeating = true;	 //没有用就是普通的两连发
+				}else{
+					second = true;
+				}
+				repeatingSTime = System.currentTimeMillis();
 			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM1)&& own.status ==ROLE_ALIVE){    	//时光闹钟
@@ -221,18 +240,19 @@ public class StateGame implements Common{
 					updateProp(propId);
 				}
 			}
-		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//速度提升液
-				if(!speedFlag){
+		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//四连发道具
+				//if(!speedFlag){
 					int propId = engine.pm.propIds[5]-53;
 					if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
-						own.speed = own.speed + CreateRole.para[4];
-						speedFlag = true;
-						addSpeedTime = System.currentTimeMillis()/1000;
+						//own.speed = own.speed + CreateRole.para[4];
+						//speedFlag = true;
+						//addSpeedTime = System.currentTimeMillis()/1000;
+						isFourRepeating = true;
 						if(!engine.isDebugMode()){
 							updateProp(propId);
 						}
 					}
-				}
+				//}
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//强力磁石
 			int propId = engine.pm.propIds[6]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
@@ -304,7 +324,7 @@ public class StateGame implements Common{
 		weapon.showProtect(g, own);
 		weapon.showGlare(g, own, batches);
 		weapon.showHarp(g, batches);
-		weapon.showMagnetEffect(g, batches);
+		//weapon.showMagnetEffect(g, batches);
 		if(batches.redWolf!=null){
 			batches.showRedWolf(g,weapon);				
 		}
@@ -329,6 +349,14 @@ public class StateGame implements Common{
 			}
 		}
 		
+		MagnetEffect m = null;
+		for(int i=0;i<mf.length;i++){
+			if(mf[i] != null){
+				m = mf[i];
+				m.showMagnetEffect(g);
+			}
+		}
+		
 		//显示道具持续时间
 		showTime(g);
 	}
@@ -346,13 +374,13 @@ public class StateGame implements Common{
 		}else
 		
 		/*加速效果时间*/
-		if(speedFlag){
-			g.drawString(String.valueOf(speedLiquidInterval-(addSpeedTime2 - addSpeedTime)), mapx, mapy, 20);
-		}else
+		//if(speedFlag){
+		//	g.drawString(String.valueOf(speedLiquidInterval-(addSpeedTime2 - addSpeedTime)), mapx, mapy, 20);
+		//}else
 		
 		/*防狼套装的时间控制*/
 		if(protectState){
-			g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx, mapy, 20);
+			g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx+55, mapy, 20);
 		}
 		
 		engine.setDefaultFont();
@@ -360,11 +388,46 @@ public class StateGame implements Common{
 	}
 
 	public void execute(){
+		
 		/*控制子弹发射间隔*/
-		endTime = System.currentTimeMillis()/1000; 
+		endTime = System.currentTimeMillis(); 
 		if(isAttack==false && endTime-startTime>=bulletInterval){
 			isAttack = true;
 		}
+		
+		/*两连发第二颗子弹*/
+		if(isRepeating && endTime-startTime>=repeatingInterval){
+			weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
+			own.bombNum ++;
+			isRepeating = false;
+		}
+		
+		repeatingETime = System.currentTimeMillis();
+		/*四连发道具--第二个子弹*/
+		if(isFourRepeating && second && repeatingETime-repeatingSTime>=repeatingInterval2){
+			weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
+			own.bombNum ++;
+			third = true;
+			second = false;
+			repeatingSTime = System.currentTimeMillis();
+		}
+		/*四连发道具--第三个子弹*/
+		if(isFourRepeating && third && repeatingETime-repeatingSTime>=repeatingInterval2){
+			weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
+			own.bombNum ++;
+			fourth = true;
+			third = false;
+			repeatingSTime = System.currentTimeMillis();
+		}
+		/*四连发道具--第四个子弹*/
+		if(isFourRepeating && fourth && repeatingETime-repeatingSTime>=repeatingInterval2){
+			weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
+			own.bombNum ++;
+			fourth = false;
+			repeatingSTime = System.currentTimeMillis();
+		}
+		
+		
 		/*控制拳套时间间隔*/
 		gloveEndTime = System.currentTimeMillis()/1000;
 		if(golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
@@ -381,12 +444,14 @@ public class StateGame implements Common{
 		if(pasueState && (pasueTimeE-pasueTimeS)>=pasueInterval){
 			pasueState = false;
 		}
+		
 		/*加速效果时间*/
-		addSpeedTime2 = System.currentTimeMillis()/1000;
-		if(addSpeedTime2 - addSpeedTime >speedLiquidInterval){			
-			speedFlag = false;
-			own.speed = CreateRole.para[4];
-		}
+		//addSpeedTime2 = System.currentTimeMillis()/1000;
+		//if(addSpeedTime2 - addSpeedTime >speedLiquidInterval){			
+		//	speedFlag = false;
+		//	own.speed = CreateRole.para[4];
+		//}
+		
 		/*防狼套装的时间控制*/
 		proEndTime = System.currentTimeMillis()/1000;
 		if(proEndTime - proStartTime > protectInterval){
@@ -439,6 +504,9 @@ public class StateGame implements Common{
 		/*激光枪碰撞检测*/
 		glareAttackNpcs();
 		
+		/*重力磁石*/
+		magnetEffect();
+		
 		/*移除死亡对象*/
 		removeDeath();
 
@@ -451,6 +519,24 @@ public class StateGame implements Common{
 		
 		/*玩家死亡逃脱的狼全部移除*/
 		removeSuccessWolf();
+	}
+
+	private void magnetEffect() {
+		for(int j = batches.npcs.size() - 1;j>=0;j--){
+			Role npc = (Role)batches.npcs.elementAt(j);
+			if(npc.status2 == ROLE_IN_AIR && npc.status != ROLE_SUCCESS/*&& npc.mapy>30*/ && StateGame.magnetState){
+				MagnetEffect m = new MagnetEffect(npc.mapx,npc.mapy);
+				mf[mIndex] = m;
+				if(mIndex < mf.length-1){
+					mIndex ++;
+				}else{
+					mIndex=0;
+				}
+				hitWolf(npc);
+				batches.npcs.removeElement(npc);
+				print();
+			}
+		}
 	}
 
 	private void removeSuccessWolf() {
@@ -737,7 +823,7 @@ public class StateGame implements Common{
 				}
 				
 				Weapon.netTimeE = System.currentTimeMillis()/1000;
-				if(Weapon.netTimeE-Weapon.netTimeS>=Weapon.netInterval){
+				if(net.isUse && Weapon.netTimeE-Weapon.netTimeS>=Weapon.netInterval){
 					net.isUse = false;
 					weapon.nets.removeElement(net);
 				}
@@ -1157,15 +1243,17 @@ public class StateGame implements Common{
 		scores2 = own.scores2;
 		hitFruits = own.hitFruits;
 		hitRatio = own.hitRatio;
-		fruit.status = FRUIT_HIT;
-		ShowScore s = new ShowScore(fruit.mapx,fruit.mapy);
-		s.score = fruit.scores;
-		ss[sIndex] = s;
-		if(sIndex < ss.length-1){
-			sIndex ++;
-		}else{
-			sIndex=0;
+		if(fruit.status == OBJECT_NOT_HIT){
+			ShowScore s = new ShowScore(fruit.mapx,fruit.mapy);
+			s.score = fruit.scores;
+			ss[sIndex] = s;
+			if(sIndex < ss.length-1){
+				sIndex ++;
+			}else{
+				sIndex=0;
+			}
 		}
+		fruit.status = OBJECT_HIT;
 		printInfo();
 	}
 	
@@ -1180,15 +1268,17 @@ public class StateGame implements Common{
 		hitBuble = own.hitBuble;
 		hitRatio = own.hitRatio;
 		hitBooms = own.hitBooms;
-		boom.status = BOOM_HIT;
-		ShowScore s = new ShowScore(boom.mapx,boom.mapy);
-		s.score = boom.scores;
-		ss[sIndex] = s;
-		if(sIndex < ss.length-1){
-			sIndex ++;
-		}else{
-			sIndex=0;
+		if(boom.status == OBJECT_NOT_HIT){
+			ShowScore s = new ShowScore(boom.mapx,boom.mapy);
+			s.score = boom.scores;
+			ss[sIndex] = s;
+			if(sIndex < ss.length-1){
+				sIndex ++;
+			}else{
+				sIndex=0;
+			}
 		}
+		boom.status = OBJECT_HIT;
 		printInfo();
 	}
 	
@@ -1241,6 +1331,15 @@ public class StateGame implements Common{
 		HASWOLF_FOUR = false;
 		weapon.clearObjects(); // 清空对象
 		batches.clearObject(); // 清空对象
+		for(int j=0;j<ss.length;j++){
+			ss[j]=null;
+		}
+		for(int i=0;i<exploders.length;i++){
+			exploders[i]=null;
+		}
+		for(int i=0;i<mf.length;i++){
+			mf[i]=null;
+		}
 	}
 	
 	/*游戏结束要清楚的数据*/
@@ -1254,8 +1353,14 @@ public class StateGame implements Common{
 		hitTotalNum = own.hitTotalNum = 0;
 		hitRatio = own.hitRatio = 0;
 		useProps = own.useProps = 0;*/
+		for(int j=0;j<ss.length;j++){
+			ss[j]=null;
+		}
 		for(int i=0;i<exploders.length;i++){
 			exploders[i]=null;
+		}
+		for(int i=0;i<mf.length;i++){
+			mf[i]=null;
 		}
 		own = null;
 		level = 1;

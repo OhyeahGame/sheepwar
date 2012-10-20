@@ -69,11 +69,8 @@ public interface Common {
 	public final static short watermelon = Resource.id_watermelon;				//西瓜
 	
 	/*水果状态*/
-	public static short FRUIT_NOT_HIT = 0;			//水果被击中
-	public static short FRUIT_HIT = 1;				//水果未被击中
-	
-	public static short BOOM_NOT_HIT = 0;				//子弹未被击中
-	public static short BOOM_HIT = 1;					//子弹被击中
+	public static short OBJECT_NOT_HIT = 0;			//对象被击中
+	public static short OBJECT_HIT = 1;				//对象未被击中
 	
 	/*激光枪状态*/
 	public static short HIT_NPC = 1;				//激光枪击中npc
