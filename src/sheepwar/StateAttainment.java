@@ -119,8 +119,8 @@ public class StateAttainment implements Common{
 		g.drawImage(achievement_out1, 55, 451, 20);
 		g.drawImage(shop_big, 235, 102, 20);
 		g.drawImage(achievement_points, 250, 448, 20);
-		g.setColor(0x000000);
-		g.drawString("×ÜµãÊý", 250+achievement_points.getWidth()+5, 448+5, 20);
+		g.setColor(0xffffff);
+		g.drawString(String.valueOf(StateGame.attainment), 250+achievement_points.getWidth()+5, 448+5, 20);
 		
 		g.setColor(0xcccccc);
 		int leftX = 52,leftY = 122,leftSpace = 15,shadowX = 4,shadowY = 4, mapx, mapy;   

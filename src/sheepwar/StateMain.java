@@ -84,7 +84,7 @@ public class StateMain implements Common{
 			StateShop ss =  new StateShop(engine);
 			ss.processShop();
 		} else if (mainIndex == 2){ //成就系统
-			engine.initAttainmen();
+			engine.updateAttainmen();
 			StateAttainment sa = new StateAttainment();
 			sa.processAttainment();
 			

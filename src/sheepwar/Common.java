@@ -51,6 +51,7 @@ public interface Common {
 	public final static short yellow = Resource.id_balloon_yellow;				//黄气球
 	public final static short orange = Resource.id_balloon_yellowred;			//橙色气球
 	
+	public final static short[] bubleColor = {blue, green, multicolour, red, yellow, orange};
 	
 	/*武器对应id*/
 	public final static short clockWeapon = 1001;							//时光闹钟
@@ -71,10 +72,6 @@ public interface Common {
 	/*水果状态*/
 	public static short OBJECT_NOT_HIT = 0;			//对象被击中
 	public static short OBJECT_HIT = 1;				//对象未被击中
-	
-	/*激光枪状态*/
-	public static short HIT_NPC = 1;				//激光枪击中npc
-	public static short NOT_HIT_NPC = 0;			//激光枪没有击中npc
 	
 	/*随即选中水果*/
 	public final static short selectFruit[] = {apple,lemon,pear,watermelon};

@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Image;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.ui.DrawUtil;
 import cn.ohyeah.stb.util.Collision;
 import cn.ohyeah.stb.util.RandomValue;
 
@@ -40,7 +41,7 @@ public class StateGame implements Common{
 	private int eIndex, sIndex, mIndex;
 
 	/*游戏关卡*/
-	public static short level = 1; 
+	public static short level = 4; 
 	/*奖励关卡*/
 	public short rewardLevel = 1;
 	
@@ -294,6 +295,10 @@ public class StateGame implements Common{
 				
 				//保存数据
 				engine.saveRecord();
+				
+				/*更新玩家成就*/
+				engine.updateAttainmen();
+				
 				initDataGameOver();
 				engine.state = STATUS_MAIN_MENU;
 				clear();
@@ -314,6 +319,7 @@ public class StateGame implements Common{
 	public void show(SGraphics g){
 		drawGamePlaying(g);
 		createRole.showSheep(g,own);
+		batches.showBuble(g);
 //		if(weapon.id != 4){
 			batches.showWolf(g, weapon);
 //		}
@@ -477,9 +483,6 @@ public class StateGame implements Common{
 		/*游戏过度时间*/
 		gameBufferTimeE = System.currentTimeMillis()/1000;
 		
-		/*更新玩家成就*/
-		engine.updateAttainmen();
-		
 		/*创建一批狼*/
 		createNpc();
 		
@@ -513,12 +516,23 @@ public class StateGame implements Common{
 		/*判断4个位置上是否都有狼*/
 		checkFourPosition();
 		
+		/*第四关之后的双数关卡创建气球*/
+		createBubles();
+		
 		/*判断游戏成功或失败*/
 		gameSuccessOrFail();
 		gameOver();
 		
 		/*玩家死亡逃脱的狼全部移除*/
 		removeSuccessWolf();
+	}
+
+	private void createBubles() {
+		batches.bublesETime = System.currentTimeMillis()/1000;
+		if(!isRewardLevel && level>=4 && level%2==0 && (batches.bublesETime-batches.bublesSTime)>3){
+			batches.createBallon();
+			batches.bublesSTime = System.currentTimeMillis()/1000;
+		}
 	}
 
 	private void magnetEffect() {
@@ -638,6 +652,8 @@ public class StateGame implements Common{
 			gameBufferTimeS = System.currentTimeMillis()/1000;
 			//保存数据
 			engine.saveRecord();
+			/*更新玩家成就*/
+			engine.updateAttainmen();
 		}else if(level > 15 && !isGameOver){	/*游戏通关*/
 			System.out.println("游戏成功：");
 			isGameOver = true;
@@ -647,6 +663,8 @@ public class StateGame implements Common{
 			engine.pm.sysProps();
 			//保存数据
 			engine.saveRecord();
+			/*更新玩家成就*/
+			engine.updateAttainmen();
 		}
 	}
 	
@@ -683,6 +701,14 @@ public class StateGame implements Common{
 				Weapon fruit = (Weapon) weapon.fruits.elementAt(k);
 				if(Collision.checkSquareCollision(boxing.mapx, boxing.mapy, boxing.width, boxing.height, fruit.mapx, fruit.mapy, fruit.width, fruit.height)){
 					hitFruit(fruit);
+					print();
+				}
+			}
+			/*射气球*/
+			for(int k=batches.ballons.size()-1;k>=0;k--){
+				Role buble = (Role) batches.ballons.elementAt(k);
+				if(Collision.checkSquareCollision(boxing.mapx, boxing.mapy, boxing.width, boxing.height, buble.mapx, buble.mapy, buble.width, 30)){
+					hitBuble(buble);
 					print();
 				}
 			}
@@ -734,6 +760,15 @@ public class StateGame implements Common{
 					if(Collision.checkSquareCollision(boom.mapx, boom.mapy, boom.width, boom.height,glare.mapx, glare.mapy, glare.width, glare.height)){
 						hitBoom(boom);
 						weapon.booms.removeElement(boom);
+						print();
+					}
+				}
+				
+				/*射气球*/
+				for(int k=batches.ballons.size()-1;k>=0;k--){
+					Role buble = (Role) batches.ballons.elementAt(k);
+					if(Collision.checkSquareCollision(buble.mapx, buble.mapy, buble.width, 30,glare.mapx, glare.mapy, glare.width, glare.height)){
+						hitBuble(buble);
 						print();
 					}
 				}
@@ -822,6 +857,15 @@ public class StateGame implements Common{
 					}
 				}
 				
+				/*射气球*/
+				for(int k=batches.ballons.size()-1;k>=0;k--){
+					Role buble = (Role) batches.ballons.elementAt(k);
+					if(Collision.checkSquareCollision(buble.mapx, buble.mapy, buble.width, 30,net.mapx, net.mapy, net.width, net.height)){
+						hitBuble(buble);
+						print();
+					}
+				}
+				
 				Weapon.netTimeE = System.currentTimeMillis()/1000;
 				if(net.isUse && Weapon.netTimeE-Weapon.netTimeS>=Weapon.netInterval){
 					net.isUse = false;
@@ -894,6 +938,22 @@ public class StateGame implements Common{
 				weapon.fruits.removeElement(fruit);
 			}
 		}
+		
+		/*狼的子弹*/
+		for(int m=weapon.booms.size()-1;m>=0;m--){
+			Weapon boom = (Weapon)weapon.booms.elementAt(m);
+			if(boom.status==OBJECT_HIT){
+				weapon.booms.removeElement(boom);
+			}
+		}
+		
+		/*气球出界*/
+		for(int n=batches.ballons.size()-1;n>=0;n--){
+			Role babule = (Role) batches.ballons.elementAt(n);
+			if((babule.mapy+babule.width)<=0){
+				batches.ballons.removeElement(babule);
+			}
+		}
 	}
 	
 	private void bombAttackNpcs(){
@@ -904,10 +964,15 @@ public class StateGame implements Common{
 				Role ballon = npc.role;
 				if(ballon != null && npc.status == ROLE_ALIVE && npc.status2 == ROLE_IN_AIR){
 					if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height,
-							ballon.mapx, ballon.mapy, ballon.width, 30/*ballon.height*/)&& ballon.id != multicolour){
-						hitWolf(npc);
-						print();
-						weapon.bombs.removeElement(bomb);
+							ballon.mapx, ballon.mapy, ballon.width, 30/*ballon.height*/)){
+						if(ballon.id == multicolour){
+							hitWolf(npc);
+							print();
+							weapon.bombs.removeElement(bomb);
+						}else{
+							bomb.direction = Weapon.WEAPON_MOVE_DOWN;
+							bomb.speedY = bomb.speedX + 10;
+						}
 					}
 					else if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width,
 							bomb.height, npc.mapx, npc.mapy, npc.width, npc.height)&& npc.status != ROLE_SUCCESS){
@@ -924,6 +989,21 @@ public class StateGame implements Common{
 					hitFruit(fruit);
 					print();
 					weapon.bombs.removeElement(bomb);
+				}
+			}
+			
+			/*射气球*/
+			for(int k=batches.ballons.size()-1;k>=0;k--){
+				Role buble = (Role) batches.ballons.elementAt(k);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, buble.mapx, buble.mapy, buble.width, 30)){
+					if(buble.id == multicolour){
+						hitBuble(buble);
+						print();
+						weapon.bombs.removeElement(bomb);
+					}else{
+						bomb.direction = Weapon.WEAPON_MOVE_DOWN;
+						bomb.speedY = bomb.speedX + 10;
+					}
 				}
 			}
 			
@@ -1050,8 +1130,12 @@ public class StateGame implements Common{
 				g.drawRegion(pass_cloud1, 0, 0, down_cloudIndex, cloud1H, 0, cloud1W-down_cloudIndex, down_cloud1Y, 20);
 			}
 			g.drawImage(playing_menu, 491, 0, 20);
-			g.drawImage(playing_level, 491+32, 18, 20);								//游戏中 左侧的关卡图片		
-			drawNum(g, rewardLevel, 491+32+playing_level.getWidth()+10, 18);
+			g.drawImage(playing_level, 491+32, 18, 20);								//游戏中 左侧的关卡图片
+			if(isNextLevel){
+				drawNum(g, rewardLevel-1, 491+32+playing_level.getWidth()+10, 18);
+			}else{
+				drawNum(g, rewardLevel, 491+32+playing_level.getWidth()+10, 18);
+			}
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//奖励关卡羊的生命数,应该改为一条命
 			g.drawImage(multiply, 491+66, 147, 20);
 			
@@ -1105,8 +1189,12 @@ public class StateGame implements Common{
 			}
 			
 			g.drawImage(playing_menu, 491, 0, 20);
-			g.drawImage(playing_level, 491+32, 18, 20);						//游戏中 左侧的关卡图片		
-			drawNum(g, level, 491+32+playing_level.getWidth()+10, 18);
+			g.drawImage(playing_level, 491+32, 18, 20);						//游戏中 左侧的关卡图片	
+			if(isNextLevel){
+				drawNum(g, level-1, 491+32+playing_level.getWidth()+10, 18);
+			}else{
+				drawNum(g, level, 491+32+playing_level.getWidth()+10, 18);
+			}
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 			g.drawImage(multiply, 491+66, 147, 20);
 			
@@ -1171,14 +1259,23 @@ public class StateGame implements Common{
 		
 		
 		/*道具数量*/
-		int propX=550, propY=184, spaceY=71, spaceX=67;
+		int propX=548, propY=186, spaceY=71, spaceX=67;
 		for(int j=0;j<4;j++){
 			for(int k=0;k<2;k++){
 				String str = String.valueOf(engine.props[getPropIndex(j, k)].getNums());
 				int color = g.getColor();
 				engine.setFont(19, true);
-				g.setColor(0x000000);
-				g.drawString(str, propX+spaceX*k, propY+spaceY*j, 20);
+				if(engine.props[getPropIndex(j, k)].getNums()<10){
+					g.setColor(0xffffff);
+					DrawUtil.drawRect(g, propX+spaceX*k, propY+spaceY*j+3, 10, 13);
+					g.setColor(0x000000);
+					g.drawString(str, propX+spaceX*k, propY+spaceY*j, 20);
+				}else{
+					g.setColor(0xffffff);
+					DrawUtil.drawRect(g, propX+spaceX*k-7, propY+spaceY*j+3, 16, 13);
+					g.setColor(0x000000);
+					g.drawString(str, propX+spaceX*k-7, propY+spaceY*j, 20);
+				}
 				g.setColor(color);
 				engine.setDefaultFont();
 			}
@@ -1257,6 +1354,28 @@ public class StateGame implements Common{
 		printInfo();
 	}
 	
+	/*击中气球要更改的数据*/
+	private void hitBuble(Role buble){
+		own.scores += buble.scores;
+		own.scores2 += buble.scores;
+		own.hitRatio++;
+		scores = own.scores;
+		scores2 = own.scores2;
+		hitRatio = own.hitRatio;
+		if(buble.status == ROLE_ALIVE){
+			ShowScore s = new ShowScore(buble.mapx,buble.mapy);
+			s.score = buble.scores;
+			ss[sIndex] = s;
+			if(sIndex < ss.length-1){
+				sIndex ++;
+			}else{
+				sIndex=0;
+			}
+		}
+		buble.status = ROLE_DEATH;
+		printInfo();
+	}
+	
 	/*击中子弹要改变的数据 */
 	private void hitBoom(Weapon boom) {
 		own.scores += boom.scores;
@@ -1264,9 +1383,6 @@ public class StateGame implements Common{
 		scores = own.scores;
 		scores2 = own.scores2;
 		own.hitBooms ++;
-		hitNum = own.hitNum;
-		hitBuble = own.hitBuble;
-		hitRatio = own.hitRatio;
 		hitBooms = own.hitBooms;
 		if(boom.status == OBJECT_NOT_HIT){
 			ShowScore s = new ShowScore(boom.mapx,boom.mapy);

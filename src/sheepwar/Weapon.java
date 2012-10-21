@@ -161,7 +161,7 @@ public class Weapon implements Common {
 				tempy = w.mapy;
 				tempx = w.mapx;
 				g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
-			}else if(w.status == OBJECT_NOT_HIT){				//子弹被飞镖击中的时候
+			}else if(w.status == OBJECT_HIT){				//子弹被飞镖击中的时候
 				tempy = w.mapy;
 				tempx = w.mapx;
 				if(w.frame<3){					//画出子弹被击中后粉碎的效果
@@ -387,15 +387,20 @@ public class Weapon implements Common {
 	}
 	
 	/*显示拳套生成*/
+	int gloveF;
 	public void showGloveCreate(SGraphics g, Role own){
 		Image glove = Resource.loadImage(Resource.id_prop_fist);
 		Image gloveEffectLeft = Resource.loadImage(Resource.id_gloveLeft);
 		//Image gloveEffectRight = Resource.loadImage(Resource.id_gloveRight);
 		int gloveW = gloveEffectLeft.getWidth()/4, gloveH = gloveEffectLeft.getHeight();
 		if(stateGame.isShowGlove){
-			g.drawImage(glove, 374-6, 163, 20);
-		}
-		if(stateGame.isUseGlove && stateGame.isShowGlove == false){
+			if(gloveF<2){
+				gloveF++;
+				g.drawImage(glove, 368, 163, 20);
+			}else{
+				gloveF=0;
+			}
+		}else if(stateGame.isUseGlove){
 			//g.drawRegion(gloveEffectRight, 0*gloveW, 0,	gloveW, gloveH, 0, own.mapx - 13, own.mapy + 24, 20);
 			g.drawRegion(gloveEffectLeft, 0, 0, gloveW, gloveH, 0, own.mapx - 12, own.mapy + 30, 20);
 		}

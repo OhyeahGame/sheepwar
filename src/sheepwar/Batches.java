@@ -20,16 +20,19 @@ public class Batches implements Common{
 	int ballonId;			//气球种类
 	
 	public Vector npcs = new Vector();   
+	public Vector ballons = new Vector();   
 	public Role redWolf;
 	private int[] coors = {60,110,160,210}; 					 //狼下落点的横坐标
-	private int[] coorY = {245,195,245,295,345,395,295,395};  	 //狼发射子弹的Y坐标
+	private int[] coorY = {245,230,245,295,315,355,295,315};  	 //狼发射子弹的Y坐标
 	private long startTime,endTime;
+	public long bublesSTime,bublesETime;
 
 	/* 气球属性 */
 	public static int bublePara[] = {
-	/* 0 图片宽，1 图片高，2提供的积分 */
-	   45, 75, 200
+	/* 0 图片宽，1 图片高，2提供的积分, 3气球Y轴坐标，4速度 */
+	   45, 75, 200, 445, 10
 	};
+	private int[] bubleX = {70,120,170,220};
 	
 	/*npc（狼）属性*/
 	public static int npcPara[] = {
@@ -219,7 +222,7 @@ public class Batches implements Common{
 		return role;
 	}
 	
-	/*气球*/
+	/*狼身上的气球*/
 	public void createBallon(Role wolf){
 		if(wolf.role != null){
 			return;
@@ -233,6 +236,47 @@ public class Batches implements Common{
 		ballon.mapy = wolf.mapy+40 - ballon.height;      
 		ballon.speed = wolf.speed;
 		wolf.role = ballon;
+	}
+	
+	/*气球*/
+	public void createBallon(){
+		Role ballon = new Role();
+		ballon.id = bubleColor[RandomValue.getRandInt(5)];
+		ballon.status = ROLE_ALIVE;
+		ballon.width = bublePara[0];
+		ballon.height = bublePara[1];
+		ballon.scores = bublePara[2];
+		ballon.mapx = bubleX[RandomValue.getRandInt(4)];
+		ballon.mapy = bublePara[3];     
+		ballon.speed = bublePara[4]; 
+		ballons.addElement(ballon);
+	}
+	
+	public void showBuble(SGraphics g){
+		Role buble = null;
+		for(int i=ballons.size()-1;i>=0;i--){
+			buble = (Role) ballons.elementAt(i);
+			Image ballon = Resource.loadImage(buble.id);
+			int ballonW = ballon.getWidth()/5, ballonH = ballon.getHeight();
+			if(!StateGame.pasueState){
+				if(buble.status==ROLE_ALIVE){
+					if(buble.frame<2){
+						buble.frame ++;
+					}else{
+						buble.mapy -= buble.speed;
+					}
+					g.drawRegion(ballon, buble.frame*ballonW, 0, ballonW, ballonH, 0, buble.mapx, buble.mapy, 20);
+				}else if(buble.status==ROLE_DEATH){
+					if(buble.frame<4){
+						buble.frame ++;
+						g.drawRegion(ballon, buble.frame*ballonW, 0, ballonW, ballonH, 0, buble.mapx, buble.mapy, 20);
+					}else{
+						ballons.removeElement(buble);
+					}
+				}
+				//g.drawImage(ballon, buble.mapx, buble.mapy, 20);
+			}
+		}
 	}
 
 	public void showWolf(SGraphics g, Weapon weapon) {
@@ -503,6 +547,7 @@ public class Batches implements Common{
 	
 	public void clearObject(){
 		npcs.removeAllElements();
+		ballons.removeAllElements();
 		redWolf = null;
 	}
 }

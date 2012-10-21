@@ -166,45 +166,54 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*更新玩家成就(主要是标记玩家是否达到某一成就的条件)*/
 	public void updateAttainmen(){
-		this.initAttainmen();
+		//每次更新成就前重新赋值
+		StateGame.scores3 = StateGame.scores3>StateGame.scores?StateGame.scores3:StateGame.scores;
+	    StateGame.hitTotalNum2 = StateGame.hitTotalNum2>StateGame.hitTotalNum?StateGame.hitTotalNum2:StateGame.hitTotalNum;
+	    StateGame.hitBooms2 = StateGame.hitBooms2>StateGame.hitBooms?StateGame.hitBooms2:StateGame.hitBooms;
+	    StateGame.useProps2 = StateGame.useProps2>StateGame.useProps?StateGame.useProps2:StateGame.useProps;
+	    StateGame.hitFruits2 = StateGame.hitFruits2>StateGame.hitFruits?StateGame.hitFruits2:StateGame.hitFruits;
+	    StateGame.level2 = StateGame.level2>StateGame.level?StateGame.level2:StateGame.level;
+		
+		Attainment attainment;
+		for(int i=0;i<attainments.length;i++){
+			for(int j=0;j<attainments[i].length;j++){
+				attainment = attainments[i][j];
+				/*判断玩家是否达到成就条件*/
+				setAttainmentResult(attainment, i, j);
+			}
+		}
 	}
 	
 	private void setAttainmentResult(Attainment attainment, int i, int j){
 		if(attainment.getType()==Attainment_Type_Scores){
-			if(StateGame.scores3>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.scores3>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}else if(attainment.getType()==Attainment_Type_HitWolf){
-			if(StateGame.hitTotalNum2>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.hitTotalNum2>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}else if(attainment.getType()==Attainment_Type_HitBomb){
-			if(StateGame.hitBooms2>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.hitBooms2>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}else if(attainment.getType()==Attainment_Type_UseProp){
-			if(StateGame.useProps2>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.useProps2>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}else if(attainment.getType()==Attainment_Type_HitFruit){
-			if(StateGame.hitFruits2>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.hitFruits2>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}else if(attainment.getType()==Attainment_Type_Level){
-			if(StateGame.level2>=Integer.parseInt(Attainments[i][j][3])){
+			if(attainment.isResult()==false&&StateGame.level2>=Integer.parseInt(Attainments[i][j][3])){
 				attainment.setResult(true);
-			}else{
-				attainment.setResult(false);
+				StateGame.attainment += attainment.getAward();
 			}
 		}
 	}
