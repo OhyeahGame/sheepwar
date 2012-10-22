@@ -81,6 +81,7 @@ public class Resource implements Common {
 	public static short id_ranking_word = NUMS++;			//排行文字
 	
 	public static short id_playing_level= NUMS++;			
+	public static short id_playing_level2= NUMS++;			
 	public static short id_playing_point = NUMS++;			
 	public static short id_sheep_head = NUMS++;			
 	public static short id_wolf_head = NUMS++;			
@@ -131,6 +132,8 @@ public class Resource implements Common {
 	public static short id_achievement_bottom = NUMS++;     				
 	public static short id_rank_bottom = NUMS++;     				
 	public static short id_control = NUMS++;     				
+	public static short id_wolf_die = NUMS++;     				
+	public static short id_wolf_shove = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -200,6 +203,7 @@ public class Resource implements Common {
 		"/ranking_word.png",
 		
 		"/playing_level.png",
+		"/playing_level2.png",
 		"/playing_point.png",
 		"/sheep_head.png",
 		"/wolf_head.png",
@@ -250,6 +254,8 @@ public class Resource implements Common {
 		"/achievement_bottom.jpg",             
 		"/ranking_bottom.jpg",             
 		"/control.png",             
+		"/die.png",             
+		"/shove.png",             
 		
 	};
 	
@@ -286,7 +292,7 @@ public class Resource implements Common {
 	
 	/*商城商品介绍*/    	//二维数组创建注意
 	public static String propIntroduce [][]= {
-		{"时光钟:#r时间静止10秒。#r 价格：20游戏币","驱狼竖琴:#r使用后清除所有梯子上或者正在推南瓜的灰太狼。#r价格：30游戏币"},//shopY
+		{"时光闹钟:#r时间静止10秒。#r 价格：20游戏币","驱狼竖琴:#r使用后清除所有梯子上或者正在推南瓜的灰太狼。#r价格：30游戏币"},//shopY
 		{"捕狼网:#r发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r只击落碰到的灰太狼。#r价格：20游戏币","连发:#r使用后连续发射四颗子弹，单关有效。#r价格：30游戏币"},
 		{"防狼套装:#r开启后得到5秒的无敌效#r果，抵御各种攻击。#r价格：30游戏币","强力磁石:#r击落所有空中的灰太狼。#r价格：50游戏币"},
 		{"驱狼光波:#r发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。#r价格：30游戏币","替身玩偶:#r增加一条命。#r价格：50游戏币"},

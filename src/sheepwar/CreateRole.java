@@ -44,12 +44,14 @@ public class CreateRole implements Common {
 		role.status = ROLE_ALIVE;
 		role.lifeNum = StateGame.lifeNum;
 		role.scores = StateGame.scores;
+		role.scores2 = StateGame.scores2;
 		role.hitNum = StateGame.hitNum;
 		role.hitBuble = StateGame.hitBuble;
 		role.hitRatio = StateGame.hitRatio;
 		role.hitTotalNum = StateGame.hitTotalNum;
 		role.hitFruits = StateGame.hitFruits;
 		role.useProps = StateGame.useProps;
+		role.hitBooms = StateGame.hitBooms;
 		return role;
 	}
 	

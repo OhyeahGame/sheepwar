@@ -232,8 +232,8 @@ public class Batches implements Common{
 		ballon.width = bublePara[0];
 		ballon.height = bublePara[1];
 		ballon.scores = bublePara[2];
-		ballon.mapx = wolf.mapx+12;
-		ballon.mapy = wolf.mapy+40 - ballon.height;      
+		ballon.mapx = wolf.mapx+17;
+		ballon.mapy = wolf.mapy+37 - ballon.height;      
 		ballon.speed = wolf.speed;
 		wolf.role = ballon;
 	}
@@ -283,6 +283,8 @@ public class Batches implements Common{
 		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); 
 		Image wolf_down = Resource.loadImage(Resource.id_wolf_down);
 		Image wolf_climb = Resource.loadImage(Resource.id_wolf_climb);
+		Image wolf_die = Resource.loadImage(Resource.id_wolf_die);
+		Image wolf_shove = Resource.loadImage(Resource.id_wolf_shove);
 		int len = npcs.size();
 		Role wolf = null;
 		for(int i=len-1;i>=0;i--){
@@ -304,7 +306,7 @@ public class Batches implements Common{
 						setWolfLadders(wolf);
 					}
 				}
-				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
+				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb, wolf_die);
 				
 			}else if(wolf.position2 == WOLF_POSITION_BOTTOM){  //狼由下往上
 				
@@ -320,13 +322,13 @@ public class Batches implements Common{
 						setWolfLadders(wolf);
 					}
 				}
-				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
+				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb, wolf_die,wolf_shove);
 			}
 		}	
 	}
 	
 	/*狼由上往下*/
-	private void wolfDown(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
+	private void wolfDown(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb, Image wolf_die){
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
@@ -342,7 +344,7 @@ public class Batches implements Common{
 			int tempx_ballon = wolf.role.mapx;
 			int tempy_ballon = wolf.role.mapy;
 			Image ballon = Resource.loadImage(wolf.role.id);
-			if(wolf.status == ROLE_ALIVE){
+			if(wolf.status == ROLE_ALIVE || wolf.status == ROLE_ATTACK){
 				if(!StateGame.pasueState){
 					if(wolf.role.frame<2){
 						wolf.role.frame = (wolf.role.frame+1);
@@ -352,13 +354,28 @@ public class Batches implements Common{
 						tempy_ballon += wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != orange /*&& wolf.colorId != multicolour*/){			//根据狼气球的颜色区分是否攻击的狼
-						if(wolf.mapy == wolf.coorY){				
-							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+					int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
+					if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
+						weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+						wolf.status = ROLE_ATTACK;
+					}
+					if(wolf.status==ROLE_ATTACK){
+						wolf.frame = (wolf.frame+1)%3;
+						if(wolf.frame==0){
+							wolf.frame=1;
+						}
+						g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+						if(wolf.frame==2){
+							wolf.status = ROLE_ALIVE;
+						}
+					}else{
+						if(wolf.role.id != orange){
+							g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+						}else{
+							g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 						}
 					}
 				}
-				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
 				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
 			}else if(wolf.status == ROLE_DEATH){
 				if(wolf.role.frame<4){
@@ -368,10 +385,10 @@ public class Batches implements Common{
 					tempy += wolf.speed;
 					wolf.mapy = tempy;
 				}
-				int w = wolf_down.getWidth()/2;
-				int h = wolf_down.getHeight();
+				int w = wolf_die.getWidth()/2;
+				int h = wolf_die.getHeight();
 				wolf.frame = (wolf.frame+1)%2;
-				g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+				g.drawRegion(wolf_die, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
 			}
 			
 		}else if(wolf.direction == ROLE_MOVE_UP){    //向上走
@@ -412,7 +429,7 @@ public class Batches implements Common{
 	}
 	
 	/*狼由下往上*/
-	private void wolfUp(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
+	private void wolfUp(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb, Image wolf_die, Image wolf_shove){
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
@@ -423,50 +440,74 @@ public class Batches implements Common{
 						if(tempx+wolf.speed <= positionX){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else{
 							wolf.mapx = tempx = positionX;
+							wolf.frame = (wolf.frame+1)%2;
+							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_TWO_LADDER){
 						if(tempx+wolf.speed <= positionX-wolf.width){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else if(tempx>positionX-wolf.width){
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
+						}else{
+							wolf.frame = (wolf.frame+1)%2;
+							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_THREE_LADDER){
 						if(tempx+wolf.speed < positionX-wolf.width*2){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else if(tempx>positionX-wolf.width*2){
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
+						}else{
+							wolf.frame = (wolf.frame+1)%2;
+							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_FOUR_LADDER){
 						if(tempx+wolf.speed < positionX-wolf.width*3){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else if(tempx>positionX-wolf.width*3){
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
+							wolf.frame = (wolf.frame + 1) % 6; 
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else{
+							wolf.frame = (wolf.frame+1)%2;
+							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 							StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
 						}
 					}
 				}else{
 					tempx += wolf.speed;
 					wolf.mapx = tempx;
+					wolf.frame = (wolf.frame + 1) % 6; 
+					g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 				}
-				wolf.frame = (wolf.frame + 1) % 6; 
 			}
-			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 		}else if(wolf.direction == ROLE_MOVE_UP){   //向上走
 			createBallon(wolf); //创建气球
 			wolf.status2 = ROLE_IN_AIR;
 			int tempx_ballon = wolf.role.mapx;
 			int tempy_ballon = wolf.role.mapy;
 			Image ballon = Resource.loadImage(wolf.role.id);
-			if(wolf.status == ROLE_ALIVE){
+			if(wolf.status == ROLE_ALIVE || wolf.status == ROLE_ATTACK){
 				if(!StateGame.pasueState){
 					if(wolf.role.frame<2){
 						wolf.role.frame = (wolf.role.frame+1);
@@ -476,13 +517,28 @@ public class Batches implements Common{
 						tempy_ballon -= wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != orange /*&& wolf.colorId != multicolour*/){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
-						if(wolf.mapy == wolf.coorY){				
-							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+					int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
+					if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
+						weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+						wolf.status = ROLE_ATTACK;
+					}
+					if(wolf.status==ROLE_ATTACK){
+						wolf.frame = (wolf.frame+1)%3;
+						if(wolf.frame==0){
+							wolf.frame=1;
+						}
+						g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+						if(wolf.frame==2){
+							wolf.status = ROLE_ALIVE;
+						}
+					}else{
+						if(wolf.role.id != orange){
+							g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+						}else{
+							g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 						}
 					}
 				}
-				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
 				g.drawRegion(ballon, wolf.role.frame*ballon.getWidth()/5, 0, ballon.getWidth()/5, ballon.getHeight(), 0, tempx_ballon, tempy_ballon, 20);
 			}else if(wolf.status == ROLE_DEATH){
 				if(wolf.role.frame<4){
@@ -492,10 +548,10 @@ public class Batches implements Common{
 					tempy += wolf.speed;
 					wolf.mapy = tempy;
 				}
-				int w = wolf_down.getWidth()/2;
-				int h = wolf_down.getHeight();
+				int w = wolf_die.getWidth()/2;
+				int h = wolf_die.getHeight();
 				wolf.frame = (wolf.frame+1)%2;
-				g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+				g.drawRegion(wolf_die, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
 			}
 		}
 	}

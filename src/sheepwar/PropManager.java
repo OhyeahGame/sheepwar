@@ -126,19 +126,19 @@ public class PropManager implements Common{
 		}
 		if (shopX == 0 && shopY == 3) {
 			int propId = propIds[3];
-			if (buyProp(propId, 1, propPrice[3], "º§π‚«π")) {
+			if (buyProp(propId, 1, propPrice[3], "«˝¿«π‚≤®")) {
 				props[3].setNums(props[3].getNums()+1);
 			}
 		}
 		if (shopX == 1 && shopY == 0) {
 			int propId = propIds[4];
-			if (buyProp(propId, 1, propPrice[4], "«˝…¢ ˙«Ÿ")) {
+			if (buyProp(propId, 1, propPrice[4], "«˝¿« ˙«Ÿ")) {
 				props[4].setNums(props[4].getNums()+1);
 			}
 		}
 		if (shopX == 1 && shopY == 1) {
 			int propId = propIds[5];
-			if (buyProp(propId, 1, propPrice[5], "ÀŸ∂»Ã·…˝“∫")) {
+			if (buyProp(propId, 1, propPrice[5], "¡¨…‰")) {
 				props[5].setNums(props[5].getNums()+1);
 			}
 		}

@@ -27,6 +27,7 @@ public class Weapon implements Common {
 	int scores;				//提供的积分
 	boolean isUse;			//是否在使用
 	int position;			//拳套初始位置，0-上方，1-下方
+	int hitNum;				//拳套击中狼的个数
 	
 	public StateGame stateGame;
 	public Weapon(StateGame stateGame){
@@ -142,6 +143,7 @@ public class Weapon implements Common {
 		w.height = 22;
 		w.width = 14;
 		w.speedX = 10;		
+		w.scores = 50;
 		w.status = OBJECT_NOT_HIT;
 		booms.addElement(w);
 	}
@@ -383,6 +385,7 @@ public class Weapon implements Common {
 		w.width = 129;
 		w.speedX = 15;
 		w.speedY = 10;
+		w.hitNum = 0;
 		gloves.addElement(w);
 	}
 	
