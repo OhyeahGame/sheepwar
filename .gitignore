@@ -12,3 +12,5 @@
 /.classpath
 /.mtj*
 /Application Descriptor
+/build.properties
+/deployed
