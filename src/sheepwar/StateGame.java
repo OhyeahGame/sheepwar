@@ -41,7 +41,7 @@ public class StateGame implements Common{
 	private int eIndex, sIndex, mIndex;
 
 	/*ÓÎÏ·¹Ø¿¨*/
-	public static short level = 4; 
+	public static short level = 1; 
 	/*½±Àø¹Ø¿¨*/
 	public short rewardLevel = 1;
 	
@@ -965,7 +965,7 @@ public class StateGame implements Common{
 				if(ballon != null && npc.status == ROLE_ALIVE && npc.status2 == ROLE_IN_AIR){
 					if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height,
 							ballon.mapx, ballon.mapy, ballon.width, 30/*ballon.height*/)){
-						if(ballon.id == multicolour){
+						if(ballon.id != multicolour){
 							hitWolf(npc);
 							print();
 							weapon.bombs.removeElement(bomb);
@@ -996,7 +996,7 @@ public class StateGame implements Common{
 			for(int k=batches.ballons.size()-1;k>=0;k--){
 				Role buble = (Role) batches.ballons.elementAt(k);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, buble.mapx, buble.mapy, buble.width, 30)){
-					if(buble.id == multicolour){
+					if(buble.id != multicolour){
 						hitBuble(buble);
 						print();
 						weapon.bombs.removeElement(bomb);

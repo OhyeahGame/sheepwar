@@ -30,7 +30,7 @@ public class Batches implements Common{
 	/* 气球属性 */
 	public static int bublePara[] = {
 	/* 0 图片宽，1 图片高，2提供的积分, 3气球Y轴坐标，4速度 */
-	   45, 75, 200, 445, 10
+	   45, 75, 200, 445, 8
 	};
 	private int[] bubleX = {70,120,170,220};
 	
