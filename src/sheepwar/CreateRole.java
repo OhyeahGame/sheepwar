@@ -52,6 +52,8 @@ public class CreateRole implements Common {
 		role.hitFruits = StateGame.hitFruits;
 		role.useProps = StateGame.useProps;
 		role.hitBooms = StateGame.hitBooms;
+		StateGame.protectState = true;
+		StateGame.proStartTime = System.currentTimeMillis()/1000;
 		return role;
 	}
 	
@@ -59,6 +61,7 @@ public class CreateRole implements Common {
 		Image sheep = Resource.loadImage(Resource.id_playing_sheep); 
 		Image sheep_eye = Resource.loadImage(Resource.id_sheep_eye);
 		Image sheep_hand = Resource.loadImage(Resource.id_sheep_hand);
+		Image shield = Resource.loadImage(Resource.id_prop_3);
 		
 		int sheepW = sheep.getWidth(), sheepH = sheep.getHeight();
 		int handW = sheep_hand.getWidth()/2, handH = sheep_hand.getHeight();
@@ -82,15 +85,16 @@ public class CreateRole implements Common {
 		if(role.status == ROLE_ALIVE){
 			g.drawRegion(sheep_hand, handIndex*handW, 0, handW, handH, 0, role.mapx-4, 36+role.mapy, 20); 
 			g.drawImage(sheep, role.mapx, role.mapy, 20);
-			g.drawRegion(sheep_eye, index*eyeW, 0, eyeW,	eyeH, 0, role.mapx+3, 20+role.mapy, 20);
-			
+			g.drawRegion(sheep_eye, index*eyeW, 0, eyeW, eyeH, 0, role.mapx+3, 20+role.mapy, 20);
+			if(StateGame.protectState && !StateGame.isProtectProp){
+				g.drawRegion(shield, 0, 0, shield.getWidth(), shield.getHeight(), 0, role.mapx, role.mapx+27, 20);
+			}
 		}else if(role.status == ROLE_DEATH){
 			if(role.mapy<=466){
 				role.mapy += 4*role.speed;
 				g.drawRegion(sheep_hand, handW, 0, handW, handH, Sprite.TRANS_MIRROR_ROT180, role.mapx-4, 36+role.mapy, 20); 
 				g.drawRegion(sheep, 0, 0, sheepW, sheepH, Sprite.TRANS_MIRROR_ROT180, role.mapx, role.mapy, 20);
-				g.drawRegion(sheep_eye, 0, 0, eyeW,	eyeH, Sprite.TRANS_MIRROR_ROT180, role.mapx+3, 20+role.mapy, 20);
-				//g.drawImage(sheep, role.mapx, role.mapy, 20);
+				g.drawRegion(sheep_eye, 0, 0, eyeW,	eyeH, Sprite.TRANS_MIRROR_ROT180, role.mapx+3, 20+role.mapx, 20);
 			}else if(role.lifeNum>0){
 				System.out.println("Íæ¼Ò¸´»î");
 				StateGame.own = reviveSheep();

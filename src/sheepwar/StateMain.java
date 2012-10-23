@@ -37,31 +37,36 @@ public class StateMain implements Common{
 	public void show(SGraphics g) {
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
-		Image main_select_right = Resource.loadImage(Resource.id_main_select_right);
-		Image main_select_left = Resource.loadImage(Resource.id_main_select_left);
+		//Image main_select_right = Resource.loadImage(Resource.id_main_select_right);
+		////Image main_select_left = Resource.loadImage(Resource.id_main_select_left);
 		Image main_select_right_base = Resource.loadImage(Resource.id_main_select_right_base);
 		Image main_select_left_base = Resource.loadImage(Resource.id_main_select_left_base);
 		g.drawImage(main_bg, 0, 0, 0);
 		int sw = main_menu.getWidth() / 2, sh = main_menu.getHeight() / 6;
-		for(int j=0;j<3;j++){	
-			g.drawRegion(main_select_right, 0, 0, main_select_right.getWidth(), 
-					main_select_right.getHeight(), 0, 515, 229+j*90, 20);
-			g.drawRegion(main_select_left, 0, 0, main_select_left.getWidth(), 
-					main_select_left.getHeight(), 0, 446, 280-6+j*90, 20);
-	}
-	
-	for (int i = 0; i < menuAxis.length; ++i) {
-		if(mainIndex == i){
-			if(mainIndex % 2==0){
-				g.drawRegion(main_select_right_base, 0, 0, main_select_right_base.getWidth(), 
-						main_select_right_base.getHeight(), 0, menuAxis[i][0]-8, menuAxis[i][1]-14, 20);
-			}else{
-				g.drawRegion(main_select_left_base, 0, 0, main_select_left_base.getWidth(), 
-						main_select_left_base.getHeight(), 0, menuAxis[i][0]-21, menuAxis[i][1]-14, 20);
+		/*for (int j = 0; j < 3; j++) {
+			g.drawRegion(main_select_right, 0, 0, main_select_right.getWidth(),
+					main_select_right.getHeight(), 0, 515, 229 + j * 90, 20);
+			g.drawRegion(main_select_left, 0, 0, main_select_left.getWidth(),
+					main_select_left.getHeight(), 0, 446, 280 - 6 + j * 90, 20);
+		}*/
+
+		for (int i = 0; i < menuAxis.length; ++i) {
+			if (mainIndex == i) {
+				if (mainIndex % 2 == 0) {
+					g.drawRegion(main_select_right_base, 0, 0,
+							main_select_right_base.getWidth(),
+							main_select_right_base.getHeight(), 0,
+							menuAxis[i][0] - 8, menuAxis[i][1] - 14, 20);
+				} else {
+					g.drawRegion(main_select_left_base, 0, 0,
+							main_select_left_base.getWidth(),
+							main_select_left_base.getHeight(), 0,
+							menuAxis[i][0] - 21, menuAxis[i][1] - 14, 20);
+				}
 			}
+			g.drawRegion(main_menu, (mainIndex != i) ? sw : 0, i * sh, sw, sh,
+					0, menuAxis[i][0], menuAxis[i][1], 0);
 		}
-		g.drawRegion(main_menu,(mainIndex != i) ? sw : 0, i * sh, sw,sh, 0, menuAxis[i][0], menuAxis[i][1], 0);
-	}
 	}
 	
 	public void execute(){
@@ -106,8 +111,8 @@ public class StateMain implements Common{
 	private void clear() {
 		Resource.freeImage(Resource.id_main_bg);
 		Resource.freeImage(Resource.id_main_menu);
-		Resource.freeImage(Resource.id_main_select_right);
-		Resource.freeImage(Resource.id_main_select_left);
+		//Resource.freeImage(Resource.id_main_select_right);
+		//Resource.freeImage(Resource.id_main_select_left);
 		Resource.freeImage(Resource.id_main_select_right_base);
 		Resource.freeImage(Resource.id_main_select_left_base);
 	}

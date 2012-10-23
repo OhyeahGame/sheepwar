@@ -143,7 +143,7 @@ public class Weapon implements Common {
 		w.height = 22;
 		w.width = 14;
 		w.speedX = 10;		
-		w.scores = 50;
+		w.scores = 200;
 		w.status = OBJECT_NOT_HIT;
 		booms.addElement(w);
 	}
@@ -159,7 +159,9 @@ public class Weapon implements Common {
 		for(int i = booms.size() - 1;i>=0;i --){
 			w = (Weapon)booms.elementAt(i);
 			if(w.status == OBJECT_NOT_HIT){
-				w.mapx += w.speedX;
+				if(!StateGame.pasueState){
+					w.mapx += w.speedX;
+				}
 				tempy = w.mapy;
 				tempx = w.mapx;
 				g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
@@ -196,7 +198,7 @@ public class Weapon implements Common {
 		int tempx = 0,tempy = 0;
 		for(int i = protects.size() - 1;i >= 0;i --){
 			w = (Weapon)protects.elementAt(i);
-			if(StateGame.protectState){
+			if(StateGame.protectState && StateGame.isProtectProp){
 				tempy = role.mapy+27;
 				tempx = w.mapx;
 				g.drawRegion(shield, 0, 0, shield.getWidth(), shield.getHeight(), 0, tempx, tempy, 20);
@@ -355,8 +357,10 @@ public class Weapon implements Common {
 			fruitImg = Resource.loadImage(w.id);
 			int fruitW = fruitImg.getWidth()/3, fruitH = fruitImg.getHeight();
 			if(w.status == OBJECT_NOT_HIT){
-				w.mapy += w.speedY;
-				w.mapx += w.speedX;
+				if(!StateGame.pasueState){
+					w.mapy += w.speedY;
+					w.mapx += w.speedX;
+				}
 				tempy = w.mapy;
 				tempx = w.mapx;
 				g.drawRegion(fruitImg, 0, 0, fruitW, fruitH, 0, tempx, tempy, 20);
@@ -397,7 +401,7 @@ public class Weapon implements Common {
 		//Image gloveEffectRight = Resource.loadImage(Resource.id_gloveRight);
 		int gloveW = gloveEffectLeft.getWidth()/4, gloveH = gloveEffectLeft.getHeight();
 		if(stateGame.isShowGlove){
-			if(gloveF<2){
+			if(gloveF<6){
 				gloveF++;
 				g.drawImage(glove, 368, 163, 20);
 			}else{

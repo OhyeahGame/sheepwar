@@ -123,9 +123,9 @@ public class StateGame implements Common{
 	
 	/*防狼套装*/
 	private long proEndTime;
-	private long proStartTime;
-	private int protectInterval = 5;
-	public static boolean protectState;
+	public static long proStartTime;
+	private int protectInterval = 30;
+	public static boolean protectState, isProtectProp; //使用了防狼道具
 	
 	/*驱散竖琴*/
 	private long harpStartTime,harpEndTime;
@@ -219,6 +219,7 @@ public class StateGame implements Common{
 			int propId = engine.pm.propIds[2]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
 				protectState = true;
+				isProtectProp = true;
 				weapon.createProtect(own);
 				proStartTime = System.currentTimeMillis()/1000;
 				if(!engine.isDebugMode()){
@@ -388,7 +389,7 @@ public class StateGame implements Common{
 		//}else
 		
 		/*防狼套装的时间控制*/
-		if(protectState){
+		if(isProtectProp && protectState){
 			g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx+55, mapy, 20);
 		}
 		
@@ -463,7 +464,12 @@ public class StateGame implements Common{
 		
 		/*防狼套装的时间控制*/
 		proEndTime = System.currentTimeMillis()/1000;
-		if(proEndTime - proStartTime > protectInterval){
+		if(isProtectProp && (proEndTime - proStartTime > protectInterval)){
+			protectState = false;
+			isProtectProp = false;
+		}
+		//死亡后无敌时间
+		if(!isProtectProp && (proEndTime - proStartTime > 3)){
 			protectState = false;
 		}
 		
@@ -572,10 +578,7 @@ public class StateGame implements Common{
 			IS_FOUR_WOLF = false;
 			if(!isRewardLevel){		//普通关卡四只狼逃脱
 				if(level%2!=0){
-					own.status = ROLE_DEATH;
-					own.lifeNum --;
-					lifeNum = own.lifeNum;
-					System.out.println("生命数减一");
+					hitOwn(own);
 				}else{
 					down = true;
 				}
@@ -818,10 +821,7 @@ public class StateGame implements Common{
 							rewardLevelFail = true;
 							System.out.println("奖励关卡游戏失败");
 						}else{
-							own.status = ROLE_DEATH;
-							own.lifeNum --;
-							lifeNum = own.lifeNum;
-							System.out.println("生命数减一");
+							hitOwn(own);
 						}
 					}
 					weapon.booms.removeElement(boom);
@@ -1071,6 +1071,7 @@ public class StateGame implements Common{
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
 		Image pumpkin = Resource.loadImage(Resource.id_pumpkin);
 		Image control = Resource.loadImage(Resource.id_control);
+		Image fruit = Resource.loadImage(Resource.id_watermelon);
 		
 		g.drawImage(game_bg, 0, 0, 20);
 		int nanW = pumpkin.getWidth(), nanH = pumpkin.getHeight();
@@ -1155,13 +1156,38 @@ public class StateGame implements Common{
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//奖励关卡羊的生命数,应该改为一条命
 			g.drawImage(multiply, 491+66, 147, 20);
 			
-			int num = REWARD_LEVEL_INFO[rewardLevel-1][1]-own.hitNum-reward_nums;
-			if(num<0){
-				num = 0;
-			}
-			if(!isNextLevel){
-				g.drawImage(multiply, 45, 12, 20);	
-				drawNum(g, num, 45+multiply.getWidth()+10, 12);
+			if(rewardLevel%2==1){
+				int num=0;
+				if(!isNextLevel){
+					num = REWARD_LEVEL_INFO[rewardLevel-1][1]-own.hitNum-reward_nums;
+					if(num<0){
+						num = 0;
+					}
+					g.drawImage(multiply, 50, 12, 20);	
+					drawNum(g, num, 55+multiply.getWidth(), 12);
+					g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像
+				}else{
+					g.drawImage(multiply, 50, 12, 20);	
+					drawNum(g, 0, 55+multiply.getWidth(), 12);
+					g.drawRegion(fruit, 0, 0, fruit.getWidth()/3, fruit.getHeight(), 0, 12, 2, 20);
+				}
+			}else{
+				int num=0;
+				if(!isNextLevel){
+					if(batches.redWolf!=null){
+						num =16-batches.redWolf.bombNum;
+						if(num<0){
+							num = 0;
+						}
+					}
+					g.drawImage(multiply, 50, 12, 20);	
+					drawNum(g, num, 55+multiply.getWidth(), 12);
+					g.drawRegion(fruit, 0, 0, fruit.getWidth()/3, fruit.getHeight(), 0, 12, 2, 20);
+				}else{
+					g.drawImage(multiply, 50, 12, 20);	
+					drawNum(g, 0, 55+multiply.getWidth(), 12);
+					g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像
+				}
 			}
 			/*if((rewardLevel%2==1 && !isNextLevel) || (rewardLevel%2==0)&& isNextLevel){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
 				if(down){
@@ -1217,18 +1243,14 @@ public class StateGame implements Common{
 			if((level%2==0 && !isNextLevel) || (level!=1 && level%2==1 && isNextLevel)){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
 				if(down){
 					if(nanX<310){
-						nanX += 5;
+						nanX += 10;
 						nanY += 5;
 					}else{
 						nanY += 10;
 					}
 					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY, 20);
 					if(own.status==ROLE_ALIVE && Collision.checkSquareCollision(own.mapx, own.mapy, own.width, own.height, nanX, nanY, nanW, nanH)){
-						own.status = ROLE_DEATH;
-						own.lifeNum --;
-						lifeNum = own.lifeNum;
-						down = false;
-						System.out.println("生命数减一");
+						hitOwn(own);
 					}
 				}else{
 					nanX = 256; nanY =27;
@@ -1241,7 +1263,12 @@ public class StateGame implements Common{
 			}
 			if(!isNextLevel){
 				g.drawImage(multiply, 45, 12, 20);	
-				drawNum(g, num, 45+multiply.getWidth()+10, 12);
+				drawNum(g, num, 55+multiply.getWidth(), 12);
+				g.drawImage(wolf_head, 12, 10, 20);								
+			}else{
+				g.drawImage(multiply, 45, 12, 20);	
+				drawNum(g, 0, 55+multiply.getWidth(), 12);
+				g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像
 			}
 		}
 		
@@ -1261,7 +1288,6 @@ public class StateGame implements Common{
 			drawNum(g, own.scores, 491+35, 89);
 		}
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
-		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 
 		int LeftMenuX = 497+1,RightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
 		int menuH = playing_prop_memu.getHeight();
@@ -1300,8 +1326,6 @@ public class StateGame implements Common{
 				engine.setDefaultFont();
 			}
 		}
-		
-		//g.drawImage(playing_stop, 500,459, 20);			//暂停游戏按钮
 	}
 	
 	private int getPropIndex(int x, int y){
@@ -1420,6 +1444,17 @@ public class StateGame implements Common{
 		boom.status = OBJECT_HIT;
 		printInfo();
 	}
+
+	public void hitOwn(Role role){
+		own.status = ROLE_DEATH;
+		own.lifeNum --;
+		lifeNum = own.lifeNum;
+		HASWOLF_ONE = false;
+		HASWOLF_TWO = false;
+		HASWOLF_THREE = false;
+		HASWOLF_FOUR = false;
+		System.out.println("生命数减一");
+	}
 	
 	/*击中狼所要该变的数据*/
 	public void hitWolf(Role wolf, Weapon w){
@@ -1498,6 +1533,7 @@ public class StateGame implements Common{
 		isShowGlove=false;
 		golveFlag=true;
 		isFourRepeating = false;
+		rewardLevelFail = false;
 		scores2 = own.scores2 = 0;
 		batch = 0;
 		HASWOLF_ONE = false;
@@ -1539,6 +1575,7 @@ public class StateGame implements Common{
 		}
 		own = null;
 		isFourRepeating = false;
+		rewardLevelFail = false;
 		isUseGlove=false;
 		isShowGlove=false;
 		golveFlag=true;
@@ -1598,6 +1635,7 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_pass_cloud2);   
 		Resource.freeImage(Resource.id_pass_cloud1);   
 		Resource.freeImage(Resource.id_pass_cloud);   
+		Resource.freeImage(Resource.id_watermelon);   
 	}
 	
 }

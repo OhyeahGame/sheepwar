@@ -39,7 +39,7 @@ public class PropManager implements Common{
 	
 	/*初始道具设为0*/
 	public void initProps(Prop[] p){
-		System.out.println("初始化道具");
+		System.out.println("创建道具数据并初始化道具信息");
 		for(int i=0;i<p.length;i++){
 			Prop prop = new Prop();
 			p[i] = prop;
@@ -138,7 +138,7 @@ public class PropManager implements Common{
 		}
 		if (shopX == 1 && shopY == 1) {
 			int propId = propIds[5];
-			if (buyProp(propId, 1, propPrice[5], "连射")) {
+			if (buyProp(propId, 1, propPrice[5], "连发")) {
 				props[5].setNums(props[5].getNums()+1);
 			}
 		}

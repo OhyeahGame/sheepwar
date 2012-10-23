@@ -354,26 +354,26 @@ public class Batches implements Common{
 						tempy_ballon += wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
-					if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
-						weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
-						wolf.status = ROLE_ATTACK;
+				}
+				int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
+				if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
+					weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+					wolf.status = ROLE_ATTACK;
+				}
+				if(wolf.status==ROLE_ATTACK){
+					wolf.frame = (wolf.frame+1)%3;
+					if(wolf.frame==0){
+						wolf.frame=1;
 					}
-					if(wolf.status==ROLE_ATTACK){
-						wolf.frame = (wolf.frame+1)%3;
-						if(wolf.frame==0){
-							wolf.frame=1;
-						}
-						g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						if(wolf.frame==2){
-							wolf.status = ROLE_ALIVE;
-						}
+					g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+					if(wolf.frame==2){
+						wolf.status = ROLE_ALIVE;
+					}
+				}else{
+					if(wolf.role.id != orange){
+						g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 					}else{
-						if(wolf.role.id != orange){
-							g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						}else{
-							g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						}
+						g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 					}
 				}
 				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
@@ -433,7 +433,7 @@ public class Batches implements Common{
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
-			if(!StateGame.pasueState){
+			//if(!StateGame.pasueState){
 				if(wolf.status == ROLE_SUCCESS){
 					int positionX = 210;
 					if(wolf.position == ON_ONE_LADDER){
@@ -495,12 +495,14 @@ public class Batches implements Common{
 						}
 					}
 				}else{
-					tempx += wolf.speed;
-					wolf.mapx = tempx;
-					wolf.frame = (wolf.frame + 1) % 6; 
+					if(!StateGame.pasueState){
+						tempx += wolf.speed;
+						wolf.mapx = tempx;
+						wolf.frame = (wolf.frame + 1) % 6; 
+					}
 					g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 				}
-			}
+			//}
 		}else if(wolf.direction == ROLE_MOVE_UP){   //向上走
 			createBallon(wolf); //创建气球
 			wolf.status2 = ROLE_IN_AIR;
@@ -517,26 +519,26 @@ public class Batches implements Common{
 						tempy_ballon -= wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
-					if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
-						weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
-						wolf.status = ROLE_ATTACK;
+				}
+				int wolfDownW = wolf_down.getWidth()/3, wolfDownH = wolf_down.getHeight();
+				if(wolf.colorId != orange && wolf.mapy == wolf.coorY){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
+					weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+					wolf.status = ROLE_ATTACK;
+				}
+				if(wolf.status==ROLE_ATTACK){
+					wolf.frame = (wolf.frame+1)%3;
+					if(wolf.frame==0){
+						wolf.frame=1;
 					}
-					if(wolf.status==ROLE_ATTACK){
-						wolf.frame = (wolf.frame+1)%3;
-						if(wolf.frame==0){
-							wolf.frame=1;
-						}
-						g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						if(wolf.frame==2){
-							wolf.status = ROLE_ALIVE;
-						}
+					g.drawRegion(wolf_down, wolf.frame*wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
+					if(wolf.frame==2){
+						wolf.status = ROLE_ALIVE;
+					}
+				}else{
+					if(wolf.role.id != orange){
+						g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 					}else{
-						if(wolf.role.id != orange){
-							g.drawRegion(wolf_down, wolfDownW, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						}else{
-							g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
-						}
+						g.drawRegion(wolf_down, 0, 0, wolfDownW, wolfDownH, 0, tempx, tempy, 20);
 					}
 				}
 				g.drawRegion(ballon, wolf.role.frame*ballon.getWidth()/5, 0, ballon.getWidth()/5, ballon.getHeight(), 0, tempx_ballon, tempy_ballon, 20);
@@ -584,17 +586,19 @@ public class Batches implements Common{
 		if(redWolf.mapx>=300){
 			redWolf.direction = ROLE_MOVE_LEFT;
 		}
-		if(redWolf.direction == ROLE_MOVE_LEFT){
-			redWolf.mapx -= redWolf.speed;
-		}else{
-			redWolf.mapx += redWolf.speed;
+		if(!StateGame.pasueState){
+			if(redWolf.direction == ROLE_MOVE_LEFT){
+				redWolf.mapx -= redWolf.speed;
+			}else{
+				redWolf.mapx += redWolf.speed;
+			}
+			redWolf.frame = (redWolf.frame+1)%2;
 		}
-		redWolf.frame = (redWolf.frame+1)%2;
 		g.drawRegion(redWolfI, redWolf.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth() / 2, redWolfI.getHeight(),
 				redWolf.direction==ROLE_MOVE_LEFT?0:Sprite.TRANS_MIRROR, redWolf.mapx, redWolf.mapy, 20);
 		
 		endTime = System.currentTimeMillis()/1000;
-		if(endTime-startTime>=5){
+		if(endTime-startTime>=5&&!StateGame.pasueState){
 			weapon.createFruit(redWolf);
 			redWolf.bombNum ++;
 			startTime = System.currentTimeMillis()/1000;

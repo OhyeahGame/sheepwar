@@ -7,8 +7,6 @@ import com.zte.iptv.j2me.stbapi.GameData;
 import com.zte.iptv.j2me.stbapi.STBAPI;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
-import cn.ohyeah.stb.res.UIResource;
-import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.util.ConvertUtil;
 
 /**
@@ -243,9 +241,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			account = STBAPI.GetBalance();
 			System.out.println("查询余额");
 		} catch (Exception e) {
-			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-			pt.setText("查询余额失败，原因："+getErrorMessage(account.getResult())+account.getResult());
-			pt.popup();
+			System.out.println("查询余额失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			state = STATUS_MAIN_MENU; 
 		} 
 	}
 
@@ -289,6 +286,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		    }
 		} catch (Exception e){
 			System.out.println("获取加载游戏数据失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			state = STATUS_MAIN_MENU; 
 		}
 	}
 
@@ -335,6 +333,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		catch (Exception e)
 		{
 		   System.out.println("获取系统时间失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+		   state = STATUS_MAIN_MENU;
 		}
 		return recordId;
 	}
@@ -351,6 +350,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		catch (Exception e)
 		{
 			 System.out.println("获取保存记录失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			 state = STATUS_MAIN_MENU;
 		}
 		
 		/*上报积分*/
@@ -363,6 +363,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		catch (Exception e)
 		{
 			System.out.println("获取上报积分失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			state = STATUS_MAIN_MENU;
 		}
 	}
 	

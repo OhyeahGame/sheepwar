@@ -70,6 +70,8 @@ public class StateShop implements Common{
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
+		Image shop_selected=Resource.loadImage(Resource.id_shop_selected);
+		Image return_selected=Resource.loadImage(Resource.id_return_selected);
 		g.setColor(0xffffff);
 		g.drawImage(game_bg, 0, 0, 20);
 	
@@ -90,8 +92,9 @@ public class StateShop implements Common{
 		    	 g.drawImage(shop_small_base, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
 				if(shopX==j && shopY==i){
 					engine.setFont(30,true);	
-					g.setColor(0x000000);
-					g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
+					g.setColor(0xffffff);
+					g.drawImage(shop_selected, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
+					//g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
 					g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
 					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+8, y+(spaceY+smallH)*i+9, 20);
 					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
@@ -122,31 +125,31 @@ public class StateShop implements Common{
 				}
 			}
 		}
-		 if(shopX==2){          //充值和返回被选择的阴影效果
+		if(shopX==2){          //充值和返回被选择的阴影效果
 			 if(shopY==0){      //控制方向由左到右的入口方向
-				 g.drawImage(shop_go_pay_base, 457, 381, 20);
+				 g.drawImage(return_selected, 457, 381, 20);
 				 g.drawImage(shop_go_pay, 457+16, 381+5, 20);
 				 g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);		
 			   	 g.drawImage(shop_out, 457-8+16, 429-5+7, 20);
 			  }else{
 			   	 g.drawImage(shop_go_pay_base, 457-8, 381-5, 20);
 			   	 g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
-			   	 g.drawImage(shop_go_pay_base, 457, 429, 20);
+				 g.drawImage(return_selected, 457, 429, 20);
 			   	 g.drawImage(shop_out, 457+16, 429+7, 20);
 			 }
-		    }else{
-		    	g.drawImage(shop_go_pay_base, 457 -8, 381-5, 20);
-		    	g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
-		   		g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);
-		   		g.drawImage(shop_out, 457-8+16, 429-5+7, 20);
+		}else{
+	    	g.drawImage(shop_go_pay_base, 457 -8, 381-5, 20);
+	    	g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
+	   		g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);
+	   		g.drawImage(shop_out, 457-8+16, 429-5+7, 20);
 		}
 		 
 		engine.setFont(30, true);
 		g.setColor(0x000000);
 		int colorBalance = g.getColor();
-		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,110,449+9, 20);//用户余额
+		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,110,449+7, 20);//用户余额
 		g.setColor(0xffff00);
-		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,109,448+9, 20);
+		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,109,448+7, 20);
 		g.setColor(colorBalance);
 		engine.setDefaultFont();
 	}
@@ -247,5 +250,7 @@ public class StateShop implements Common{
 		Resource.freeImage(Resource.id_pass_cloud1);       
 		Resource.freeImage(Resource.id_pass_cloud1);   
 		Resource.freeImage(Resource.id_propOfCloud);   
+		Resource.freeImage(Resource.id_shop_selected);   
+		Resource.freeImage(Resource.id_return_selected);   
 	}
 }
