@@ -68,7 +68,7 @@ public class StateNextLevel implements Common{
 	
 	private void judeStar(Role own){
 		/*根据当前关数与星级标准进行判断画几颗星星*/
-		for(int i= 1;i<starJudge[StateGame.level-1].length;i++){	//关数
+		for(int i= 1;i<starJudge[StateGame.level-2].length;i++){	//关数
 			if(own.scores2 >= starJudge[i][2]){
 				starNum = 3;
 			}else if(own.scores2 <starJudge[i][2] && (own.scores2 >= starJudge[i][1])){

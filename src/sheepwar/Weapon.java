@@ -198,7 +198,7 @@ public class Weapon implements Common {
 		int tempx = 0,tempy = 0;
 		for(int i = protects.size() - 1;i >= 0;i --){
 			w = (Weapon)protects.elementAt(i);
-			if(StateGame.protectState && StateGame.isProtectProp){
+			if(StateGame.protectState /*&& StateGame.isProtectProp*/){
 				tempy = role.mapy+27;
 				tempx = w.mapx;
 				g.drawRegion(shield, 0, 0, shield.getWidth(), shield.getHeight(), 0, tempx, tempy, 20);
@@ -244,21 +244,6 @@ public class Weapon implements Common {
 		}
 	}
 	
-	/*显示激光枪燃烧效果*/
-	/*public void showGlareEffect(SGraphics g,Batches batches) {
-		Image burnEffect = Resource.loadImage(Resource.id_burn);
-		for(int j = batches.npcs.size() - 1;j>=0;j--){
-			Role npc = (Role)batches.npcs.elementAt(j);
-			if(StateGame.isHitted){
-				npc.frame = (npc.frame+1)%8;
-				npc.status = ROLE_DEATH;
-				g.drawRegion(burnEffect, npc.frame*burnEffect.getWidth()/8, 0, burnEffect.getWidth()/8, burnEffect.getHeight(), 
-						0, npc.mapx, npc.mapy, 20);
-				batches.npcs.removeElement(npc);
-			}
-		}
-	}*/
-	
 	/*创建驱散竖琴*/
 	public void createHarp(Role player){
 		Weapon w = new Weapon();
@@ -293,31 +278,6 @@ public class Weapon implements Common {
 			}
 		}
 	}
-	/*
-	显示强力磁石效果
-	private int magFlag;
-	public void showMagnetEffect(SGraphics g,Batches batches) {
-		Image magnetEffect = Resource.loadImage(Resource.id_prop_7_effect);
-		int effectW = magnetEffect.getWidth()/2, effectH = magnetEffect.getHeight();
-		for(int j = batches.npcs.size() - 1;j>=0;j--){
-			Role npc = (Role)batches.npcs.elementAt(j);
-			if(npc.status2 == ROLE_IN_AIR && npc.status != ROLE_SUCCESS&& npc.mapy>30 && StateGame.magnetState){
-				if (magFlag <= 10) {		//调整帧数大小---10-17
-					magFlag++;
-					npc.frame=0;
-				} else {
-					npc.frame = 1;
-					magFlag = 0;
-				}
-				System.out.println("frame:"+npc.frame);
-				g.drawRegion(magnetEffect, npc.frame*effectW, 0, effectW, effectH, 0, npc.mapx, npc.mapy, 20);
-				if(npc.frame==1){
-					stateGame.hitWolf(npc);
-					//batches.npcs.removeElement(npc);
-				}
-			}
-		}
-	}*/
 
 	/*水果*/
 	public void createFruit(Role redWolf){
@@ -401,7 +361,7 @@ public class Weapon implements Common {
 		//Image gloveEffectRight = Resource.loadImage(Resource.id_gloveRight);
 		int gloveW = gloveEffectLeft.getWidth()/4, gloveH = gloveEffectLeft.getHeight();
 		if(stateGame.isShowGlove){
-			if(gloveF<6){
+			if(gloveF<10){
 				gloveF++;
 				g.drawImage(glove, 368, 163, 20);
 			}else{

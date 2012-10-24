@@ -19,6 +19,7 @@ public class StateGameSuccessOrFail implements Common{
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
+			
 			while (running) {
 				handleGameSuccessOrFail(keyState);
 				if (running) {
@@ -43,6 +44,7 @@ public class StateGameSuccessOrFail implements Common{
 		}
 		
 	}
+	
 
 	int x1 = 20, x2 = 550, x3 = 424;
 	int ballonY = 114, ballon2Y = 336, ballon3Y = 59, ballon4Y = 420, ballon5Y = 560;
@@ -122,13 +124,17 @@ public class StateGameSuccessOrFail implements Common{
 		
 		/*亮星星（根据积分确定星星个数）*/
 		if(isSuccess){
-			g.drawImage(pass_star, 125, 130, 20);
+			for(int i=0;i<3;i++){
+				g.drawImage(pass_star, 125+(i*space), 130, 20);			
+			}
 		}
 		
 		/*积分*/
-		g.drawImage(pass_score, 155, 286, 20);
-		drawNum(g, StateGame.scores2, 180+pass_score.getWidth(), 288);
-		drawNum(g, StateGame.scores, 180+pass_score.getWidth(), 330);
+		//g.drawImage(pass_score, 155, 286, 20);
+		int scoreH = pass_score.getHeight()/2, scoreW = pass_score.getWidth();
+		g.drawRegion(pass_score, 0, scoreH, scoreW, scoreH, 0, 155, 300, 20);
+		//drawNum(g, StateGame.scores2, 180+pass_score.getWidth(), 288);
+		drawNum(g, StateGame.scores, 180+pass_score.getWidth(), 303);
 		
 		/*彩虹*/
 		g.drawImage(pass_rainbow, 395, 258, 20);

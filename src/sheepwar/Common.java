@@ -18,6 +18,7 @@ public interface Common {
 	public final static short ROLE_DEATH = -1;  		//角色活着状态 
 	public final static short ROLE_SUCCESS = 1;  		//狼逃脱的状态 
 	public final static short ROLE_ATTACK = 2;  		//狼攻击的状态 
+	public final static short ROLE_DIZZY = 3;  			//狼眩晕的状态 
 	
 	public final static short ROLE_ON_GROUND = 0;  		//狼在地面
 	public final static short ROLE_IN_AIR = 1;  		//狼离开地面

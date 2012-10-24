@@ -112,8 +112,8 @@ public class StateGame implements Common{
 	private boolean fourth;
 	
 	/*时光闹钟*/
-	public static boolean pasueState;
-	private long pasueTimeS,  pasueTimeE;
+	public static boolean pasueState, isUsePasue;
+	public static long pasueTimeS,  pasueTimeE;
 	private int pasueInterval = 10; 	//单位秒
 	
 	/*加速*/
@@ -123,13 +123,13 @@ public class StateGame implements Common{
 	
 	/*防狼套装*/
 	private long proEndTime;
-	public static long proStartTime;
+	private long proStartTime;
 	private int protectInterval = 30;
-	public static boolean protectState, isProtectProp; //使用了防狼道具
+	public static boolean protectState; //使用了防狼道具
 	
-	/*驱散竖琴*/
+	/*驱狼竖琴*/
 	private long harpStartTime,harpEndTime;
-	private int harpInterval = 1;				//便于控制驱散竖琴的效果
+	private int harpInterval = 3;				//便于控制驱散竖琴的效果
 	public static boolean harpState;
 	
 	/*强力磁石*/
@@ -202,6 +202,7 @@ public class StateGame implements Common{
 			int propId = engine.pm.propIds[0]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
 				pasueState = true;
+				isUsePasue = true;
 				pasueTimeS = System.currentTimeMillis()/1000;
 				if(!engine.isDebugMode()){
 					updateProp(propId);
@@ -219,7 +220,6 @@ public class StateGame implements Common{
 			int propId = engine.pm.propIds[2]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
 				protectState = true;
-				isProtectProp = true;
 				weapon.createProtect(own);
 				proStartTime = System.currentTimeMillis()/1000;
 				if(!engine.isDebugMode()){
@@ -239,7 +239,7 @@ public class StateGame implements Common{
 			int propId = engine.pm.propIds[4]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
 				harpState = true;
-				weapon.createHarp(own);
+				//weapon.createHarp(own);
 				harpStartTime = System.currentTimeMillis()/1000;
 				if(!engine.isDebugMode()){
 					updateProp(propId);
@@ -307,6 +307,19 @@ public class StateGame implements Common{
 				engine.state = STATUS_MAIN_MENU;
 				clear();
 			}
+			
+			/*时间重置，暂停后要恢复道具的有效时间*/
+			if(pasueState && isUsePasue){		//时光闹钟
+				long t1 = pasueTimeE-pasueTimeS;
+				long t2 = System.currentTimeMillis()/1000;
+				pasueTimeS = t2-t1;
+			}
+			
+			if(protectState){					//防狼道具
+				long t3 = proEndTime-proStartTime;
+				long t4 = System.currentTimeMillis()/1000;
+				proStartTime = t4-t3;
+			}
 		}
 	}
 	
@@ -333,7 +346,7 @@ public class StateGame implements Common{
 		weapon.showNet(g);
 		weapon.showProtect(g, own);
 		weapon.showGlare(g, own, batches);
-		weapon.showHarp(g, batches);
+		//weapon.showHarp(g, batches);
 		//weapon.showMagnetEffect(g, batches);
 		if(batches.redWolf!=null){
 			batches.showRedWolf(g,weapon);				
@@ -372,16 +385,19 @@ public class StateGame implements Common{
 	}
 	
 	private void showTime(SGraphics g) {
-		
+		Image prop = Resource.loadImage(Resource.id_playing_prop);
 		engine.setFont(30, true);
 		int col = g.getColor();
 		g.setColor(0xff0000);
 		
-		int mapx = 250, mapy = 15;
+		int propW = prop.getWidth()/8, propH = prop.getHeight();
+		int mapx = 250, mapy = 20;
 		/*时光闹钟持续时间*/
-		if(pasueState){
-			g.drawString(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS)), mapx, mapy, 20);
-		}else
+		if(pasueState && isUsePasue){
+			g.drawRegion(prop, 0, 0, propW, propH, 0, 190, 5, 20);
+			drawNum(g, Integer.parseInt(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS))), mapx, mapy);
+			//g.drawString(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS)), mapx, mapy, 20);
+		}
 		
 		/*加速效果时间*/
 		//if(speedFlag){
@@ -389,8 +405,15 @@ public class StateGame implements Common{
 		//}else
 		
 		/*防狼套装的时间控制*/
-		if(isProtectProp && protectState){
-			g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx+55, mapy, 20);
+		if(protectState){
+			g.setColor(0x000000);
+			g.drawRegion(prop, 2*propW, 0, propW, propH, 0, 300, 5, 20);
+			drawNum(g, Integer.parseInt(String.valueOf(protectInterval-(proEndTime - proStartTime))), mapx+110, mapy);
+			//g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx+55, mapy, 20);
+		}
+		
+		if(isFourRepeating){
+			g.drawRegion(prop, 5*propW, 0, propW, propH, 0, 410, 5, 20);
 		}
 		
 		engine.setDefaultFont();
@@ -440,7 +463,7 @@ public class StateGame implements Common{
 		
 		/*控制拳套时间间隔*/
 		gloveEndTime = System.currentTimeMillis()/1000;
-		if(golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
+		if(!isRewardLevel && golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
 			isShowGlove = true;
 			golveFlag = false;
 		}
@@ -451,8 +474,9 @@ public class StateGame implements Common{
 		
 		/*时光闹钟效果时间*/
 		pasueTimeE = System.currentTimeMillis()/1000;
-		if(pasueState && (pasueTimeE-pasueTimeS)>=pasueInterval){
+		if(isUsePasue && pasueState && (pasueTimeE-pasueTimeS)>=pasueInterval){
 			pasueState = false;
+			isUsePasue = false;
 		}
 		
 		/*加速效果时间*/
@@ -464,13 +488,12 @@ public class StateGame implements Common{
 		
 		/*防狼套装的时间控制*/
 		proEndTime = System.currentTimeMillis()/1000;
-		if(isProtectProp && (proEndTime - proStartTime > protectInterval)){
+		if((proEndTime - proStartTime > protectInterval)){
 			protectState = false;
-			isProtectProp = false;
 		}
-		//死亡后无敌时间
-		if(!isProtectProp && (proEndTime - proStartTime > 3)){
-			protectState = false;
+		//死亡后暂停时间
+		if(!isUsePasue && pasueState && (pasueTimeE - pasueTimeS > 3)){
+			pasueState = false;
 		}
 		
 		/*驱散竖琴时间间隔控制*/
@@ -534,6 +557,25 @@ public class StateGame implements Common{
 		
 		/*玩家死亡逃脱的狼全部移除*/
 		removeSuccessWolf();
+		
+		/*使用驱狼竖琴眩晕状态*/
+		wolfDizzy();
+	}
+
+	private void wolfDizzy() {
+		if(own!=null && own.status != ROLE_DEATH && harpState){
+			for(int j=batches.npcs.size()-1;j>=0;j--){
+				Role npc = (Role) batches.npcs.elementAt(j);
+				if(npc.status == ROLE_SUCCESS){
+					npc.status = ROLE_DIZZY;
+					//System.out.println("眩晕"+npc.status);
+				}
+			}
+			HASWOLF_ONE = false;
+			HASWOLF_TWO = false;
+			HASWOLF_THREE = false;
+			HASWOLF_FOUR = false;
+		}
 	}
 
 	private void createBubles() {
@@ -933,6 +975,10 @@ public class StateGame implements Common{
 			Role npc = (Role) batches.npcs.elementAt(j);
 			if(npc.status == ROLE_DEATH && npc.mapy >= 446){
 				batches.npcs.removeElement(npc);
+			}else if(npc.mapx>=gameW){  
+				batches.npcs.removeElement(npc);
+			}else if(npc.direction==ROLE_MOVE_LEFT && (npc.mapx+npc.width)<=0){
+				batches.npcs.removeElement(npc);
 			}
 		}
 		/*水果出界移除*/
@@ -1043,6 +1089,7 @@ public class StateGame implements Common{
 	private int down_cloudIndex, down_cloud2Index;
 	int x1 = 20, x2 = 550, x3 = 424;
 	int nanX = 256, nanY = 27, nanY2 = 25;
+	int nanFlag,nanIndex=0;
 	private void drawGamePlaying(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);
@@ -1074,7 +1121,7 @@ public class StateGame implements Common{
 		Image fruit = Resource.loadImage(Resource.id_watermelon);
 		
 		g.drawImage(game_bg, 0, 0, 20);
-		int nanW = pumpkin.getWidth(), nanH = pumpkin.getHeight();
+		int nanW = pumpkin.getWidth()/5, nanH = pumpkin.getHeight();
 		if((isRewardLevel && !isNextLevel) || isReward){		//画出奖励关卡界面
 			g.drawImage(pass_cloud, 50, 80, 20);
 			g.drawImage(pass_cloud, 216, 80, 20);
@@ -1189,22 +1236,6 @@ public class StateGame implements Common{
 					g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像
 				}
 			}
-			/*if((rewardLevel%2==1 && !isNextLevel) || (rewardLevel%2==0)&& isNextLevel){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
-				if(down){
-					nanX += 2;
-					nanY2 += 10;
-					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY2, 20);
-					if(own.status==ROLE_ALIVE && Collision.checkSquareCollision(own.mapx, own.mapy, own.width, own.height, nanX, nanY2, nanW, nanH)){
-						own.status = ROLE_DEATH;
-						rewardLevelFail = true;
-						down = false;
-					}
-				}else{
-					nanX = 256; nanY2 =25;
-					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY2, 20);
-				}
-			}
-			*/
 		}else {
 			if(tempx+playing_cloudbig.getWidth()>0){
 				tempx -= 1;
@@ -1240,23 +1271,63 @@ public class StateGame implements Common{
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 			g.drawImage(multiply, 491+66, 147, 20);
 			
+			/*南瓜效果*/
 			if((level%2==0 && !isNextLevel) || (level!=1 && level%2==1 && isNextLevel)){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)\
 				if(down){
 					if(nanX<310){
 						nanX += 10;
 						nanY += 5;
+						if(nanX<=276){
+							nanIndex=2;
+						}else if(nanIndex<=296){
+							nanIndex=3;
+						}else{
+							nanIndex=4;
+						}
 					}else{
 						nanY += 10;
+						nanIndex=4;
 					}
-					g.drawRegion(pumpkin, 0, 0, nanW, nanH, 0, nanX, nanY, 20);
+					g.drawRegion(pumpkin, nanIndex*nanW, 0, nanW, nanH, 0, nanX, nanY, 20);
 					if(own.status==ROLE_ALIVE && Collision.checkSquareCollision(own.mapx, own.mapy, own.width, own.height, nanX, nanY, nanW, nanH)){
 						hitOwn(own);
 					}
 				}else{
 					nanX = 256; nanY =27;
-					g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, nanX, nanY, 20);
+					if(HASWOLF_ONE && !HASWOLF_TWO && !HASWOLF_THREE && !HASWOLF_FOUR){
+						nanIndex=0;
+					}
+					if(HASWOLF_ONE && HASWOLF_TWO && !HASWOLF_THREE && !HASWOLF_FOUR){
+						if(nanFlag<4){
+							nanFlag++;
+						}else{
+							nanIndex = (nanIndex+1)%2;
+							nanFlag=0;
+						}
+						if(nanIndex==1){
+							nanX += 5;
+						}else{
+							nanX = 256;
+						}
+					}
+					if(HASWOLF_ONE && HASWOLF_TWO && HASWOLF_THREE && !HASWOLF_FOUR){
+						if(nanFlag<4){
+							nanFlag++;
+						}else{
+							nanIndex =(nanIndex+1)%3;
+							nanFlag=0;
+						}
+						if(nanIndex>0){
+							nanX += 5;
+						}else{
+							nanX = 256;
+						}
+					}
+					g.drawRegion(pumpkin, nanIndex*nanW, 0, nanW, nanH, 0, nanX, nanY, 20);
 				}
 			}
+			
+			
 			int num =  LEVEL_INFO[level-1][1]-own.hitNum;
 			if(num<0){
 				num = 0;
@@ -1446,6 +1517,8 @@ public class StateGame implements Common{
 	}
 
 	public void hitOwn(Role role){
+		down = false;
+		nanIndex=0;
 		own.status = ROLE_DEATH;
 		own.lifeNum --;
 		lifeNum = own.lifeNum;
@@ -1529,13 +1602,20 @@ public class StateGame implements Common{
 	
 	/*过关要清楚的据*/
 	private void initDataNextLevel(){
+		pasueState=false;
+		isUsePasue=false;
 		isUseGlove=false;
 		isShowGlove=false;
+		isAttack = false;
+		protectState = false;
+		harpState = false;
+		magnetState = false;
 		golveFlag=true;
 		isFourRepeating = false;
 		rewardLevelFail = false;
 		scores2 = own.scores2 = 0;
 		batch = 0;
+		nanIndex=0;
 		HASWOLF_ONE = false;
 		HASWOLF_TWO = false;
 		HASWOLF_THREE = false;
@@ -1573,7 +1653,15 @@ public class StateGame implements Common{
 		for(int i=0;i<mf.length;i++){
 			mf[i]=null;
 		}
-		own = null;
+		pasueState=false;
+		isUsePasue=false;
+		isUseGlove=false;
+		isShowGlove=false;
+		isAttack = false;
+		protectState = false;
+		harpState = false;
+		magnetState = false;
+		golveFlag=true;
 		isFourRepeating = false;
 		rewardLevelFail = false;
 		isUseGlove=false;
@@ -1582,6 +1670,7 @@ public class StateGame implements Common{
 		level = 1;
 		rewardLevel = 1;
 		batch = 0;
+		nanIndex=0;
 		isRewardLevel = false;
 		isReward = false;
 		isNextLevel = false;
@@ -1590,6 +1679,7 @@ public class StateGame implements Common{
 		HASWOLF_TWO = false;
 		HASWOLF_THREE = false;
 		HASWOLF_FOUR = false;
+		own = null;
 		weapon.clearObjects(); // 清空对象
 		batches.clearObject(); // 清空对象
 	}
@@ -1636,6 +1726,7 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_pass_cloud1);   
 		Resource.freeImage(Resource.id_pass_cloud);   
 		Resource.freeImage(Resource.id_watermelon);   
+		Resource.freeImage(Resource.id_prop_2_eff);   
 	}
 	
 }

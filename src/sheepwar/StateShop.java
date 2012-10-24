@@ -249,7 +249,6 @@ public class StateShop implements Common{
 		Resource.freeImage(Resource.id_pass_cloud);       
 		Resource.freeImage(Resource.id_pass_cloud1);       
 		Resource.freeImage(Resource.id_pass_cloud1);   
-		Resource.freeImage(Resource.id_propOfCloud);   
 		Resource.freeImage(Resource.id_shop_selected);   
 		Resource.freeImage(Resource.id_return_selected);   
 	}

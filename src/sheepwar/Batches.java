@@ -280,6 +280,7 @@ public class Batches implements Common{
 	}
 
 	public void showWolf(SGraphics g, Weapon weapon) {
+		g.setClip(0, 0, gameW, ScrH);
 		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); 
 		Image wolf_down = Resource.loadImage(Resource.id_wolf_down);
 		Image wolf_climb = Resource.loadImage(Resource.id_wolf_climb);
@@ -297,13 +298,19 @@ public class Batches implements Common{
 				/*向右的临界点*/
 				if(wolf.mapy >= 463){
 					wolf.direction = ROLE_MOVE_RIGHT;
-					wolf.status = ROLE_SUCCESS;				//该状态说明狼成功逃脱攻击(地面)，因此武器将攻击不到
+					if(wolf.status!=ROLE_DIZZY){
+						wolf.status = ROLE_SUCCESS;				//该状态说明狼成功逃脱攻击(地面)，因此武器将攻击不到
+					}
 				}
 				/*向上临界点*/
-				if(wolf.mapx == 420){     
-					wolf.direction = ROLE_MOVE_UP;
-					if(wolf.position == 0){
-						setWolfLadders(wolf);
+				if(wolf.mapx == 420){
+					if(wolf.status==ROLE_DIZZY){
+						wolf.direction = ROLE_MOVE_RIGHT;
+					}else{
+						wolf.direction = ROLE_MOVE_UP;
+						if(wolf.position == 0){
+							setWolfLadders(wolf);
+						}
 					}
 				}
 				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb, wolf_die);
@@ -316,19 +323,26 @@ public class Batches implements Common{
 				}
 				/*向右的临界点*/
 				if(wolf.mapy <= 26){
-					wolf.direction = ROLE_MOVE_RIGHT;
-					wolf.status = ROLE_SUCCESS;
-					if(wolf.position == 0){
-						setWolfLadders(wolf);
+					if(wolf.status!=ROLE_DIZZY){
+						wolf.direction = ROLE_MOVE_RIGHT;
+						wolf.status = ROLE_SUCCESS;
+						if(wolf.position == 0){
+							setWolfLadders(wolf);
+						}
+					}else{
+						wolf.direction = ROLE_MOVE_LEFT;
 					}
 				}
 				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb, wolf_die,wolf_shove);
 			}
 		}	
+		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
 	/*狼由上往下*/
 	private void wolfDown(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb, Image wolf_die){
+		Image dizzy = Resource.loadImage(Resource.id_prop_2_eff);
+		int dizzyW = dizzy.getWidth()/3, dizzyH = dizzy.getHeight();
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
@@ -336,8 +350,17 @@ public class Batches implements Common{
 				tempx += wolf.speed;
 				wolf.mapx = tempx;
 				wolf.frame = (wolf.frame + 1) % 6; 
+				if(wolf.dizzyFlag<2){
+					wolf.dizzyFlag++;
+				}else{
+					wolf.dizzyFlag=0;
+					wolf.dizzyIndex = (wolf.dizzyIndex+1)%3;
+				}
 			}
 			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+			if(wolf.status==ROLE_DIZZY){
+				g.drawRegion(dizzy, wolf.dizzyIndex*dizzyW, 0, dizzyW, dizzyH, 0, tempx, tempy-15, 20);
+			}
 		}else if(wolf.direction == ROLE_MOVE_DOWN){   //向下走
 			createBallon(wolf); //创建气球
 			wolf.status2 = ROLE_IN_AIR;
@@ -387,7 +410,14 @@ public class Batches implements Common{
 				}
 				int w = wolf_die.getWidth()/2;
 				int h = wolf_die.getHeight();
-				wolf.frame = (wolf.frame+1)%2;
+				if(wolf.index<2){
+					wolf.index++;
+					wolf.frame=0;
+				}else{
+					wolf.index=0;
+					wolf.frame=1;
+				}
+				//wolf.frame = (wolf.frame+1)%2;
 				g.drawRegion(wolf_die, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
 			}
 			
@@ -399,24 +429,32 @@ public class Batches implements Common{
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
+				}else if(wolf.status==ROLE_DIZZY){
+					wolf.direction=ROLE_MOVE_RIGHT;
 				}
 			}else if(wolf.position == ON_TWO_LADDER){
 				if(tempy >= positionY+89*2){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
+				}else if(wolf.status==ROLE_DIZZY){
+					wolf.direction=ROLE_MOVE_RIGHT;
 				}
 			}else if(wolf.position == ON_THREE_LADDER){
 				if(tempy >= positionY+89){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
+				}else if(wolf.status==ROLE_DIZZY){
+					wolf.direction=ROLE_MOVE_RIGHT;
 				}
 			}else if(wolf.position == ON_FOUR_LADDER){
 				if(tempy >= positionY){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
+				}else if(wolf.status==ROLE_DIZZY){
+					wolf.direction=ROLE_MOVE_RIGHT;
 				}else{
 					StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
 				}
@@ -424,12 +462,22 @@ public class Batches implements Common{
 			int w = wolf_climb.getWidth()/2;
 			int h = wolf_climb.getHeight();
 			g.drawRegion(wolf_climb, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+			if(wolf.dizzyFlag<2){
+				wolf.dizzyFlag++;
+			}else{
+				wolf.dizzyFlag=0;
+				wolf.dizzyIndex = (wolf.dizzyIndex+1)%3;
+			}
+			if(wolf.status==ROLE_DIZZY){
+				g.drawRegion(dizzy, wolf.dizzyIndex*dizzyW, 0, dizzyW, dizzyH, 0, tempx, tempy-15, 20);
+			}
 		}
-		
 	}
 	
 	/*狼由下往上*/
 	private void wolfUp(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb, Image wolf_die, Image wolf_shove){
+		Image dizzy = Resource.loadImage(Resource.id_prop_2_eff);
+		int dizzyW = dizzy.getWidth()/3, dizzyH = dizzy.getHeight();
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
@@ -444,7 +492,13 @@ public class Batches implements Common{
 							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 						}else{
 							wolf.mapx = tempx = positionX;
-							wolf.frame = (wolf.frame+1)%2;
+							if(wolf.index<10){
+								wolf.frame=0;
+								wolf.index++;
+							}else{
+								wolf.index=0;
+								wolf.frame = 1;
+							}
 							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_TWO_LADDER){
@@ -457,9 +511,15 @@ public class Batches implements Common{
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
 							wolf.frame = (wolf.frame + 1) % 6; 
-							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, Sprite.TRANS_MIRROR, tempx, tempy+10, 20);
 						}else{
-							wolf.frame = (wolf.frame+1)%2;
+							if(wolf.index<10){
+								wolf.frame=0;
+								wolf.index++;
+							}else{
+								wolf.index=0;
+								wolf.frame = 1;
+							}
 							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_THREE_LADDER){
@@ -472,9 +532,15 @@ public class Batches implements Common{
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
 							wolf.frame = (wolf.frame + 1) % 6; 
-							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, Sprite.TRANS_MIRROR, tempx, tempy+10, 20);
 						}else{
-							wolf.frame = (wolf.frame+1)%2;
+							if(wolf.index<10){
+								wolf.frame=0;
+								wolf.index++;
+							}else{
+								wolf.index=0;
+								wolf.frame = 1;
+							}
 							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_FOUR_LADDER){
@@ -487,9 +553,15 @@ public class Batches implements Common{
 							tempx -= wolf.speed;
 							wolf.mapx = tempx;
 							wolf.frame = (wolf.frame + 1) % 6; 
-							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
+							g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, Sprite.TRANS_MIRROR, tempx, tempy+10, 20);
 						}else{
-							wolf.frame = (wolf.frame+1)%2;
+							if(wolf.index<10){
+								wolf.frame=0;
+								wolf.index++;
+							}else{
+								wolf.index=0;
+								wolf.frame = 1;
+							}
 							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 							StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
 						}
@@ -552,8 +624,29 @@ public class Batches implements Common{
 				}
 				int w = wolf_die.getWidth()/2;
 				int h = wolf_die.getHeight();
-				wolf.frame = (wolf.frame+1)%2;
+				if(wolf.index<2){
+					wolf.index++;
+					wolf.frame=0;
+				}else{
+					wolf.index=0;
+					wolf.frame=1;
+				}
+				//wolf.frame = (wolf.frame+1)%2;
 				g.drawRegion(wolf_die, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+			}
+		}else if(wolf.direction == ROLE_MOVE_LEFT){  //向左走
+			tempx -= wolf.speed;
+			wolf.mapx = tempx;
+			wolf.frame = (wolf.frame + 1) % 6; 
+			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, Sprite.TRANS_MIRROR, tempx, tempy+10, 20);
+			if(wolf.dizzyFlag<2){
+				wolf.dizzyFlag++;
+			}else{
+				wolf.dizzyFlag=0;
+				wolf.dizzyIndex = (wolf.dizzyIndex+1)%3;
+			}
+			if(wolf.status==ROLE_DIZZY){
+				g.drawRegion(dizzy, wolf.dizzyIndex*dizzyW, 0, dizzyW, dizzyH, 0, tempx, tempy-15, 20);
 			}
 		}
 	}

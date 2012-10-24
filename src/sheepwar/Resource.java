@@ -120,7 +120,6 @@ public class Resource implements Common {
 	public static short id_prop_fist = NUMS++;    
 	public static short id_prop_fist_effect = NUMS++;    
 	public static short id_pumpkin = NUMS++;    
-	public static short id_propOfCloud = NUMS++;    		
 	public static short id_burn = NUMS++;    				
 	public static short id_gloveLeft = NUMS++;    				
 	public static short id_gloveRight = NUMS++;    				
@@ -134,6 +133,7 @@ public class Resource implements Common {
 	public static short id_wolf_shove = NUMS++;     				
 	public static short id_shop_selected = NUMS++;     				
 	public static short id_return_selected = NUMS++;     				
+	public static short id_prop_2_eff = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -242,7 +242,6 @@ public class Resource implements Common {
 		"/prop_fist.png",             
 		"/prop_fist_effect.png",             
 		"/pumpkin.png",             
-		"/propOfCloud.png",             
 		"/burn.png",             
 		"/gloveLeft.png",             
 		"/gloveRight.png",             
@@ -256,6 +255,7 @@ public class Resource implements Common {
 		"/shove.png",             
 		"/shop_selected.png",             
 		"/return_selected.png",             
+		"/prop_2_effect.png",             
 		
 	};
 	
