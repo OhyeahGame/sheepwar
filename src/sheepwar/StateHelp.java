@@ -65,14 +65,14 @@ public class StateHelp implements Common{
 		/*上面第二层云*/
 		int cloud2W = pass_cloud2.getWidth(),cloud2H = pass_cloud2.getHeight();
 		int len = cloud2W-ScrW;
-		int cloud2Y = -6;
+		//int cloud2Y = -6;
 		cloud2Index=(cloud2Index+1)%cloud2W;
-		if(cloud2Index<=len){
+		/*if(cloud2Index<=len){
 			g.drawRegion(pass_cloud2, len-cloud2Index, 0, ScrW, cloud2H, 0, 0, cloud2Y, 20);
 		}else{
 			g.drawRegion(pass_cloud2, (cloud2W-cloud2Index), 0, ScrW-(cloud2W-cloud2Index), cloud2H, 0, 0, cloud2Y, 20);
 			g.drawRegion(pass_cloud2, 0, 0, (cloud2W-cloud2Index), cloud2H, 0, ScrW-(cloud2W-cloud2Index), cloud2Y, 20);
-		}
+		}*/
 		
 		/*下面第二层云*/
 		int down_cloud2Y = 484;
@@ -107,14 +107,14 @@ public class StateHelp implements Common{
 		
 		/*上面第一层云*/
 		int cloud1W = pass_cloud1.getWidth(),cloud1H = pass_cloud1.getHeight();
-		int cloud1Y = -23;
+		//int cloud1Y = -23;
 		cloudIndex=(cloudIndex+1)%cloud1W;
-		if(cloudIndex<=cloud1W-ScrW){
+		/*if(cloudIndex<=cloud1W-ScrW){
 			g.drawRegion(pass_cloud1, cloudIndex, 0, ScrW, cloud1H, 0, 0, cloud1Y, 20);
 		}else{
 			g.drawRegion(pass_cloud1, cloudIndex, 0, cloud1W-cloudIndex, cloud1H, 0, 0, cloud1Y, 20);
 			g.drawRegion(pass_cloud1, 0, 0, cloudIndex, cloud1H, 0, cloud1W-cloudIndex, cloud1Y, 20);
-		}
+		}*/
 		
 		/*下面第一层云*/
 		int down_cloud1Y = 496;

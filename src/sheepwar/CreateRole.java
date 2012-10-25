@@ -27,14 +27,19 @@ public class CreateRole implements Common {
 		role.height = para[3];
 		role.speed = para[4];
 		role.lifeNum = para[5];
+		StateGame.lifeNum = role.lifeNum;
 		role.scores = 0;
 		role.hitNum = 0;
 		role.status = ROLE_ALIVE;
 		return role;
 	}
 	
-	/*玩家复活*/
-	public Role reviveSheep() {
+	/**
+	 * 玩家复活
+	 * @param isContinue true:继续游戏复活， false：死亡后复活
+	 * @return
+	 */
+	public Role reviveSheep(boolean isContinue) {
 		Role role = new Role();
 		role.mapx = para[0]; 
 		role.mapy = para[1];
@@ -46,14 +51,16 @@ public class CreateRole implements Common {
 		role.scores = StateGame.scores;
 		role.scores2 = StateGame.scores2;
 		role.hitNum = StateGame.hitNum;
-		role.hitBuble = StateGame.hitBuble;
+		//role.hitBuble = StateGame.hitBuble;
 		role.hitRatio = StateGame.hitRatio;
 		role.hitTotalNum = StateGame.hitTotalNum;
 		role.hitFruits = StateGame.hitFruits;
 		role.useProps = StateGame.useProps;
 		role.hitBooms = StateGame.hitBooms;
-		StateGame.pasueState = true;
-		StateGame.pasueTimeS = System.currentTimeMillis()/1000;
+		if(!isContinue){
+			StateGame.pasueState = true;
+			StateGame.pasueTimeS = System.currentTimeMillis()/1000;
+		}
 		return role;
 	}
 	
@@ -93,7 +100,7 @@ public class CreateRole implements Common {
 				g.drawRegion(sheep_eye, 0, 0, eyeW,	eyeH, Sprite.TRANS_MIRROR_ROT180, role.mapx+3, 20+role.mapx, 20);
 			}else if(role.lifeNum>0){
 				System.out.println("玩家复活");
-				StateGame.own = reviveSheep();
+				StateGame.own = reviveSheep(false);
 			}
 		}
 	}

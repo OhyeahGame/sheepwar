@@ -42,7 +42,7 @@ public class Weapon implements Common {
 	public Vector bombs = new Vector();
 	public Vector nets = new Vector();
 	public Vector booms = new Vector();
-	public Vector protects = new Vector();
+	//public Vector protects = new Vector();
 	public Vector glares = new Vector();
 	public Vector harps = new Vector();			
 	public Vector fruits = new Vector();
@@ -181,7 +181,7 @@ public class Weapon implements Common {
 	}
 	
 	/*创建防狼套装*/
-	public void createProtect(Role player) {
+	/*public void createProtect(Role player) {
        Weapon w = new Weapon();
        w.id = playerProtected;
        w.mapy = player.mapy + 30;
@@ -189,21 +189,21 @@ public class Weapon implements Common {
        w.height = 33;
        w.width = 32;
        protects.addElement(w);
-	}
+	}*/
 	
 	/*画出防狼套装*/
 	public void showProtect(SGraphics g,Role role){
 		Image shield = Resource.loadImage(Resource.id_prop_3);
-		Weapon w = null;
+		//Weapon w = null;
 		int tempx = 0,tempy = 0;
-		for(int i = protects.size() - 1;i >= 0;i --){
-			w = (Weapon)protects.elementAt(i);
+		//for(int i = protects.size() - 1;i >= 0;i --){
+			//w = (Weapon)protects.elementAt(i);
 			if(StateGame.protectState /*&& StateGame.isProtectProp*/){
 				tempy = role.mapy+27;
-				tempx = w.mapx;
+				tempx = role.mapx;
 				g.drawRegion(shield, 0, 0, shield.getWidth(), shield.getHeight(), 0, tempx, tempy, 20);
 			}
-		}
+		//}
 	}
 	
 	/*创建激光枪*/
@@ -360,14 +360,14 @@ public class Weapon implements Common {
 		Image gloveEffectLeft = Resource.loadImage(Resource.id_gloveLeft);
 		//Image gloveEffectRight = Resource.loadImage(Resource.id_gloveRight);
 		int gloveW = gloveEffectLeft.getWidth()/4, gloveH = gloveEffectLeft.getHeight();
-		if(stateGame.isShowGlove){
+		if(StateGame.isShowGlove){
 			if(gloveF<10){
 				gloveF++;
 				g.drawImage(glove, 368, 163, 20);
 			}else{
 				gloveF=0;
 			}
-		}else if(stateGame.isUseGlove){
+		}else if(StateGame.isUseGlove){
 			//g.drawRegion(gloveEffectRight, 0*gloveW, 0,	gloveW, gloveH, 0, own.mapx - 13, own.mapy + 24, 20);
 			g.drawRegion(gloveEffectLeft, 0, 0, gloveW, gloveH, 0, own.mapx - 12, own.mapy + 30, 20);
 		}
@@ -419,7 +419,7 @@ public class Weapon implements Common {
       bombs.removeAllElements();
       nets.removeAllElements();
       booms.removeAllElements();
-      protects.removeAllElements();
+      //protects.removeAllElements();
       glares.removeAllElements();
       harps.removeAllElements();
       fruits.removeAllElements();
@@ -430,7 +430,7 @@ public class Weapon implements Common {
 		System.out.println("bombs.size:"+bombs.size());
 		System.out.println("nets.size:"+nets.size());
 		System.out.println("booms.size:"+booms.size());
-		System.out.println("protects.size:"+protects.size());
+		//System.out.println("protects.size:"+protects.size());
 		System.out.println("glares.size:"+glares.size());
 		System.out.println("harps.size:"+harps.size());
 		System.out.println("fruits.size:"+fruits.size());

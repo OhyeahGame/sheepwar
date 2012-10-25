@@ -1,7 +1,6 @@
 package sheepwar;
 
 import javax.microedition.midlet.MIDlet;
-
 import com.zte.iptv.j2me.stbapi.Account;
 import com.zte.iptv.j2me.stbapi.GameData;
 import com.zte.iptv.j2me.stbapi.STBAPI;
@@ -35,12 +34,20 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public String amountUnit = "游戏币";
 	
 	private String recordId;
-	private String data;
+	private String attainmentId;
+	private String recordData;
+	private String attainmentData;
 	
 	public String achi[];
 	public String p[];
 	
+	public String[] gameRecordInfo;
+	
+	public static boolean result;   //是否由游戏记录
+	
 	public Account account;
+	public static String record_tag = "gameRecord";
+	public static String attaintment_tag = "gameAttainment";
 	
 	/**
 	 * 存放成就的二维数组，第一维是成就类型，第二维是某一成就类型中的一个成就对象
@@ -225,11 +232,15 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		pm.initProps(props);
 		
 		setRecordId();
-		//saveRecord();
-		loadGameRecord();
+
+		/*读取游戏成就信息*/
+		loadAttainmentInfo();
 
 		/*初始化道具信息*/
 		pm.updateProps();
+		
+		/*读取游戏记录*/
+		readRecord();
 		
 		/*初始化玩家成就信息*/
 		initAttainmen();
@@ -247,10 +258,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 
-	private void loadGameRecord(){
+	private void loadAttainmentInfo(){
 		try	{
-		    GameData  gamedata = STBAPI.LoadGameData(recordId);
-		    System.out.println("LoadGameData:");
+		    GameData  gamedata = STBAPI.LoadGameData(attainmentId);
+		    System.out.println("LoadAttainmentData:");
 		    System.out.println("    Result   ="   + gamedata.getResult());
 		    System.out.println("    SaveID   ="   + gamedata.getSaveID());
 		    System.out.println("    DataValue="   + gamedata.getDataValue());
@@ -291,7 +302,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	/*data前半部分是成就，后半部分是道具*/
-	public void setData() {
+	public void setAttainmentData() {
 		int scores = StateGame.scores>StateGame.scores3?StateGame.scores:StateGame.scores3;
 		StateGame.hitTotalNum2 += StateGame.hitTotalNum; 
 		StateGame.hitBooms2 += StateGame.hitBooms; 
@@ -299,7 +310,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		StateGame.hitFruits2 += StateGame.hitFruits; 
 		int level = StateGame.level>StateGame.level2?StateGame.level:StateGame.level2;
 		
-		data = "scores:"+scores+"/hitTotalNum:"+StateGame.hitTotalNum2
+		attainmentData = "scores:"+scores+"/hitTotalNum:"+StateGame.hitTotalNum2
 					+"/hitBooms:"+StateGame.hitBooms2+"/useProps:"+StateGame.useProps2
 					+"/hitFruits:"+StateGame.hitFruits2+"/level:"+level
 					+"|"
@@ -322,11 +333,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 	
-	public String setRecordId() {
+	public void setRecordId() {
 		try
 		{
 		    String Date = STBAPI.GetServiceDate();
-		    recordId = Date.substring(0,4);
+		    recordId = Date.substring(0,4)+record_tag;
+		    attainmentId = Date.substring(0,4)+attaintment_tag;
 		    System.out.println("GetServiceDate: Date=" + Date);
 		    System.out.println("GetServiceDate: Date=" + recordId);
 		} 
@@ -335,38 +347,192 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		   System.out.println("获取系统时间失败，原因："+getErrorMessage(account.getResult())+account.getResult());
 		   state = STATUS_MAIN_MENU;
 		}
-		return recordId;
 	}
 	
 	/*保存游戏成就*/
-	public void saveRecord(){
+	public void saveAttainment(){
 		/*存玩家道具和成就*/
 		try
 		{
-			setData();
-			int result = STBAPI.SaveGameData(recordId,"我的存档",data);
-			System.out.println("SaveGameData: result=" + Integer.toString(result));
+			setAttainmentData();
+			int res = STBAPI.SaveGameData(attainmentId,"成就和道具信息",attainmentData);
+			System.out.println("SaveGameData: res=" + Integer.toString(res));
 		} 
 		catch (Exception e)
 		{
-			 System.out.println("获取保存记录失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			 System.out.println("保存成就和道具信息失败，原因："+getErrorMessage(account.getResult())+account.getResult());
 			 state = STATUS_MAIN_MENU;
 		}
 		
-		/*上报积分*/
+		/*上报用于排行的积分*/
+		reportScores();
+	}
+	
+	/*上报积分*/
+	public void reportScores(){
 		try
-		{
-			int scores = StateGame.scores>StateGame.scores3?StateGame.scores:StateGame.scores3;
-			int result = STBAPI.ReportScore (STBAPI.SysConfig.RankID,scores);
-			System.out.println("ReportScore: result=" + Integer.toString(result));
+		{	if(StateGame.scores>StateGame.scores3){
+				//int scores = StateGame.scores>StateGame.scores3?StateGame.scores:StateGame.scores3;
+				int res = STBAPI.ReportScore (STBAPI.SysConfig.RankID,StateGame.scores);
+				System.out.println("ReportScore: res=" + Integer.toString(res));
+			}
 		} 
 		catch (Exception e)
 		{
-			System.out.println("获取上报积分失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			System.out.println("上报积分失败，原因："+getErrorMessage(account.getResult())+account.getResult());
 			state = STATUS_MAIN_MENU;
 		}
 	}
 	
+	private void setRecordData(){
+		recordData = "scores:"+StateGame.scores
+					+"/sorces:"+StateGame.scores2
+					+"/hitTotalNum:"+StateGame.hitTotalNum
+					+"/hitBooms:"+StateGame.hitBooms
+					+"/useProps:"+StateGame.useProps
+					+"/lifeNum:"+StateGame.lifeNum
+					+"/hitFruits:"+StateGame.hitFruits
+					+"/level:"+StateGame.level
+					+"/hitNum:"+StateGame.hitNum
+					+"/hitRatio:"+StateGame.hitRatio
+					
+					+"/isFourRepeating:"+StateGame.isFourRepeating
+					+"/second:"+StateGame.second
+					+"/pasueState:"+StateGame.pasueState
+					+"/isUsePasue:"+StateGame.isUsePasue
+					+"/pasueTime:"+(StateGame.pasueTimeE-StateGame.pasueTimeS)
+					+"/protectState:"+StateGame.protectState
+					+"/protectTime:"+(StateGame.proEndTime-StateGame.proStartTime)
+					+"/isUseGlove:"+StateGame.isUseGlove
+					+"/isShowGlove:"+StateGame.isShowGlove
+					+"/gloveValideTime:"+(StateGame.gloveEndTime-StateGame.gloveStartTime)
+					
+					+"/isRewardLevel:"+StateGame.isRewardLevel
+					+"/isReward:"+StateGame.isReward
+					+"/reward_nums:"+StateGame.reward_nums
+					+"/batch:"+StateGame.batch
+					+"/rewardLevelFail:"+StateGame.rewardLevelFail
+					+"/haswolf_one:"+StateGame.HASWOLF_ONE
+					+"/haswolf_two:"+StateGame.HASWOLF_TWO
+					+"/haswolf_three:"+StateGame.HASWOLF_THREE
+					+"/haswolf_four:"+StateGame.HASWOLF_FOUR
+					+"/isfourwolf:"+StateGame.IS_FOUR_WOLF;
+	}
+	
+	private void initRecordInfo(String[] str){
+			StateGame.scores = Integer.parseInt(str[0]);
+			StateGame.scores2 = Integer.parseInt(str[1]);
+			StateGame.hitTotalNum = Integer.parseInt(str[2]);
+			StateGame.hitBooms = Integer.parseInt(str[3]);
+			StateGame.useProps = Integer.parseInt(str[4]);
+			StateGame.lifeNum =Integer.parseInt(str[5]);
+			StateGame.hitFruits = Integer.parseInt(str[6]);
+			StateGame.level = Short.parseShort(str[7]);
+			StateGame.hitNum = Integer.parseInt(str[8]);
+			StateGame.hitRatio = Integer.parseInt(str[9]);
+			
+			StateGame.isFourRepeating = str[10].equals("true")?true:false;
+			StateGame.second = str[11].equals("true")?true:false;
+			StateGame.pasueState = str[12].equals("true")?true:false;
+			StateGame.isUsePasue = str[13].equals("true")?true:false;
+			StateGame.pasueValideTime = Integer.parseInt(str[14]);
+			StateGame.protectState = str[15].equals("true")?true:false;
+			StateGame.protectValideTime = Integer.parseInt(str[16]);
+			StateGame.isUseGlove = str[17].equals("true")?true:false;
+			StateGame.golveFlag = str[18].equals("true")?true:false;
+			StateGame.gloveValideTime = Integer.parseInt(str[19]);
+			
+			StateGame.isRewardLevel = str[20].equals("true")?true:false;
+			StateGame.isReward = str[21].equals("true")?true:false;
+			StateGame.reward_nums = Integer.parseInt(str[22]);
+			StateGame.batch = Short.parseShort(str[23]);
+			StateGame.rewardLevelFail = str[24].equals("true")?true:false;
+			StateGame.HASWOLF_ONE = str[25].equals("true")?true:false;
+			StateGame.HASWOLF_TWO = str[26].equals("true")?true:false;
+			StateGame.HASWOLF_THREE = str[27].equals("true")?true:false;
+			StateGame.HASWOLF_FOUR = str[28].equals("true")?true:false;
+			StateGame.IS_FOUR_WOLF = str[29].equals("true")?true:false;
+	}
+	
+	/*保存游戏记录*/
+	public void saveRecord(){
+		try
+		{
+			setRecordData();
+			int res = STBAPI.SaveGameData(recordId,"游戏记录信息",recordData);
+			System.out.println("SaveGameData: res=" + Integer.toString(res));
+		} 
+		catch (Exception e)
+		{
+			 System.out.println("保存游戏记录失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			 state = STATUS_MAIN_MENU;
+		}
+	}
+	
+	/*读取游戏记录*/
+	public void readRecord(){
+		try {
+			GameData gamedata = STBAPI.LoadGameData(recordId);
+			System.out.println("LoadAttainmentData:");
+		    System.out.println("    Result   ="   + gamedata.getResult());
+		    System.out.println("    SaveID   ="   + gamedata.getSaveID());
+		    System.out.println("    DataValue="   + gamedata.getDataValue());
+		    
+		    if(gamedata.getDataValue()==null){
+		    	return;
+		    }
+		    String data = gamedata.getDataValue();
+		    String[] ds = ConvertUtil.split(data, "/");
+		    gameRecordInfo = new String[ds.length];
+		    for(int i=0;i<ds.length;i++){
+		    	gameRecordInfo[i] = ConvertUtil.split(ds[i], ":")[1];
+		    }
+		    
+		    initRecordInfo(gameRecordInfo);
+		    
+		    printGameInfo();
+		    
+		    result = gamedata.getResult()==0?true:false;
+		} catch (Exception e) {
+			System.out.println("获取加载游戏数据失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			state = STATUS_MAIN_MENU; 
+			result = false;
+		} 
+	}
+	
+ 	private void printGameInfo() {
+ 		System.out.println("record_socres:"+StateGame.scores );
+ 		System.out.println("record_scores2:"+StateGame.scores2 );
+ 		System.out.println("record_hitTotalNum:"+StateGame.hitTotalNum );
+ 		System.out.println("record_hitBooms:"+StateGame.hitBooms );
+ 		System.out.println("record_useProps:"+StateGame.useProps );
+ 		System.out.println("record_lifeNum:"+StateGame.lifeNum );
+ 		System.out.println("record_hitFruits:"+StateGame.hitFruits );
+ 		System.out.println("record_level:"+StateGame.level );
+ 		System.out.println("record_hitNum:"+StateGame.hitNum  );
+ 		System.out.println("record_hitRatio:"+StateGame.hitRatio  );
+		
+ 		System.out.println("record_isFourRepeating:"+StateGame.isFourRepeating  );
+ 		System.out.println("record_second:"+StateGame.second  );
+ 		System.out.println("record_pasueState:"+StateGame.pasueState );
+ 		System.out.println("record_isUsePasue:"+StateGame.isUsePasue );
+ 		System.out.println("record_pasueValideTime:"+StateGame.pasueValideTime );
+ 		System.out.println("record_protectState:"+StateGame.protectState );
+ 		System.out.println("record_protectValideTime:"+StateGame.protectValideTime );
+		
+ 		System.out.println("record_isRewardLevel:"+StateGame.isRewardLevel );
+ 		System.out.println("record_isReward:"+StateGame.isReward );
+ 		System.out.println("record_reward_nums:"+StateGame.reward_nums );
+ 		System.out.println("record_batch:"+StateGame.batch );
+ 		System.out.println("record_rewardLevelFail:"+StateGame.rewardLevelFail );
+ 		System.out.println("record_HASWOLF_ONE:"+StateGame.HASWOLF_ONE );
+ 		System.out.println("record_HASWOLF_TWO:"+StateGame.HASWOLF_TWO );
+ 		System.out.println("record_HASWOLF_THREE:"+StateGame.HASWOLF_THREE );
+ 		System.out.println("record_HASWOLF_FOUR:"+StateGame.HASWOLF_FOUR );
+ 		System.out.println("record_IS_FOUR_WOLF:"+StateGame.IS_FOUR_WOLF );
+	}
+
+
 	public String getErrorMessage(int errorCode){
 		switch (errorCode){
 		case 2004:

@@ -12,8 +12,9 @@ import cn.ohyeah.stb.util.RandomValue;
 public class StateGame implements Common{
 	
 	public static Exploder[] exploders = new Exploder[12];
-	public static ShowScore[] ss = new ShowScore[12];
-	public static MagnetEffect[] mf = new MagnetEffect[12];
+	public static Exploder[] ss = new Exploder[12];
+	public static Exploder[] mf = new Exploder[12];
+	public static Exploder[] sprop = new Exploder[12];
 //	public SGraphics g ;
 	
 	/*从下往上判断四个梯子上是否有狼，从右到左*/
@@ -38,23 +39,23 @@ public class StateGame implements Common{
 	public static Role own; 
 	
 	public static Role npc;
-	private int eIndex, sIndex, mIndex;
+	private int eIndex, sIndex, mIndex, pIndex;
 
 	/*游戏关卡*/
 	public static short level = 1; 
 	/*奖励关卡*/
-	public short rewardLevel = 1;
+	public static short rewardLevel = 1;
 	
-	public boolean isRewardLevel, isReward;
+	public static boolean isRewardLevel, isReward;
 	
 	/*奖励关卡逃脱的狼数*/
-	private int reward_nums;
+	public static int reward_nums;
 	
 	/*当前关卡狼出现的批次*/
-	public short batch;
+	public static short batch;
 	
 	/*奖励关卡被攻击时失败标记 true为被攻击，false没被攻击*/
-	public boolean rewardLevelFail;
+	public static boolean rewardLevelFail;
 	
 	/*关卡信息*/
 	public static int[][] LEVEL_INFO = {
@@ -106,8 +107,8 @@ public class StateGame implements Common{
 	/*四连发*/
 	private long repeatingSTime, repeatingETime;
 	private int repeatingInterval2 = 100;	//单位毫秒
-	private boolean isFourRepeating;
-	private boolean second;
+	public static boolean isFourRepeating;
+	public static boolean second;
 	private boolean third;
 	private boolean fourth;
 	
@@ -115,6 +116,7 @@ public class StateGame implements Common{
 	public static boolean pasueState, isUsePasue;
 	public static long pasueTimeS,  pasueTimeE;
 	private int pasueInterval = 10; 	//单位秒
+	public static int pasueValideTime;	//道具剩余有效时间
 	
 	/*加速*/
 	//public static boolean speedFlag;
@@ -122,10 +124,11 @@ public class StateGame implements Common{
 	//private int speedLiquidInterval = 30;
 	
 	/*防狼套装*/
-	private long proEndTime;
-	private long proStartTime;
+	public static long proEndTime;
+	public static long proStartTime;
 	private int protectInterval = 30;
 	public static boolean protectState; //使用了防狼道具
+	public static int protectValideTime; //道具剩余有效时间
 	
 	/*驱狼竖琴*/
 	private long harpStartTime,harpEndTime;
@@ -141,8 +144,9 @@ public class StateGame implements Common{
 //	public static boolean glareState,isHitted = false;
 
 	/*无敌拳套*/
-	public boolean isUseGlove, isShowGlove, golveFlag=true;
-	private long gloveEndTime, gloveStartTime;
+	public static boolean isUseGlove, isShowGlove, golveFlag=true;
+	public static long gloveEndTime, gloveStartTime;
+	public static int gloveValideTime;
 	private int gloveInterval = 20;
 	
 	public boolean down;	//南瓜是否降落
@@ -207,6 +211,7 @@ public class StateGame implements Common{
 				if(!engine.isDebugMode()){
 					updateProp(propId);
 				}
+				createPromptProp(propId);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)&& own.status ==ROLE_ALIVE){ 		//捕狼网
 			int propId = engine.pm.propIds[1]-53;
@@ -215,12 +220,13 @@ public class StateGame implements Common{
 				if(!engine.isDebugMode()){
 					updateProp(propId);
 				}
+				createPromptProp(propId);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)&& own.status ==ROLE_ALIVE){		//盾牌
 			int propId = engine.pm.propIds[2]-53;
 			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
 				protectState = true;
-				weapon.createProtect(own);
+				//weapon.createProtect(own);
 				proStartTime = System.currentTimeMillis()/1000;
 				if(!engine.isDebugMode()){
 					updateProp(propId);
@@ -244,6 +250,7 @@ public class StateGame implements Common{
 				if(!engine.isDebugMode()){
 					updateProp(propId);
 				}
+				createPromptProp(propId);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//四连发道具
 				//if(!speedFlag){
@@ -256,6 +263,7 @@ public class StateGame implements Common{
 						if(!engine.isDebugMode()){
 							updateProp(propId);
 						}
+						createPromptProp(propId);
 					}
 				//}
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//强力磁石
@@ -266,6 +274,7 @@ public class StateGame implements Common{
 				if(!engine.isDebugMode()){
 					updateProp(propId);
 				}
+				createPromptProp(propId);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM8) && own.status ==ROLE_ALIVE){		//木偶->可以增加一条生命
 			int propId = engine.pm.propIds[7]-53;
@@ -275,6 +284,7 @@ public class StateGame implements Common{
 				if(!engine.isDebugMode()){
 					updateProp(propId);
 				}
+				createPromptProp(propId);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM9)){		//暂停							
 			
@@ -298,6 +308,9 @@ public class StateGame implements Common{
 				engine.pm.sysProps();
 				
 				//保存数据
+				engine.saveAttainment();
+				
+				//保存游戏记录
 				engine.saveRecord();
 				
 				/*更新玩家成就*/
@@ -319,6 +332,12 @@ public class StateGame implements Common{
 				long t3 = proEndTime-proStartTime;
 				long t4 = System.currentTimeMillis()/1000;
 				proStartTime = t4-t3;
+			}
+			
+			if(!isUseGlove && golveFlag){
+				long t5 = gloveEndTime-gloveStartTime;
+				long t6 = System.currentTimeMillis()/1000;
+				gloveStartTime = t6-t5;
 			}
 		}
 	}
@@ -356,6 +375,14 @@ public class StateGame implements Common{
 		//}
 		weapon.showGloves(g, own);
 		
+		//显示动态效果
+		showDynamic(g);
+		
+		//显示道具持续时间
+		showTime(g);
+	}
+	
+	private void showDynamic(SGraphics g) {
 		Exploder exploder = null;
 		for(int i=0;i<exploders.length;i++){
 			if(exploders[i] != null){
@@ -364,56 +391,80 @@ public class StateGame implements Common{
 			}
 		}
 		
-		ShowScore s = null;
 		for(int i=0;i<ss.length;i++){
 			if(ss[i] != null){
-				s = ss[i];
-				s.showScore(engine, g, s.score);
+				exploder = ss[i];
+				exploder.showScore(engine, g, exploder.score);
 			}
 		}
 		
-		MagnetEffect m = null;
 		for(int i=0;i<mf.length;i++){
 			if(mf[i] != null){
-				m = mf[i];
-				m.showMagnetEffect(g);
+				exploder = mf[i];
+				exploder.showMagnetEffect(g);
 			}
 		}
 		
-		//显示道具持续时间
-		showTime(g);
+		for(int i=0;i<sprop.length;i++){
+			if(sprop[i] != null){
+				exploder = sprop[i];
+				exploder.showUseProp(g, exploder.propId);
+			}
+		}
 	}
-	
+
 	private void showTime(SGraphics g) {
-		Image prop = Resource.loadImage(Resource.id_playing_prop);
+		Image prop = Resource.loadImage(Resource.id_prop);
 		engine.setFont(30, true);
 		int col = g.getColor();
 		g.setColor(0xff0000);
 		
 		int propW = prop.getWidth()/8, propH = prop.getHeight();
-		int mapx = 250, mapy = 20;
+		int mapx = 370, mapx2 = 370, mapx3 = 430, mapy = 46, offX, offX2;
 		/*时光闹钟持续时间*/
 		if(pasueState && isUsePasue){
-			g.drawRegion(prop, 0, 0, propW, propH, 0, 190, 5, 20);
-			drawNum(g, Integer.parseInt(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS))), mapx, mapy);
+			if(isFourRepeating && protectState){
+				mapx = 310;
+			}else if(isFourRepeating && !protectState){
+				mapx = 370;
+			}else if(!isFourRepeating && !protectState){
+				mapx = 430;
+			}else if(!isFourRepeating && protectState){
+				mapx = 370;
+			}
+			if(pasueInterval-(pasueTimeE-pasueTimeS)<10){
+				offX = 15;
+			}else{
+				offX = 5;
+			}
+			g.drawRegion(prop, 0, 0, propW, propH, 0, mapx, 4, 20);
+			drawNum(g, Integer.parseInt(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS))), mapx+offX, mapy);
 			//g.drawString(String.valueOf(pasueInterval-(pasueTimeE-pasueTimeS)), mapx, mapy, 20);
 		}
 		
-		/*加速效果时间*/
-		//if(speedFlag){
-		//	g.drawString(String.valueOf(speedLiquidInterval-(addSpeedTime2 - addSpeedTime)), mapx, mapy, 20);
-		//}else
-		
 		/*防狼套装的时间控制*/
 		if(protectState){
-			g.setColor(0x000000);
-			g.drawRegion(prop, 2*propW, 0, propW, propH, 0, 300, 5, 20);
-			drawNum(g, Integer.parseInt(String.valueOf(protectInterval-(proEndTime - proStartTime))), mapx+110, mapy);
+			if(isFourRepeating && pasueState){
+				mapx2 = 370;
+			}else if(isFourRepeating && !pasueState){
+				mapx2 = 370;
+			}else if(!isFourRepeating && !pasueState){
+				mapx2 = 430;
+			}else if(!isFourRepeating && pasueState){
+				mapx2 = 430;
+			}
+			if(pasueInterval-(pasueTimeE-pasueTimeS)<10){
+				offX2 = 10;
+			}else{
+				offX2 = 5;
+			}
+			g.drawRegion(prop, 2*propW, 0, propW, propH, 0, mapx2, 5, 20);
+			drawNum(g, Integer.parseInt(String.valueOf(protectInterval-(proEndTime - proStartTime))), mapx2+offX2, mapy);
 			//g.drawString(String.valueOf(protectInterval-(proEndTime - proStartTime)), mapx+55, mapy, 20);
 		}
 		
 		if(isFourRepeating){
-			g.drawRegion(prop, 5*propW, 0, propW, propH, 0, 410, 5, 20);
+			g.drawRegion(prop, 5*propW, 0, propW, propH, 0, mapx3, 5, 20);
 		}
 		
 		engine.setDefaultFont();
@@ -585,12 +636,22 @@ public class StateGame implements Common{
 			batches.bublesSTime = System.currentTimeMillis()/1000;
 		}
 	}
+	
+	private void createPromptProp(int propId){
+		Exploder e = new Exploder(own.mapx, own.mapy, 1, propId);
+		sprop[mIndex] = e;
+		if(pIndex < sprop.length-1){
+			pIndex ++;
+		}else{
+			pIndex=0;
+		}
+	}
 
 	private void magnetEffect() {
 		for(int j = batches.npcs.size() - 1;j>=0;j--){
 			Role npc = (Role)batches.npcs.elementAt(j);
 			if(npc.status2 == ROLE_IN_AIR && npc.status != ROLE_SUCCESS/*&& npc.mapy>30*/ && StateGame.magnetState){
-				MagnetEffect m = new MagnetEffect(npc.mapx,npc.mapy);
+				Exploder m = new Exploder(npc.mapx,npc.mapy);
 				mf[mIndex] = m;
 				if(mIndex < mf.length-1){
 					mIndex ++;
@@ -698,8 +759,10 @@ public class StateGame implements Common{
 			isGameOver = true;
 			isSuccess = false;
 			gameBufferTimeS = System.currentTimeMillis()/1000;
+			
 			//保存数据
-			engine.saveRecord();
+			engine.saveAttainment();
+			
 			/*更新玩家成就*/
 			engine.updateAttainmen();
 		}else if(level > 15 && !isGameOver){	/*游戏通关*/
@@ -709,8 +772,9 @@ public class StateGame implements Common{
 			gameBufferTimeS = System.currentTimeMillis()/1000;
 			//同步道具
 			engine.pm.sysProps();
+			
 			//保存数据
-			engine.saveRecord();
+			engine.saveAttainment();
 			/*更新玩家成就*/
 			engine.updateAttainmen();
 		}
@@ -1352,11 +1416,11 @@ public class StateGame implements Common{
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(), 0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
-		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 491+35, 59, 20);
-		if(own.scores>100000){
-			drawNum(g, own.scores, 491+15, 89);
+		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 504+35, 59, 20);
+		if(own.scores>99999){
+			drawNum(g, own.scores, 499+22, 89);
 		}else{
-			drawNum(g, own.scores, 491+35, 89);
+			drawNum(g, own.scores, 499+35, 89);
 		}
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 
@@ -1456,7 +1520,7 @@ public class StateGame implements Common{
 		hitFruits = own.hitFruits;
 		hitRatio = own.hitRatio;
 		if(fruit.status == OBJECT_NOT_HIT){
-			ShowScore s = new ShowScore(fruit.mapx,fruit.mapy);
+			Exploder s = new Exploder(fruit.mapx,fruit.mapy,1);
 			s.score = fruit.scores;
 			ss[sIndex] = s;
 			if(sIndex < ss.length-1){
@@ -1481,7 +1545,7 @@ public class StateGame implements Common{
 			if(buble.id == multicolour){
 				buble.scores = 1000;
 			}
-			ShowScore s = new ShowScore(buble.mapx,buble.mapy);
+			Exploder s = new Exploder(buble.mapx,buble.mapy,1);
 			s.score = buble.scores;
 			ss[sIndex] = s;
 			if(sIndex < ss.length-1){
@@ -1503,7 +1567,7 @@ public class StateGame implements Common{
 		own.hitBooms ++;
 		hitBooms = own.hitBooms;
 		if(boom.status == OBJECT_NOT_HIT){
-			ShowScore s = new ShowScore(boom.mapx,boom.mapy);
+			Exploder s = new Exploder(boom.mapx,boom.mapy,1);
 			s.score = boom.scores;
 			ss[sIndex] = s;
 			if(sIndex < ss.length-1){
@@ -1551,7 +1615,7 @@ public class StateGame implements Common{
 				scores = own.scores;
 				scores2 = own.scores2;
 			}
-			ShowScore s = new ShowScore(wolf.mapx,wolf.mapy);
+			Exploder s = new Exploder(wolf.mapx,wolf.mapy,1);
 			s.score = wolf.role.scores;
 			ss[sIndex] = s;
 			if(sIndex < ss.length-1){
@@ -1577,7 +1641,7 @@ public class StateGame implements Common{
 				scores = own.scores;
 				scores2 = own.scores2;
 			}
-			ShowScore s = new ShowScore(wolf.mapx,wolf.mapy);
+			Exploder s = new Exploder(wolf.mapx,wolf.mapy,1);
 			s.score = wolf.role.scores;
 			ss[sIndex] = s;
 			if(sIndex < ss.length-1){
@@ -1606,6 +1670,7 @@ public class StateGame implements Common{
 		isUsePasue=false;
 		isUseGlove=false;
 		isShowGlove=false;
+		gloveStartTime = 0;
 		isAttack = false;
 		protectState = false;
 		harpState = false;
@@ -1631,6 +1696,9 @@ public class StateGame implements Common{
 		for(int i=0;i<mf.length;i++){
 			mf[i]=null;
 		}
+		for(int i=0;i<sprop.length;i++){
+			sprop[i]=null;
+		}
 	}
 	
 	/*游戏结束要清楚的数据*/
@@ -1653,10 +1721,14 @@ public class StateGame implements Common{
 		for(int i=0;i<mf.length;i++){
 			mf[i]=null;
 		}
+		for(int i=0;i<sprop.length;i++){
+			sprop[i]=null;
+		}
 		pasueState=false;
 		isUsePasue=false;
 		isUseGlove=false;
 		isShowGlove=false;
+		gloveStartTime = 0;
 		isAttack = false;
 		protectState = false;
 		harpState = false;
@@ -1664,7 +1736,6 @@ public class StateGame implements Common{
 		golveFlag=true;
 		isFourRepeating = false;
 		rewardLevelFail = false;
-		isUseGlove=false;
 		isShowGlove=false;
 		golveFlag=true;
 		level = 1;
@@ -1727,6 +1798,7 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_pass_cloud);   
 		Resource.freeImage(Resource.id_watermelon);   
 		Resource.freeImage(Resource.id_prop_2_eff);   
+		Resource.freeImage(Resource.id_prop);   
 	}
 	
 }

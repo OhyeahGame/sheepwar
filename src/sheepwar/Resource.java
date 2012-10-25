@@ -134,6 +134,7 @@ public class Resource implements Common {
 	public static short id_shop_selected = NUMS++;     				
 	public static short id_return_selected = NUMS++;     				
 	public static short id_prop_2_eff = NUMS++;     				
+	public static short id_prop = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -256,7 +257,7 @@ public class Resource implements Common {
 		"/shop_selected.png",             
 		"/return_selected.png",             
 		"/prop_2_effect.png",             
-		
+		"/prop.png",             
 	};
 	
 	private static final Image[] images = new Image[NUMS];

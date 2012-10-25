@@ -42,7 +42,7 @@ public class StateAttainment implements Common{
 		
 	}
 
-	private int cloudIndex, cloud2Index;
+	//private int cloudIndex, cloud2Index;
 	//private int down_cloudIndex, down_cloud2Index;
 	int x1 = 20, x2 = 550, x3 = 424;
 	private void ShowAttainment(SGraphics g) {
@@ -64,23 +64,23 @@ public class StateAttainment implements Common{
 		Image achievement_left1 = Resource.loadImage(Resource.id_shop_out_base);
 		/*添加云朵元素*/
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
-		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
-		Image pass_cloud2 = Resource.loadImage(Resource.id_pass_cloud2);
+		//Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
+		//Image pass_cloud2 = Resource.loadImage(Resource.id_pass_cloud2);
 		engine.setFont(19,true);	
 		g.drawImage(game_bg, 0, 0, 20);
 		
 		/*新添加的云层显示*/
 		/*上面第二层云*/
-		int cloud2W = pass_cloud2.getWidth(),cloud2H = pass_cloud2.getHeight();
-		int len = cloud2W-ScrW;
-		int cloud2Y = -6;
-		cloud2Index=(cloud2Index+1)%cloud2W;
-		if(cloud2Index<=len){
+		//int cloud2W = pass_cloud2.getWidth()/*cloud2H = pass_cloud2.getHeight()*/;
+		//int len = cloud2W-ScrW;
+		//int cloud2Y = -6;
+		//cloud2Index=(cloud2Index+1)%cloud2W;
+		/*if(cloud2Index<=len){
 			g.drawRegion(pass_cloud2, len-cloud2Index, 0, ScrW, cloud2H, 0, 0, cloud2Y, 20);
 		}else{
 			g.drawRegion(pass_cloud2, (cloud2W-cloud2Index), 0, ScrW-(cloud2W-cloud2Index), cloud2H, 0, 0, cloud2Y, 20);
 			g.drawRegion(pass_cloud2, 0, 0, (cloud2W-cloud2Index), cloud2H, 0, ScrW-(cloud2W-cloud2Index), cloud2Y, 20);
-		}
+		}*/
 		
 		/*中间的云*/
 		int cloudW = pass_cloud.getWidth();
@@ -104,7 +104,7 @@ public class StateAttainment implements Common{
 		g.drawImage(pass_cloud, x3, 265, 20);
 		
 		/*上面第一层云*/
-		int cloud1W = pass_cloud1.getWidth(),cloud1H = pass_cloud1.getHeight();
+		/*int cloud1W = pass_cloud1.getWidth(),cloud1H = pass_cloud1.getHeight();
 		int cloud1Y = -23;
 		cloudIndex=(cloudIndex+1)%cloud1W;
 		if(cloudIndex<=cloud1W-ScrW){
@@ -112,7 +112,7 @@ public class StateAttainment implements Common{
 		}else{
 			g.drawRegion(pass_cloud1, cloudIndex, 0, cloud1W-cloudIndex, cloud1H, 0, 0, cloud1Y, 20);
 			g.drawRegion(pass_cloud1, 0, 0, cloudIndex, cloud1H, 0, cloud1W-cloudIndex, cloud1Y, 20);
-		}
+		}*/
 		
 		g.drawImage(achievement, 227, 19, 20);
 		g.drawImage(shop_midding, 28, 102, 20);
