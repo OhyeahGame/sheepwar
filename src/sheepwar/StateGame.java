@@ -1737,7 +1737,6 @@ public class StateGame implements Common{
 		isFourRepeating = false;
 		rewardLevelFail = false;
 		isShowGlove=false;
-		golveFlag=true;
 		level = 1;
 		rewardLevel = 1;
 		batch = 0;

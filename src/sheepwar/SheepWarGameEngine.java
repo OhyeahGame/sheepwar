@@ -240,7 +240,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		pm.updateProps();
 		
 		/*读取游戏记录*/
-		readRecord();
+		//readRecord();
 		
 		/*初始化玩家成就信息*/
 		initAttainmen();
@@ -404,7 +404,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 					+"/protectState:"+StateGame.protectState
 					+"/protectTime:"+(StateGame.proEndTime-StateGame.proStartTime)
 					+"/isUseGlove:"+StateGame.isUseGlove
-					+"/isShowGlove:"+StateGame.isShowGlove
+					+"/golveFlag:"+StateGame.golveFlag
+					+"/isGolveShow:"+StateGame.isShowGlove
 					+"/gloveValideTime:"+(StateGame.gloveEndTime-StateGame.gloveStartTime)
 					
 					+"/isRewardLevel:"+StateGame.isRewardLevel
@@ -440,18 +441,19 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			StateGame.protectValideTime = Integer.parseInt(str[16]);
 			StateGame.isUseGlove = str[17].equals("true")?true:false;
 			StateGame.golveFlag = str[18].equals("true")?true:false;
-			StateGame.gloveValideTime = Integer.parseInt(str[19]);
+			StateGame.isShowGlove = str[19].equals("true")?true:false;
+			StateGame.gloveValideTime = Integer.parseInt(str[20]);
 			
-			StateGame.isRewardLevel = str[20].equals("true")?true:false;
-			StateGame.isReward = str[21].equals("true")?true:false;
-			StateGame.reward_nums = Integer.parseInt(str[22]);
-			StateGame.batch = Short.parseShort(str[23]);
-			StateGame.rewardLevelFail = str[24].equals("true")?true:false;
-			StateGame.HASWOLF_ONE = str[25].equals("true")?true:false;
-			StateGame.HASWOLF_TWO = str[26].equals("true")?true:false;
-			StateGame.HASWOLF_THREE = str[27].equals("true")?true:false;
-			StateGame.HASWOLF_FOUR = str[28].equals("true")?true:false;
-			StateGame.IS_FOUR_WOLF = str[29].equals("true")?true:false;
+			StateGame.isRewardLevel = str[21].equals("true")?true:false;
+			StateGame.isReward = str[22].equals("true")?true:false;
+			StateGame.reward_nums = Integer.parseInt(str[23]);
+			StateGame.batch = Short.parseShort(str[24]);
+			StateGame.rewardLevelFail = str[25].equals("true")?true:false;
+			StateGame.HASWOLF_ONE = str[26].equals("true")?true:false;
+			StateGame.HASWOLF_TWO = str[27].equals("true")?true:false;
+			StateGame.HASWOLF_THREE = str[28].equals("true")?true:false;
+			StateGame.HASWOLF_FOUR = str[29].equals("true")?true:false;
+			StateGame.IS_FOUR_WOLF = str[30].equals("true")?true:false;
 	}
 	
 	/*保存游戏记录*/
@@ -519,6 +521,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
  		System.out.println("record_pasueValideTime:"+StateGame.pasueValideTime );
  		System.out.println("record_protectState:"+StateGame.protectState );
  		System.out.println("record_protectValideTime:"+StateGame.protectValideTime );
+ 		System.out.println("record_isUseGlove:"+StateGame.isUseGlove );
+ 		System.out.println("record_golveFlag:"+StateGame.golveFlag );
+ 		System.out.println("record_isShowGlove:"+StateGame.isShowGlove );
+ 		System.out.println("record_gloveValideTime:"+StateGame.gloveValideTime );
 		
  		System.out.println("record_isRewardLevel:"+StateGame.isRewardLevel );
  		System.out.println("record_isReward:"+StateGame.isReward );

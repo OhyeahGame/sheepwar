@@ -142,6 +142,7 @@ public class StateMain implements Common{
 			long t5 = StateGame.gloveValideTime;
 			long t6 = System.currentTimeMillis()/1000;
 			StateGame.gloveStartTime = t6-t5;
+			System.out.println("statTime======="+StateGame.gloveStartTime);
 		}
 	}
 
