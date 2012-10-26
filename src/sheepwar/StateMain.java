@@ -91,6 +91,7 @@ public class StateMain implements Common{
 				stateGame.batches = new Batches();
 				StateGame.own = stateGame.createRole.reviveSheep(true);
 				setPropValideTime(); 	//设置道具剩余时间
+				setWolfInLadder(); 		//恢复原有梯子上的狼
 				engine.state = STATUS_GAME_PLAYING;
 			}else{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
@@ -124,6 +125,37 @@ public class StateMain implements Common{
 		} 
 	}
 	
+	private void setWolfInLadder() {
+		if(StateGame.HASWOLF_ONE){
+			if(StateGame.level%2==0){
+				stateGame.batches.createWolf(210, 26, ROLE_MOVE_RIGHT, ON_ONE_LADDER,WOLF_POSITION_BOTTOM );
+			}else{
+				stateGame.batches.createWolf(420, 190+89*3, ROLE_MOVE_UP, ON_ONE_LADDER,WOLF_POSITION_TOP);
+			}
+		}
+		if(StateGame.HASWOLF_TWO){
+			if(StateGame.level%2==0){
+				stateGame.batches.createWolf(165, 26, ROLE_MOVE_RIGHT, ON_TWO_LADDER,WOLF_POSITION_BOTTOM );
+			}else{
+				stateGame.batches.createWolf(420, 190+89*2, ROLE_MOVE_UP, ON_TWO_LADDER,WOLF_POSITION_TOP);
+			}
+		}
+		if(StateGame.HASWOLF_THREE){
+			if(StateGame.level%2==0){
+				stateGame.batches.createWolf(120, 26, ROLE_MOVE_RIGHT, ON_THREE_LADDER,WOLF_POSITION_BOTTOM );
+			}else{
+				stateGame.batches.createWolf(420, 190+89, ROLE_MOVE_UP, ON_THREE_LADDER,WOLF_POSITION_TOP);
+			}
+		}
+		if(StateGame.HASWOLF_FOUR){
+			if(StateGame.level%2==0){
+				stateGame.batches.createWolf(75, 26, ROLE_MOVE_RIGHT, ON_FOUR_LADDER,WOLF_POSITION_BOTTOM );
+			}else{
+				stateGame.batches.createWolf(420, 190, ROLE_MOVE_UP, ON_FOUR_LADDER,WOLF_POSITION_TOP);
+			}
+		}
+	}
+
 	private void setPropValideTime(){
 		/*时间重置，暂停后要恢复道具的有效时间*/
 		if(StateGame.pasueState && StateGame.isUsePasue){		//时光闹钟
@@ -142,7 +174,6 @@ public class StateMain implements Common{
 			long t5 = StateGame.gloveValideTime;
 			long t6 = System.currentTimeMillis()/1000;
 			StateGame.gloveStartTime = t6-t5;
-			System.out.println("statTime======="+StateGame.gloveStartTime);
 		}
 	}
 

@@ -307,6 +307,9 @@ public class StateGame implements Common{
 				//同步道具
 				engine.pm.sysProps();
 				
+				//退出游戏保存逃脱的狼
+				setWolfStatus();
+				
 				//保存数据
 				engine.saveAttainment();
 				
@@ -342,6 +345,31 @@ public class StateGame implements Common{
 		}
 	}
 	
+	private void setWolfStatus() {
+		int count=0;
+		for(int j=batches.npcs.size()-1;j>=0;j--){
+			Role wolf = (Role) batches.npcs.elementAt(j);
+			if(wolf.status == ROLE_SUCCESS){
+				count++;
+			}
+		}
+		if(count==1){
+			HASWOLF_ONE = true;
+		}else if(count==2){
+			HASWOLF_ONE = true;
+			HASWOLF_TWO = true;
+		}else if(count==3){
+			HASWOLF_ONE = true;
+			HASWOLF_TWO = true;
+			HASWOLF_THREE = true;
+		}else if(count == 4){
+			HASWOLF_ONE = true;
+			HASWOLF_TWO = true;
+			HASWOLF_THREE = true;
+			HASWOLF_FOUR = true;
+		}
+	}
+
 	private void updateProp(int propId){
 		engine.props[propId].setNums(engine.props[propId].getNums()-1);
 		own.useProps++;

@@ -103,6 +103,22 @@ public class Batches implements Common{
 		}
 	}
 	
+	/*创建一只狼(已逃脱的狼，继续游戏之后恢复)*/
+	public void createWolf(int mapx, int mapy, int direction, int position, int position2){
+		Role wolf = new Role();
+		wolf.status = ROLE_SUCCESS;
+		wolf.status2 = ROLE_IN_AIR;
+		wolf.speed = npcPara[2];
+		wolf.width = npcPara[0];
+		wolf.height = npcPara[1];
+		wolf.direction = direction;
+		wolf.position = position;
+		wolf.position2 = position2;
+		wolf.mapx = mapx;
+		wolf.mapy = mapy;
+		npcs.addElement(wolf);
+	}
+	
 	/**
 	 * 根据该批狼的数量，分布方式设置狼的起始坐标和降落点
 	 * @param count  狼的数量
@@ -485,7 +501,7 @@ public class Batches implements Common{
 				if(wolf.status == ROLE_SUCCESS){
 					int positionX = 210;
 					if(wolf.position == ON_ONE_LADDER){
-						if(tempx+wolf.speed <= positionX){
+						if(tempx+wolf.speed < positionX){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
 							wolf.frame = (wolf.frame + 1) % 6; 
@@ -502,7 +518,7 @@ public class Batches implements Common{
 							g.drawRegion(wolf_shove, wolf.frame*wolf_shove.getWidth()/2, 0, wolf_shove.getWidth()/2, wolf_shove.getHeight(), 0, tempx, tempy+10, 20);
 						}
 					}else if(wolf.position == ON_TWO_LADDER){
-						if(tempx+wolf.speed <= positionX-wolf.width){
+						if(tempx+wolf.speed < positionX-wolf.width){
 							tempx += wolf.speed;
 							wolf.mapx = tempx;
 							wolf.frame = (wolf.frame + 1) % 6; 
