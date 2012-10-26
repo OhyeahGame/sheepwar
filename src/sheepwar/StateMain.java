@@ -80,11 +80,8 @@ public class StateMain implements Common{
 			stateGame.batches = new Batches();
 			StateGame.own = stateGame.createRole.createSheep();
 			engine.state = STATUS_GAME_PLAYING;
-			
 		} else if(mainIndex == 1){
-			
 			engine.readRecord();
-			
 			if(SheepWarGameEngine.result){
 				stateGame.weapon = new Weapon(stateGame);
 				stateGame.createRole = new CreateRole();
@@ -97,10 +94,8 @@ public class StateMain implements Common{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录，请重新开始游戏!");
 				pt.popup();
-				
 				mainIndex=0;
 			}
-			
 		} else if (mainIndex == 2) {// 道具商城
 			StateShop ss =  new StateShop(engine);
 			ss.processShop();
@@ -108,15 +103,12 @@ public class StateMain implements Common{
 			engine.updateAttainmen();
 			StateAttainment sa = new StateAttainment();
 			sa.processAttainment();
-			
 		} else if (mainIndex == 4) {// 排行榜
 			StateRanking sr = new StateRanking();
 			sr.processRanking();
-			
 		} else if (mainIndex == 5) {// 游戏帮助
 			StateHelp sh = new StateHelp();
 			sh.processHelp();
-			
 		}else if(mainIndex==6){//退出游戏
 			exit = true;
 			

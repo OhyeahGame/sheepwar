@@ -44,7 +44,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public String[] gameRecordInfo;
 	
 	public static boolean result;   	//是否有游戏记录
-	public static boolean isFirstGame;   //是否第一次玩游戏
+	public static boolean isFirstGame = true;   //是否第一次玩游戏
 	
 	public Account account;
 	public static String record_tag = "gameRecord";
@@ -251,7 +251,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public void queryBalance() {
 		try {
 			account = STBAPI.GetBalance();
-			System.out.println("查询余额");
+			System.out.println("查询余额为:"+account.getBalance());
 		} catch (Exception e) {
 			System.out.println("查询余额失败，原因："+getErrorMessage(account.getResult())+account.getResult());
 			state = STATUS_MAIN_MENU; 
@@ -270,7 +270,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		    if(gamedata.getDataValue()==null){
 		    	return;
 		    }
-		    isFirstGame = true;
+		   // isFirstGame = false;
+		    System.out.println("是否第一次玩："+isFirstGame);
 		    
 		    /*解析成就和道具数据*/
 		    achi = new String[6];
@@ -300,7 +301,6 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		} catch (Exception e){
 			System.out.println("获取加载游戏数据失败，原因："+getErrorMessage(account.getResult())+account.getResult());
 			state = STATUS_MAIN_MENU; 
-			isFirstGame = false;
 		}
 	}
 

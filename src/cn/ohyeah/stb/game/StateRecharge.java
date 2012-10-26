@@ -558,7 +558,9 @@ public class StateRecharge {
 			}
 		}catch (Exception e)
 		{
-		    e.printStackTrace();
+			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+			pt.setText("充值失败，原因："+ engine.getErrorMessage(engine.account.getResult()));
+			pt.popup();
 		}
 	}
 	
@@ -667,7 +669,7 @@ public class StateRecharge {
 				System.out.println("查询余额为："+engine.account.getBalance());
 			} catch (Exception e) {
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-				pt.setText("查询余额失败，原因："+e.getMessage());
+				pt.setText("查询余额失败，原因："+engine.getErrorMessage(engine.account.getResult()));
 				pt.popup();
 			} 
 		}

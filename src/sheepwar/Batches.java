@@ -54,7 +54,11 @@ public class Batches implements Common{
 			Role wolf = new Role();
 			wolf.status = ROLE_ALIVE;
 			wolf.status2 = ROLE_ON_GROUND;
-			wolf.speed = npcPara[2];
+			if(SheepWarGameEngine.isFirstGame){
+				wolf.speed = npcPara[2]*2;
+			}else{
+				wolf.speed = npcPara[2];
+			}
 			wolf.width = npcPara[0];
 			wolf.height = npcPara[1];
 			wolf.direction = ROLE_MOVE_RIGHT;
@@ -308,7 +312,7 @@ public class Batches implements Common{
 			wolf = (Role)npcs.elementAt(i);
 			if(wolf.position2 == WOLF_POSITION_TOP){  //狼由上往下
 				/*向下的临界点*/
-				if(wolf.mapx == wolf.coorX){    
+				if(wolf.mapx >= wolf.coorX){    
 					wolf.direction = ROLE_MOVE_DOWN;
 				}
 				/*向右的临界点*/
@@ -326,6 +330,13 @@ public class Batches implements Common{
 						wolf.direction = ROLE_MOVE_UP;
 						if(wolf.position == 0){
 							setWolfLadders(wolf);
+						}
+					}
+					if(SheepWarGameEngine.isFirstGame){
+						if(StateGame.HASWOLF_ONE && StateGame.HASWOLF_TWO
+								&& StateGame.HASWOLF_THREE && StateGame.HASWOLF_FOUR
+								&& wolf.position==0){
+							wolf.direction = ROLE_MOVE_RIGHT;
 						}
 					}
 				}
@@ -472,7 +483,9 @@ public class Batches implements Common{
 				}else if(wolf.status==ROLE_DIZZY){
 					wolf.direction=ROLE_MOVE_RIGHT;
 				}else{
-					StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
+					if(!SheepWarGameEngine.isFirstGame){  //不是教学关卡
+						StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
+					}
 				}
 			}
 			int w = wolf_climb.getWidth()/2;

@@ -135,6 +135,9 @@ public class Resource implements Common {
 	public static short id_return_selected = NUMS++;     				
 	public static short id_prop_2_eff = NUMS++;     				
 	public static short id_prop = NUMS++;     				
+	public static short id_game_stop = NUMS++;     				
+	public static short id_teach_level = NUMS++;     				
+	public static short id_arrowhead = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -258,6 +261,9 @@ public class Resource implements Common {
 		"/return_selected.png",             
 		"/prop_2_effect.png",             
 		"/prop.png",             
+		"/stop.png",             
+		"/teach_level.png",             
+		"/arrowhead.png",             
 	};
 	
 	private static final Image[] images = new Image[NUMS];

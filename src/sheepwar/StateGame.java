@@ -5,7 +5,10 @@ import javax.microedition.lcdui.Image;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.DrawUtil;
+import cn.ohyeah.stb.ui.PopupConfirm;
+import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.util.Collision;
 import cn.ohyeah.stb.util.RandomValue;
 
@@ -42,7 +45,7 @@ public class StateGame implements Common{
 	private int eIndex, sIndex, mIndex, pIndex;
 
 	/*游戏关卡*/
-	public static short level = 15; 
+	public static short level = 1; 
 	/*奖励关卡*/
 	public static short rewardLevel = 1;
 	
@@ -171,6 +174,11 @@ public class StateGame implements Common{
 	public static int hitTotalNum2;	//成就中击中狼的总数
 	public static int hitBooms2;	//成就中击中子弹数
 	
+	public static boolean a=true, b, c ,d ,e;	//教学关卡弹出提示
+	public static boolean  b2, c2 ,d2 ,e2;	   //教学关卡弹出提示
+	public static boolean  c3 ,d3;	   //教学关卡弹出提示
+	private long bStartTime, bEndTime,cStartTime, cEndTime, dStartTime, dEndTime, eStartTime, eEndTime;
+	
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30, sWidth, sTempy;
 	
 	public void handleKey(KeyState keyState){
@@ -243,27 +251,33 @@ public class StateGame implements Common{
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)&& own.status ==ROLE_ALIVE){		//驱散竖琴
 			int propId = engine.pm.propIds[4]-53;
-			if(engine.props[propId].getNums()>0 || engine.isDebugMode()){
+			if(engine.props[propId].getNums()>0 || engine.isDebugMode()|| SheepWarGameEngine.isFirstGame){
 				harpState = true;
 				//weapon.createHarp(own);
 				harpStartTime = System.currentTimeMillis()/1000;
-				if(!engine.isDebugMode()){
+				if(!engine.isDebugMode() && !SheepWarGameEngine.isFirstGame){
 					updateProp(propId);
 				}
 				createPromptProp(propId);
+				if(SheepWarGameEngine.isFirstGame){
+					d3 = false;
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//四连发道具
 				//if(!speedFlag){
 					int propId = engine.pm.propIds[5]-53;
-					if(!isFourRepeating && engine.props[propId].getNums()>0 || engine.isDebugMode()){
+					if(!isFourRepeating && engine.props[propId].getNums()>0 || engine.isDebugMode() || SheepWarGameEngine.isFirstGame){
 						//own.speed = own.speed + CreateRole.para[4];
 						//speedFlag = true;
 						//addSpeedTime = System.currentTimeMillis()/1000;
 						isFourRepeating = true;
-						if(!engine.isDebugMode()){
+						if(!engine.isDebugMode() && !SheepWarGameEngine.isFirstGame){
 							updateProp(propId);
 						}
 						createPromptProp(propId);
+						if(SheepWarGameEngine.isFirstGame){
+							c3 = false;
+						}
 					}
 				//}
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//强力磁石
@@ -289,58 +303,65 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM9)){		//暂停							
 			
 		}else if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)){ 	//返回
-			StateSubMenu sm = new StateSubMenu();
-			int index = sm.processSubMenu();
-			if(index == 0){		//返回游戏
-				
-			}else if(index == 1){
-				engine.queryBalance();
-				StateShop ss =  new StateShop(engine);
-				ss.processShop();
-			}else if(index == 2){
-				StateHelp sh = new StateHelp();
-				sh.processHelp();
-			}else if(index == 3){
-				System.out.println("退出游戏");
-				printInfo();
-				
-				//同步道具
-				engine.pm.sysProps();
-				
-				//退出游戏保存逃脱的狼
-				setWolfStatus();
-				
-				//保存数据
-				engine.saveAttainment();
-				
-				//保存游戏记录
-				engine.saveRecord();
-				
-				/*更新玩家成就*/
-				engine.updateAttainmen();
-				
+			if(SheepWarGameEngine.isFirstGame){
+				SheepWarGameEngine.isFirstGame = false;
 				initDataGameOver();
 				engine.state = STATUS_MAIN_MENU;
 				clear();
-			}
-			
-			/*时间重置，暂停后要恢复道具的有效时间*/
-			if(pasueState && isUsePasue){		//时光闹钟
-				long t1 = pasueTimeE-pasueTimeS;
-				long t2 = System.currentTimeMillis()/1000;
-				pasueTimeS = t2-t1;
-			}
-			
-			if(protectState){					//防狼道具
-				long t3 = proEndTime-proStartTime;
-				long t4 = System.currentTimeMillis()/1000;
-				proStartTime = t4-t3;
-			}
-			
-			if(!isUseGlove && golveFlag){
-				long t5 = gloveEndTime-gloveStartTime;
-				long t6 = System.currentTimeMillis()/1000;
-				gloveStartTime = t6-t5;
+			}else{
+				StateSubMenu sm = new StateSubMenu();
+				int index = sm.processSubMenu();
+				if(index == 0){		//返回游戏
+					
+				}else if(index == 1){
+					engine.queryBalance();
+					StateShop ss =  new StateShop(engine);
+					ss.processShop();
+				}else if(index == 2){
+					StateHelp sh = new StateHelp();
+					sh.processHelp();
+				}else if(index == 3){
+					System.out.println("退出游戏");
+					printInfo();
+					
+					//同步道具
+					engine.pm.sysProps();
+					
+					//退出游戏保存逃脱的狼
+					setWolfStatus();
+					
+					//保存数据
+					engine.saveAttainment();
+					
+					//保存游戏记录
+					engine.saveRecord();
+					
+					/*更新玩家成就*/
+					engine.updateAttainmen();
+					
+					initDataGameOver();
+					engine.state = STATUS_MAIN_MENU;
+					clear();
+				}
+				
+				/*时间重置，暂停后要恢复道具的有效时间*/
+				if(pasueState && isUsePasue){		//时光闹钟
+					long t1 = pasueTimeE-pasueTimeS;
+					long t2 = System.currentTimeMillis()/1000;
+					pasueTimeS = t2-t1;
+				}
+				
+				if(protectState){					//防狼道具
+					long t3 = proEndTime-proStartTime;
+					long t4 = System.currentTimeMillis()/1000;
+					proStartTime = t4-t3;
+				}
+				
+				if(!isUseGlove && golveFlag){
+					long t5 = gloveEndTime-gloveStartTime;
+					long t6 = System.currentTimeMillis()/1000;
+					gloveStartTime = t6-t5;
+				}
 			}
 		}
 	}
@@ -408,6 +429,75 @@ public class StateGame implements Common{
 		
 		//显示道具持续时间
 		showTime(g);
+		
+		/*教学关卡*/
+		teachingLevel();
+	}
+	
+	/*教学关卡*/
+	private void teachingLevel(){
+		if(SheepWarGameEngine.isFirstGame){
+			bEndTime = System.currentTimeMillis()/1000;
+			cEndTime = System.currentTimeMillis()/1000;
+			dEndTime = System.currentTimeMillis()/1000;
+			eEndTime = System.currentTimeMillis()/1000;
+			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+			if(a){	//教学关卡第一个提示
+				pt.setText("欢迎进入教学关卡，#R按确认键#W继续教学，#R按0键#W退出教学关卡。");
+				pt.popup();
+				a = false;
+				b2 = true;
+				bStartTime = System.currentTimeMillis()/1000;
+			}
+			if(b){
+				pt.setText("#R按上下键#W移动喜羊羊，#R按确认键#W发射飞镖，击中灰太狼身上的气球阻止灰太狼降落");
+				pt.popup();
+				b = false;
+				b2 = false;
+				c2 = true;
+				cStartTime = System.currentTimeMillis()/1000;
+			}
+			if(c){
+				pt.setText("想让飞镖的威力更大吗？#R按数字键4#W使用道具连发。");
+				pt.popup();
+				c = false;
+				c2 = false;
+				c3 = true;
+				d2 = true;
+				dStartTime = System.currentTimeMillis()/1000;
+			}
+			if(d){
+				pt.setText("梯子上爬满灰太狼会威胁到喜羊羊的安全。#R按数字键2#W使用道具驱狼竖琴清除掉成功降落的灰太狼。");
+				pt.popup();
+				d = false;
+				d2 = false;
+				d3 = true;
+				e2 = true;
+				eStartTime = System.currentTimeMillis()/1000;
+			}
+			if(e){
+				pt.setText("恭喜你，你已经可以独自面对接下来的挑战了。带上这些道具，#R按数字键#W就可以使用它们。记住，道具没有了可以去商城去购买。");
+				pt.popup();
+				e = false;
+				e2 = false;
+				SheepWarGameEngine.isFirstGame = false;
+				initDataGameOver();
+				engine.state = STATUS_MAIN_MENU;
+				clear();
+			}
+			if(e2 && (eEndTime-eStartTime)>10){
+				e = true;
+			}
+			if(d2 && (dEndTime-dStartTime)>10){
+				d = true;
+			}
+			if(c2 && (cEndTime-cStartTime)>7){
+				c = true;
+			}
+			if(b2 && (bEndTime-bStartTime)>5){
+				b = true;
+			}
+		}
 	}
 	
 	private void showDynamic(SGraphics g) {
@@ -501,6 +591,9 @@ public class StateGame implements Common{
 
 	public void execute(){
 		
+		/*道具使用提示*/
+		promptUseProp();
+		
 		/*控制子弹发射间隔*/
 		endTime = System.currentTimeMillis(); 
 		if(isAttack==false && endTime-startTime>=bulletInterval){
@@ -542,7 +635,7 @@ public class StateGame implements Common{
 		
 		/*控制拳套时间间隔*/
 		gloveEndTime = System.currentTimeMillis()/1000;
-		if(!isRewardLevel && golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
+		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
 			isShowGlove = true;
 			golveFlag = false;
 		}
@@ -639,6 +732,60 @@ public class StateGame implements Common{
 		
 		/*使用驱狼竖琴眩晕状态*/
 		wolfDizzy();
+	}
+
+	private boolean isUseProp2=true, isUseProp4;
+	private void promptUseProp() {
+		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==1){
+			if(isUseProp2 && HASWOLF_ONE && HASWOLF_TWO){
+				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+				pc.setText("已经有多只狼逃脱，是否使用道具驱狼竖琴清除掉成功降落的灰太狼?");
+				int index = pc.popup();
+				if(index==0){
+					int propId = engine.pm.propIds[4]-53;
+					System.out.println("propNum:"+engine.props[propId].getNums());
+					if(engine.props[propId].getNums()>0){
+						harpState = true;
+						harpStartTime = System.currentTimeMillis()/1000;
+						updateProp(propId);
+						createPromptProp(propId);
+					}else{
+						pc.setText("道具数量不足，是否去商城购买?");
+						int i = pc.popup();
+						if(i==0){
+							engine.queryBalance();
+							StateShop ss =  new StateShop(engine);
+							ss.processShop();
+						}
+					}
+				}
+				isUseProp2 = false;
+			}
+		}
+		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==2){
+			if(isUseProp4 && !isFourRepeating){
+				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+				pc.setText("是否使用连发道具，让飞镖发挥更大的威力。");
+				int index = pc.popup();
+				if(index==0){
+					int propId = engine.pm.propIds[5]-53;
+					if(engine.props[propId].getNums()>0){
+						isFourRepeating = true;
+						updateProp(propId);
+						createPromptProp(propId);
+					}else{
+						pc.setText("道具数量不足，是否去商城购买?");
+						int i = pc.popup();
+						if(i==0){
+							engine.queryBalance();
+							StateShop ss =  new StateShop(engine);
+							ss.processShop();
+						}
+					}
+				}
+				isUseProp4 = false;
+			}
+		}
 	}
 
 	private void wolfDizzy() {
@@ -778,6 +925,7 @@ public class StateGame implements Common{
 			StateNextLevel stateLevel = new StateNextLevel();
 			stateLevel.processNextLevel(own);
 			initDataNextLevel();	//清空数据
+			isUseProp4 = true;
 		}
 	}
 	
@@ -950,7 +1098,7 @@ public class StateGame implements Common{
 			if(own.status == ROLE_ALIVE){
 				if(Collision.checkSquareCollision(boom.mapx, boom.mapy, boom.width, boom.height, own.mapx,
 						own.mapy, own.width, own.height)){
-					if(!protectState){			//玩家是否有防狼套装
+					if(!protectState && !SheepWarGameEngine.isFirstGame){			//玩家是否有防狼套装, 或不是在教学关卡
 						if(isRewardLevel){
 							rewardLevelFail = true;
 							System.out.println("奖励关卡游戏失败");
@@ -1181,7 +1329,7 @@ public class StateGame implements Common{
 	private int down_cloudIndex, down_cloud2Index;
 	int x1 = 20, x2 = 550, x3 = 424;
 	int nanX = 256, nanY = 27, nanY2 = 25;
-	int nanFlag,nanIndex=0;
+	int nanFlag,nanIndex=0, arrowFlag, arrowIndex;
 	private void drawGamePlaying(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);
@@ -1211,6 +1359,9 @@ public class StateGame implements Common{
 		Image pumpkin = Resource.loadImage(Resource.id_pumpkin);
 		Image control = Resource.loadImage(Resource.id_control);
 		Image fruit = Resource.loadImage(Resource.id_watermelon);
+		Image stop = Resource.loadImage(Resource.id_game_stop);
+		Image teach_level = Resource.loadImage(Resource.id_teach_level);
+		Image arrowhead = Resource.loadImage(Resource.id_arrowhead);
 		
 		g.drawImage(game_bg, 0, 0, 20);
 		int nanW = pumpkin.getWidth()/5, nanH = pumpkin.getHeight();
@@ -1354,11 +1505,15 @@ public class StateGame implements Common{
 			}
 			
 			g.drawImage(playing_menu, 491, 0, 20);
-			g.drawImage(playing_level, 491+32, 18, 20);						//游戏中 左侧的关卡图片	
-			if(isNextLevel){
-				drawNum(g, level-1, 491+32+playing_level.getWidth()+10, 18);
+			if(SheepWarGameEngine.isFirstGame){
+				g.drawImage(teach_level, 491+32, 18, 20);	
 			}else{
-				drawNum(g, level, 491+32+playing_level.getWidth()+10, 18);
+				g.drawImage(playing_level, 491+32, 18, 20);						//游戏中 左侧的关卡图片	
+				if(isNextLevel){
+					drawNum(g, level-1, 491+32+playing_level.getWidth()+10, 18);
+				}else{
+					drawNum(g, level, 491+32+playing_level.getWidth()+10, 18);
+				}
 			}
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 			g.drawImage(multiply, 491+66, 147, 20);
@@ -1447,6 +1602,8 @@ public class StateGame implements Common{
 		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 504+35, 59, 20);
 		if(own.scores>99999){
 			drawNum(g, own.scores, 499+22, 89);
+		}else if(own.scores<1000){
+			drawNum(g, own.scores, 499+42, 89);
 		}else{
 			drawNum(g, own.scores, 499+35, 89);
 		}
@@ -1464,6 +1621,25 @@ public class StateGame implements Common{
 			drawProp(g, i+4, RightMenuX+5,propMenuY+10+i*(distanceMenuY+menuH));  //第二列对应原图片中的后四个
 			g.drawRegion(control, (i+i+1)*controlW, 0, controlW, controlH, 0, RightMenuX+5, propMenuY+menuH-13+i*(distanceMenuY+menuH), 20);
 
+		}
+		
+		if(SheepWarGameEngine.isFirstGame){
+			int sW = stop.getWidth()/2, sH = stop.getHeight();
+			int aW = arrowhead.getWidth()/2, aH = arrowhead.getHeight();
+			g.drawRegion(stop, sW, 0, sW, sH, 0, 498, 467, 20);
+			if(arrowFlag<3){
+				arrowFlag++;
+				arrowIndex=0;
+			}else{
+				arrowFlag=0;
+				arrowIndex=1;
+			}
+			if(c3){
+				g.drawRegion(arrowhead, arrowIndex * aW, 0, aW, aH, 0, 555, 226, 20);
+			}
+			if(d3){
+				g.drawRegion(arrowhead, arrowIndex * aW, 0, aW, aH, 0, 555, 166, 20);
+			}
 		}
 		
 		
@@ -1711,6 +1887,7 @@ public class StateGame implements Common{
 		if(batches.redWolf!=null){
 			batches.redWolf.bombNum = 0;
 		}
+		
 		reward_nums = 0;
 		batch = 0;
 		nanIndex=0;
@@ -1831,6 +2008,9 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_watermelon);   
 		Resource.freeImage(Resource.id_prop_2_eff);   
 		Resource.freeImage(Resource.id_prop);   
+		Resource.freeImage(Resource.id_game_stop);   
+		Resource.freeImage(Resource.id_teach_level);   
+		Resource.freeImage(Resource.id_arrowhead);   
 	}
 	
 }

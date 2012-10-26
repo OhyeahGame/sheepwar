@@ -86,6 +86,7 @@ public class StateShop implements Common{
 		int p_propW = playing_prop.getWidth()/8, p_propH = playing_prop.getHeight();
 		int baseW = shop_small_base.getWidth(), baseH = shop_small_base.getHeight();
 		int /*outW = shop_out_base.getWidth(), */outH = shop_out_base.getHeight();
+		int priAndQuW = price_quantity.getWidth()/2,priAndQuH = price_quantity.getHeight();
 		for(int i=0;i<4;i++){
 		     for(int j=0;j<2;j++){
 		    	 g.drawImage(shop_out_base, 457, 381+(spaceY+outH)*j, 20);
@@ -95,7 +96,8 @@ public class StateShop implements Common{
 					g.setColor(0xffffff);
 					g.drawImage(shop_selected, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
 					//g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
-					g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
+//						g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
+					g.drawRegion(price_quantity, 0, 0, priAndQuW, priAndQuH, 0,  x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
 					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+8, y+(spaceY+smallH)*i+9, 20);
 					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
 							x+(spaceX+smallW)*j+124, y+(spaceY+smallH)*i+12, 20);
@@ -114,7 +116,8 @@ public class StateShop implements Common{
 					int col = g.getColor();
 					g.setColor(0x000000);
 					g.drawImage(shop_small, mapx+(spaceX+smallW)*j, mapy+(spaceY+smallH)*i, 20);
-					g.drawImage(price_quantity, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12, 20);
+//						g.drawImage(price_quantity, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12, 20);
+					g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12,20);
 					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,mapx+(spaceX+smallW)*j+8, mapy+(spaceY+smallH)*i+9, 20);
 					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
 							mapx+(spaceX+smallW)*j+124, mapy+(spaceY+smallH)*i+12, 20);
