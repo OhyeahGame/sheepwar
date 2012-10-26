@@ -42,7 +42,7 @@ public class StateGame implements Common{
 	private int eIndex, sIndex, mIndex, pIndex;
 
 	/*游戏关卡*/
-	public static short level = 1; 
+	public static short level = 15; 
 	/*奖励关卡*/
 	public static short rewardLevel = 1;
 	
@@ -575,7 +575,7 @@ public class StateGame implements Common{
 			pasueState = false;
 		}
 		
-		/*驱散竖琴时间间隔控制*/
+		/*驱狼竖琴时间间隔控制*/
 		harpEndTime = System.currentTimeMillis()/1000;
 		if(harpEndTime - harpStartTime >harpInterval){
 			harpState = false;
@@ -772,7 +772,7 @@ public class StateGame implements Common{
 		}
 
 		/*进入过关界面*/
-		if(isNextLevel==true && gameBufferTimeE-gameBufferTimeS>1){
+		if(level<=15 && isNextLevel==true && gameBufferTimeE-gameBufferTimeS>1){
 			isNextLevel = false;
 			isReward = false;
 			StateNextLevel stateLevel = new StateNextLevel();
@@ -1707,6 +1707,11 @@ public class StateGame implements Common{
 		isFourRepeating = false;
 		rewardLevelFail = false;
 		scores2 = own.scores2 = 0;
+		hitNum = own.hitNum = 0;
+		if(batches.redWolf!=null){
+			batches.redWolf.bombNum = 0;
+		}
+		reward_nums = 0;
 		batch = 0;
 		nanIndex=0;
 		HASWOLF_ONE = false;
