@@ -90,6 +90,7 @@ public class StateMain implements Common{
 				setPropValideTime(); 	//设置道具剩余时间
 				setWolfInLadder(); 		//恢复原有梯子上的狼
 				engine.state = STATUS_GAME_PLAYING;
+				SheepWarGameEngine.isFirstGame = false;
 			}else{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录，请重新开始游戏!");

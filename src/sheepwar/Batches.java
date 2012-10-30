@@ -55,7 +55,7 @@ public class Batches implements Common{
 			wolf.status = ROLE_ALIVE;
 			wolf.status2 = ROLE_ON_GROUND;
 			if(SheepWarGameEngine.isFirstGame){
-				wolf.speed = npcPara[2]*2;
+				wolf.speed = npcPara[2]+3;
 			}else{
 				wolf.speed = npcPara[2];
 			}
@@ -319,11 +319,11 @@ public class Batches implements Common{
 				if(wolf.mapy >= 463){
 					wolf.direction = ROLE_MOVE_RIGHT;
 					if(wolf.status!=ROLE_DIZZY){
-						wolf.status = ROLE_SUCCESS;				//该状态说明狼成功逃脱攻击(地面)，因此武器将攻击不到
+						wolf.status = ROLE_SUCCESS;				
 					}
 				}
 				/*向上临界点*/
-				if(wolf.mapx == 420){
+				if(wolf.mapx >= 420){
 					if(wolf.status==ROLE_DIZZY){
 						wolf.direction = ROLE_MOVE_RIGHT;
 					}else{

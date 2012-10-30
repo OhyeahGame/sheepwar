@@ -13,8 +13,9 @@ public class StateGameSuccessOrFail implements Common{
 	private boolean running;
 	private int cloudIndex, cloud2Index;
 	private int down_cloudIndex, down_cloud2Index;
+	private int index;
 	
-	public void processGameSuccessOrFail(boolean isSuccess, Role own){
+	public int processGameSuccessOrFail(boolean isSuccess, Role own){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
@@ -36,8 +37,10 @@ public class StateGameSuccessOrFail implements Common{
 					}
 				}
 			}
+			return index;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
 		finally {
 			clear();
@@ -65,7 +68,8 @@ public class StateGameSuccessOrFail implements Common{
 		Image green = Resource.loadImage(Resource.id_balloon_green);
 		Image game_result = Resource.loadImage(Resource.id_game_result);
 		Image game_return = Resource.loadImage(Resource.id_game_return);
-		Image return_bg = Resource.loadImage(Resource.id_achievement_left);
+		//Image return_bg = Resource.loadImage(Resource.id_achievement_left);
+		Image return_bg=Resource.loadImage(Resource.id_ranking_option);
 		g.drawImage(pass_bg, 0, 0, 20);
 		
 		/*上面第二层云*/
@@ -195,13 +199,25 @@ public class StateGameSuccessOrFail implements Common{
 		
 		/*logo*/
 		g.drawImage(logo, 6, 2, 20);
-		
+		int i, j;
+		if(index==0){
+			i=1;
+			j=0;
+		}else{
+			i=0;
+			j=1;
+		}
 		/*return*/
-		int bgX = SheepWarGameEngine.ScrW/2-return_bg.getWidth()/2, bgY = 390;
-		int gameW = game_return.getWidth(), gameH = game_return.getHeight()/2;
-		int gameX = SheepWarGameEngine.ScrW/2-gameW/2;
+		int bgX = 115, bgY = 390;
+		int gameW = game_return.getWidth()/2, gameH = game_return.getHeight()/3;
+		int gameX = bgX+20;
 		g.drawImage(return_bg, bgX, bgY, 20);
-		g.drawRegion(game_return, 0, gameH, gameW, gameH, 0, gameX, 398, 20);
+		g.drawRegion(game_return, i*gameW, gameH, gameW, gameH, 0, gameX, 398, 20);
+		
+		bgX = 355;
+		gameX = bgX+20;
+		g.drawImage(return_bg, bgX, bgY, 20);
+		g.drawRegion(game_return, j*gameW, 2*gameH, gameW, gameH, 0, gameX, 398, 20);
 	}
 	
 	private void drawNum(SGraphics g, int num, int x, int y){
@@ -214,8 +230,12 @@ public class StateGameSuccessOrFail implements Common{
 	}
 	
 	private void handleGameSuccessOrFail(KeyState keyState) {
-	    if(keyState.containsAndRemove(KeyCode.OK)){ 
-	    	running = false;
+		if(keyState.containsAndRemove(KeyCode.LEFT)){
+			index = 0;
+		}else if(keyState.containsAndRemove(KeyCode.RIGHT)){
+			index = 1;
+		}else if(keyState.containsAndRemove(KeyCode.OK)){ 
+			running = false;
 		}
 	}
 
@@ -237,6 +257,7 @@ public class StateGameSuccessOrFail implements Common{
 		Resource.freeImage(Resource.id_balloon_blue);
 		Resource.freeImage(Resource.id_game_result);
 		Resource.freeImage(Resource.id_game_return);
+		Resource.freeImage(Resource.id_ranking_option);
 	}
 
 }

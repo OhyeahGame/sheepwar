@@ -100,7 +100,7 @@ public class StateGame implements Common{
 	/*控制子弹发射的变量*/
 	private long startTime, endTime;
 	private boolean isAttack = true;
-	private int bulletInterval = 2000;  //单位毫秒
+	private int bulletInterval = 1500;  //单位毫秒
 	
 	/*两连发*/
 	//private long repeatingT;
@@ -476,14 +476,19 @@ public class StateGame implements Common{
 				eStartTime = System.currentTimeMillis()/1000;
 			}
 			if(e){
-				pt.setText("恭喜你，你已经可以独自面对接下来的挑战了。带上这些道具，#R按数字键#W就可以使用它们。记住，道具没有了可以去商城去购买。");
+				pt.setText("恭喜你，你已经可以独自面对接下来的挑战了。#R按数字键#W使用它们。记住，道具没有了可以去商城去购买。");
 				pt.popup();
 				e = false;
 				e2 = false;
 				SheepWarGameEngine.isFirstGame = false;
 				initDataGameOver();
-				engine.state = STATUS_MAIN_MENU;
-				clear();
+				weapon = new Weapon(this);
+				createRole = new CreateRole();
+				batches = new Batches();
+				own = createRole.createSheep();
+				engine.state = STATUS_GAME_PLAYING;
+				//engine.state = STATUS_MAIN_MENU;
+				//clear();
 			}
 			if(e2 && (eEndTime-eStartTime)>10){
 				e = true;
@@ -736,7 +741,7 @@ public class StateGame implements Common{
 
 	private boolean isUseProp2=true, isUseProp4;
 	private void promptUseProp() {
-		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==1){
+		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==1 && !isNextLevel){
 			if(isUseProp2 && HASWOLF_ONE && HASWOLF_TWO){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 				pc.setText("已经有多只狼逃脱，是否使用道具驱狼竖琴清除掉成功降落的灰太狼?");
@@ -762,7 +767,7 @@ public class StateGame implements Common{
 				isUseProp2 = false;
 			}
 		}
-		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==2){
+		if(!SheepWarGameEngine.isFirstGame && !isRewardLevel && level==2 && !isNextLevel){
 			if(isUseProp4 && !isFourRepeating){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 				pc.setText("是否使用连发道具，让飞镖发挥更大的威力。");
@@ -961,10 +966,19 @@ public class StateGame implements Common{
 		if(isGameOver && gameBufferTimeE-gameBufferTimeS>1){
 			isGameOver=false;
 			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
-			sgs.processGameSuccessOrFail(isSuccess, own);
-			engine.state = STATUS_MAIN_MENU;
-			initDataGameOver();  //清空数据
-			clear();
+			int index = sgs.processGameSuccessOrFail(isSuccess, own);
+			if(index==1){//返回主界面
+				engine.state = STATUS_MAIN_MENU;
+				initDataGameOver();  //清空数据
+				clear();
+			}else{//重新游戏
+				initDataGameOver();
+				weapon = new Weapon(this);
+				createRole = new CreateRole();
+				batches = new Batches();
+				own = createRole.createSheep();
+				engine.state = STATUS_GAME_PLAYING;
+			}
 		}
 	}
 	

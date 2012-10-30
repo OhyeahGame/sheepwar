@@ -223,7 +223,7 @@ public class StateNextLevel implements Common{
 		/*logo*/
 		g.drawImage(logo, 6, 2, 20);
 		int bgX = SheepWarGameEngine.ScrW/2-return_bg.getWidth()/2, bgY = 390;
-		int gameW = game_return.getWidth(), gameH = game_return.getHeight()/2;
+		int gameW = game_return.getWidth()/2, gameH = game_return.getHeight()/3;
 		int gameX = SheepWarGameEngine.ScrW/2-gameW/2;
 		g.drawImage(return_bg, bgX, bgY, 20);
 		g.drawRegion(game_return, 0, 0, gameW, gameH, 0, gameX, 398, 20);
