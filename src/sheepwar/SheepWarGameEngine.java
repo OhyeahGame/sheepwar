@@ -464,6 +464,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		try
 		{
 			setRecordData();
+			printGameInfo();
 			int res = STBAPI.SaveGameData(recordId,"游戏记录信息",recordData);
 			System.out.println("SaveGameData: res=" + Integer.toString(res));
 		} 

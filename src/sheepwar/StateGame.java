@@ -1927,15 +1927,15 @@ public class StateGame implements Common{
 	
 	/*游戏结束要清楚的数据*/
 	private void initDataGameOver(){
-		/*hitNum = own.hitNum = 0;
-		lifeNum = own.lifeNum = 0;
-		scores = own.scores = 0;
-		scores2 = own.scores2 = 0;
-		hitBuble = own.hitBuble = 0;
-		hitFruits = own.hitFruits = 0;
-		hitTotalNum = own.hitTotalNum = 0;
-		hitRatio = own.hitRatio = 0;
-		useProps = own.useProps = 0;*/
+		hitNum = 0;
+		lifeNum = 0;
+		scores = 0;
+		scores2 = 0;
+		hitBuble = 0;
+		hitFruits = 0;
+		hitTotalNum = 0;
+		hitRatio =0;
+		useProps = 0;
 		for(int j=0;j<ss.length;j++){
 			ss[j]=null;
 		}
