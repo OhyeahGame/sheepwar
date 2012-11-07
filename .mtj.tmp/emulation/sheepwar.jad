@@ -1,12 +1,12 @@
 MIDlet-1: MIDlet-1,,sheepwar.SheepWarMIDlet
-MIDlet-Jar-Size: 1056071
+MIDlet-Jar-Size: 1068530
 MIDlet-Jar-URL: sheepwar.jar
 MIDlet-Name: sheepwar MIDlet Suite
 MIDlet-Vendor: MIDlet Suite Vendor
 MIDlet-Version: 1.0.0
 MicroEdition-Configuration: CLDC-1.0
 MicroEdition-Profile: MIDP-2.1
-authcode: c370f9bfb4682611b8e00d13f3e88770
+authcode: 62bb656b51cd0c90ad4f06246eb376d7
 consumeflag: 0
 fee100: productIDa3000000000000000216897
 fee1000: productIDa3000000000000000216905
@@ -22,4 +22,4 @@ rechargeflag: 0
 resurl: xxxx
 sender: shxy
 spid: spa00025
-usrid: 53200000068
+usrid: 53200000071

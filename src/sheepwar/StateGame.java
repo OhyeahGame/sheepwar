@@ -1623,16 +1623,16 @@ public class StateGame implements Common{
 		}
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 
-		int LeftMenuX = 497+1,RightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
+		int LeftMenuX = 497+3,RightMenuX= 564+4,propMenuY = 185-2,distanceMenuY = 4;
 		int menuH = playing_prop_memu.getHeight();
 		int controlW = control.getWidth()/8, controlH = control.getHeight();
 		for(int i=0;i<4;i++){                                                                
 			g.drawImage(playing_prop_memu, LeftMenuX,propMenuY+6+(i)*(distanceMenuY+menuH), 20);
-			drawProp(g, i, LeftMenuX+5,propMenuY+10+i*(distanceMenuY+menuH));           
+			drawProp(g, i, LeftMenuX+5+2,propMenuY+10+4+i*(distanceMenuY+menuH));           
 			g.drawRegion(control, (i+i)*controlW, 0, controlW, controlH, 0, LeftMenuX+5, propMenuY+menuH-13+i*(distanceMenuY+menuH), 20);
 			
 			g.drawImage(playing_prop_memu, RightMenuX,propMenuY+6+i*(distanceMenuY+menuH), 20);
-			drawProp(g, i+4, RightMenuX+5,propMenuY+10+i*(distanceMenuY+menuH));  //第二列对应原图片中的后四个
+			drawProp(g, i+4, RightMenuX+5+2,propMenuY+10+4+i*(distanceMenuY+menuH));  //第二列对应原图片中的后四个
 			g.drawRegion(control, (i+i+1)*controlW, 0, controlW, controlH, 0, RightMenuX+5, propMenuY+menuH-13+i*(distanceMenuY+menuH), 20);
 
 		}

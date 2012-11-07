@@ -10,7 +10,7 @@ fee100: productIDa3000000000000000216897
 loginurl: 221.226.179.187:6006
 rechargeflag: 0
 MIDlet-Name: sheepwar MIDlet Suite
-authcode: c370f9bfb4682611b8e00d13f3e88770
+authcode: 62bb656b51cd0c90ad4f06246eb376d7
 fee500: productIDa3000000000000000216904
 MIDlet-1: MIDlet-1,,sheepwar.SheepWarMIDlet
 flush: flush
@@ -21,4 +21,4 @@ consumeflag: 0
 fee200: productIDa3000000000000000216898
 MIDlet-Vendor: MIDlet Suite Vendor
 MicroEdition-Profile: MIDP-2.1
-usrid: 53200000068
+usrid: 53200000071

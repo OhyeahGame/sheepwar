@@ -123,8 +123,8 @@ public class Resource implements Common {
 	public static short id_burn = NUMS++;    				
 	public static short id_gloveLeft = NUMS++;    				
 	public static short id_gloveRight = NUMS++;    				
-	public static short id_main_select_right_base = NUMS++;    				
-	public static short id_main_select_left_base = NUMS++;     				
+//	public static short id_main_select_right_base = NUMS++;    				
+//	public static short id_main_select_left_base = NUMS++;     				
 	public static short id_shop_bottom = NUMS++;     				
 	public static short id_achievement_bottom = NUMS++;     				
 	public static short id_rank_bottom = NUMS++;     				
@@ -153,7 +153,7 @@ public class Resource implements Common {
 		"/playing_stop.png",
 		"/game_bg.jpg",
 		"/playing_prop_memu.png",
-		"/prop1.png",						//修改过的道具图片
+		"/prop1.jpg",						//修改过的道具图片 11-7
 		"/playing_lunzi.png",
 		"/playing_shenzi.png",
 		"/playing_lift.png",    
@@ -201,7 +201,7 @@ public class Resource implements Common {
 		"/current_ranking.png",       //排行图片资源
 		"/ranking_option.png",
 		"/ranking_option1.png",
-		"/ranking_stripe.jpg",       
+		"/ranking_stripe.png",       
 		"/ranking.png",
 		"/show.png",								//替换了ranking_show.jpg
 		"/ranking_word.png",
@@ -249,8 +249,8 @@ public class Resource implements Common {
 		"/burn.png",             
 		"/gloveLeft.png",             
 		"/gloveRight.png",             
-		"/main_select_right_base.png",             
-		"/main_select_left_base.png",             
+//		"/main_select_right_base.png",             
+//		"/main_select_left_base.png",           //remove on 11-7 for dow's requirement  
 		"/shop_bottom.jpg",             
 		"/achievement_bottom.jpg",             
 		"/ranking_bottom.jpg",             

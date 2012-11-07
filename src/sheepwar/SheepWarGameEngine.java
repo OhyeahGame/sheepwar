@@ -241,7 +241,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		pm.updateProps();
 		
 		/*读取游戏记录*/
-		//readRecord();
+		readRecord();
 		
 		/*初始化玩家成就信息*/
 		initAttainmen();
@@ -253,7 +253,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			account = STBAPI.GetBalance();
 			System.out.println("查询余额为:"+account.getBalance());
 		} catch (Exception e) {
-			System.out.println("查询余额失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			System.out.println("查询余额失败，原因："+e.getMessage()/*getErrorMessage(account.getResult())+account.getResult()*/);
 			state = STATUS_MAIN_MENU; 
 		} 
 	}
@@ -347,7 +347,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		} 
 		catch (Exception e)
 		{
-		   System.out.println("获取系统时间失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+		   System.out.println("获取系统时间失败，原因："+e.getMessage()/*getErrorMessage(account.getResult())+account.getResult()*/);
 		   state = STATUS_MAIN_MENU;
 		}
 	}
@@ -363,7 +363,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		} 
 		catch (Exception e)
 		{
-			 System.out.println("保存成就和道具信息失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			 System.out.println("保存成就和道具信息失败，原因："+e.getMessage()/*getErrorMessage(account.getResult())+account.getResult()*/);
 			 state = STATUS_MAIN_MENU;
 		}
 		

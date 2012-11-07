@@ -126,7 +126,7 @@ public class StateRanking implements Common{
 		
 		int option1W = ranking_option1.getWidth(), option1H = ranking_option1.getHeight();
 		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
-		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth()/2;
+		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth();
 		for(int i=0;i<2;i++){//ÅÅÐÐ×ó²àÌõÄ¿
 			g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
 					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);
@@ -138,7 +138,7 @@ public class StateRanking implements Common{
 			}else{
 				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
 						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(optionH+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,workW,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
+				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
 						rankLeftY-rankShadowY+7+(optionH+rankLeftYSpace)*i, 20);
 			}
 
