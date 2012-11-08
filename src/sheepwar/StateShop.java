@@ -62,8 +62,10 @@ public class StateShop implements Common{
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{29,103}
 		Image shop_go_pay = Resource.loadImage(Resource.id_shop_go_pay);//{457,381}				//9/29被修改为单纯的文字图片
 		Image shop_go_pay_base = Resource.loadImage(Resource.id_achievement_left);				//单纯的 按钮图片
+		Image shop_go_pay_base1 = Resource.loadImage(Resource.id_achievement_left1);				//单纯的 按钮图片
+		
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{434,103}
-		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);
+//		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);
 		Image shop_out = Resource.loadImage(Resource.id_shop_out);//{457,429}					//9/29被修改为单纯的文字图片“返回”
 		Image shop_small_base = Resource.loadImage(Resource.id_shop_small_base);
 		Image shop_small = Resource.loadImage(Resource.id_shop_small);
@@ -71,26 +73,26 @@ public class StateShop implements Common{
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
 		Image shop_selected=Resource.loadImage(Resource.id_shop_selected);
-		Image return_selected=Resource.loadImage(Resource.id_return_selected);
+//		Image return_selected=Resource.loadImage(Resource.id_return_selected);
 		g.setColor(0xffffff);
 		g.drawImage(game_bg, 0, 0, 20);
 	
-		g.drawImage(shop, 161, 18, 20);
-		g.drawImage(shop_big, 29, 103, 20);
+		g.drawImage(shop, 220, 18, 20);
+		g.drawImage(shop_big, 29-12, 103, 20);
 		g.drawImage(shop_balance, 46, 457, 20);
-		g.drawImage(shop_midding, 434, 103, 20);
+		g.drawImage(shop_midding, 434-12, 103, 20);
 		
-		int x =42, y = 123, spaceX = 15, spaceY = 8;
-		int mapx=37,mapy=115;       
+		int x =42, y = 130, spaceX = 15, spaceY = 5;
+//		int mapx=37,mapy=115;       
 		int smallW = shop_small.getWidth(), smallH = shop_small.getHeight();
 		int p_propW = playing_prop.getWidth()/8, p_propH = playing_prop.getHeight();
 		int baseW = shop_small_base.getWidth(), baseH = shop_small_base.getHeight();
-		int /*outW = shop_out_base.getWidth(), */outH = shop_out_base.getHeight();
+//		int outW = shop_out_base.getWidth(), outH = shop_out_base.getHeight();
 		int priAndQuW = price_quantity.getWidth()/2,priAndQuH = price_quantity.getHeight();
 		for(int i=0;i<4;i++){
 		     for(int j=0;j<2;j++){
-		    	 g.drawImage(shop_out_base, 457, 381+(spaceY+outH)*j, 20);
-		    	 g.drawImage(shop_small_base, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
+		    	 /*g.drawImage(shop_out_base, 457, 381+(spaceY+outH)*j, 20);
+		    	 g.drawImage(shop_small_base, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);*/ //按钮效果 -10-8
 				if(shopX==j && shopY==i){
 					engine.setFont(30,true);	
 					g.setColor(0xffffff);
@@ -105,54 +107,54 @@ public class StateShop implements Common{
 							x+(spaceX+smallW)*j+124, y+(spaceY+smallH)*i+38, 20);
 					g.setColor(0x000000);
 					engine.setFont(25, true);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 120, 162, 220);
-					int textColor = g.getColor();
+					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 130, 162, 220);
+					/*int textColor = g.getColor();
 					g.setColor(0xffffff);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 443, 119, 162, 220);
+					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 443, 130, 162, 220);*/
 					engine.setDefaultFont();
-					g.setColor(textColor);
+//					g.setColor(textColor);
 				}else{
 					engine.setFont(30,true);
 					int col = g.getColor();
 					g.setColor(0x000000);
-					g.drawImage(shop_small, mapx+(spaceX+smallW)*j, mapy+(spaceY+smallH)*i, 20);
+					g.drawImage(shop_small, /*map*/x+(spaceX+smallW)*j, /*map*/y+(spaceY+smallH)*i, 20);
 //						g.drawImage(price_quantity, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12, 20);
-					g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12,20);
-					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,mapx+(spaceX+smallW)*j+8, mapy+(spaceY+smallH)*i+9, 20);
+					g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, /*map*/x+(spaceX+smallW)*j+65, /*map*/y+(spaceY+smallH)*i+12,20);
+					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,/*map*/x+(spaceX+smallW)*j+8, /*map*/y+(spaceY+smallH)*i+9, 20);
 					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
-							mapx+(spaceX+smallW)*j+124, mapy+(spaceY+smallH)*i+12, 20);
+							/*map*/x+(spaceX+smallW)*j+124, /*map*/y+(spaceY+smallH)*i+12, 20);
 					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
-							mapx+(spaceX+smallW)*j+124, mapy+(spaceY+smallH)*i+38, 20);
+							/*map*/x+(spaceX+smallW)*j+124, /*map*/y+(spaceY+smallH)*i+38, 20);
 					engine.setDefaultFont();
 					g.setColor(col);
 				}
 			}
 		}
-		if(shopX==2){          //充值和返回被选择的阴影效果
+		if(shopX==2){          // changed on 11-7 by Lee : removed the slash effect
 			 if(shopY==0){      //控制方向由左到右的入口方向
-				 g.drawImage(return_selected, 457, 381, 20);
-				 g.drawImage(shop_go_pay, 457+16, 381+5, 20);
-				 g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);		
-			   	 g.drawImage(shop_out, 457-8+16, 429-5+7, 20);
+				 g.drawImage(shop_go_pay_base1, 457-8, 381-5, 20);
+			   	 g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
+			 	 g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);
+			   	 g.drawImage(shop_out, 457+16, 429+7, 20);
 			  }else{
 			   	 g.drawImage(shop_go_pay_base, 457-8, 381-5, 20);
 			   	 g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
-				 g.drawImage(return_selected, 457, 429, 20);
+			 	 g.drawImage(shop_go_pay_base1, 457-8, 429-5, 20);
 			   	 g.drawImage(shop_out, 457+16, 429+7, 20);
 			 }
 		}else{
-	    	g.drawImage(shop_go_pay_base, 457 -8, 381-5, 20);
-	    	g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
-	   		g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);
-	   		g.drawImage(shop_out, 457-8+16, 429-5+7, 20);
+	   	 g.drawImage(shop_go_pay_base, 457-8, 381-5, 20);
+	   	 g.drawImage(shop_go_pay, 457-8+16, 381-5+5, 20);
+	   	 g.drawImage(shop_go_pay_base, 457-8, 429-5, 20);
+	   	 g.drawImage(shop_out, 457+16, 429+7, 20);
 		}
 		 
 		engine.setFont(30, true);
 		g.setColor(0x000000);
 		int colorBalance = g.getColor();
-		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,110,449+7, 20);//用户余额
+	//	g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,110,449+7, 20);//用户余额
 		g.setColor(0xffff00);
-		g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,109,448+7, 20);
+	//	g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,109,448+7, 20);
 		g.setColor(colorBalance);
 		engine.setDefaultFont();
 	}

@@ -227,21 +227,21 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void init() {
 		
 		/*查用户余额*/
-		queryBalance();
+	//	queryBalance();
 		
 		/*创建道具数组*/
 		pm.initProps(props);
 		
-		setRecordId();
+		//setRecordId();
 
 		/*读取游戏成就信息*/
-		loadAttainmentInfo();
+	//	loadAttainmentInfo();
 
 		/*初始化道具信息*/
 		pm.updateProps();
 		
 		/*读取游戏记录*/
-		readRecord();
+	//	readRecord();
 		
 		/*初始化玩家成就信息*/
 		initAttainmen();
@@ -382,7 +382,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		} 
 		catch (Exception e)
 		{
-			System.out.println("上报积分失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			System.out.println("上报积分失败，原因："+/*getErrorMessage(account.getResult())+account.getResult()*/e.getMessage());
 			state = STATUS_MAIN_MENU;
 		}
 	}
@@ -500,7 +500,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		    
 		    result = gamedata.getResult()==0?true:false;
 		} catch (Exception e) {
-			System.out.println("获取加载游戏数据失败，原因："+getErrorMessage(account.getResult())+account.getResult());
+			System.out.println("获取加载游戏数据失败，原因："+e.getMessage()/*getErrorMessage(account.getResult())+account.getResult()*/);
 			state = STATUS_MAIN_MENU; 
 			result = false;
 		} 

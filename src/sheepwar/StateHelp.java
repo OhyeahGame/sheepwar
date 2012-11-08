@@ -45,10 +45,10 @@ public class StateHelp implements Common{
 	}
 
 	private int cloudIndex, cloud2Index;
-	private int down_cloudIndex, down_cloud2Index;
+//	private int down_cloudIndex, down_cloud2Index;
 	int x1 = 20, x2 = 550, x3 = 424;
 	private void showHelp(SGraphics g) {
-		Image game_bg = Resource.loadImage(Resource.id_game_bg);
+		Image help_bg = Resource.loadImage(Resource.id_achievement_bottom);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
 		Image game_help = Resource.loadImage(Resource.id_game_help);     //{214,18}
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);   //{17,498}
@@ -60,11 +60,11 @@ public class StateHelp implements Common{
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
 		Image pass_cloud2 = Resource.loadImage(Resource.id_pass_cloud2);
 		engine.setFont(20,true);					//设置字体大小
-		g.drawImage(game_bg, 0, 0, 20);
+		g.drawImage(help_bg, 0, 0, 20);
 		/*增加的云层*/
 		/*上面第二层云*/
-		int cloud2W = pass_cloud2.getWidth(),cloud2H = pass_cloud2.getHeight();
-		int len = cloud2W-ScrW;
+		int cloud2W = pass_cloud2.getWidth()/*,cloud2H = pass_cloud2.getHeight()*/;
+//		int len = cloud2W-ScrW;
 		//int cloud2Y = -6;
 		cloud2Index=(cloud2Index+1)%cloud2W;
 		/*if(cloud2Index<=len){
@@ -75,14 +75,14 @@ public class StateHelp implements Common{
 		}*/
 		
 		/*下面第二层云*/
-		int down_cloud2Y = 484;
+		/*int down_cloud2Y = 484;
 		down_cloud2Index=(down_cloud2Index+1)%cloud2W;
 		if(down_cloud2Index<=len){
 			g.drawRegion(pass_cloud2, len-down_cloud2Index, 0, ScrW, cloud2H, 0, 0, down_cloud2Y, 20);
 		}else{
 			g.drawRegion(pass_cloud2, (cloud2W-down_cloud2Index), 0, ScrW-(cloud2W-down_cloud2Index), cloud2H, 0, 0, down_cloud2Y, 20);
 			g.drawRegion(pass_cloud2, 0, 0, (cloud2W-down_cloud2Index), cloud2H, 0, ScrW-(cloud2W-down_cloud2Index), down_cloud2Y, 20);
-		}
+		}*/
 
 		/*中间的云*/
 		int cloudW = pass_cloud.getWidth();
@@ -106,7 +106,7 @@ public class StateHelp implements Common{
 		g.drawImage(pass_cloud, x3, 265, 20);
 		
 		/*上面第一层云*/
-		int cloud1W = pass_cloud1.getWidth(),cloud1H = pass_cloud1.getHeight();
+		int cloud1W = pass_cloud1.getWidth()/*,cloud1H = pass_cloud1.getHeight()*/;
 		//int cloud1Y = -23;
 		cloudIndex=(cloudIndex+1)%cloud1W;
 		/*if(cloudIndex<=cloud1W-ScrW){
@@ -117,47 +117,47 @@ public class StateHelp implements Common{
 		}*/
 		
 		/*下面第一层云*/
-		int down_cloud1Y = 496;
+		/*int down_cloud1Y = 496;
 		down_cloudIndex=(down_cloudIndex+1)%cloud1W;
 		if(down_cloudIndex<=cloud1W-ScrW){
 			g.drawRegion(pass_cloud1, down_cloudIndex, 0, ScrW, cloud1H, 0, 0, down_cloud1Y, 20);
 		}else{
 			g.drawRegion(pass_cloud1, down_cloudIndex, 0, cloud1W-down_cloudIndex, cloud1H, 0, 0, down_cloud1Y, 20);
 			g.drawRegion(pass_cloud1, 0, 0, down_cloudIndex, cloud1H, 0, cloud1W-down_cloudIndex, down_cloud1Y, 20);
-		}
+		}*/
 		
 		g.drawImage(shop_big, 137, 108, 20);
 		
 		int helpLeftRightX = 380,helpLeftRightY = 452,sapceLeftRight = 52;				//帮助界面中的按钮横纵坐标,sapceLeftRight左右间距
-		int helpShadowX = 4,helpShadowY = 4;
+//		int helpShadowX = 4,helpShadowY = 4;
 		int achLeftW = achievement_left_right.getWidth()/2;
-		int achRight1W = achievement_left_right1.getWidth()/2;
+//		int achRight1W = achievement_left_right1.getWidth()/2;
 		g.drawImage(slash, helpLeftRightX+achLeftW+15, helpLeftRightY+7, 20);
 		g.drawString("3", helpLeftRightX+achLeftW+slash.getWidth()+14, helpLeftRightY+8, 20);
-		g.drawRegion(achievement_left_right1, 0, 0, achRight1W, 		//翻页左按钮
+		/*g.drawRegion(achievement_left_right1, 0, 0, achRight1W, 		//翻页左按钮
 				achievement_left_right1.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
 		g.drawRegion(achievement_left_right1, achRight1W, 0,			//翻页右按钮
 				achRight1W, achievement_left_right1.getHeight(),
-				0, helpLeftRightX+sapceLeftRight+achRight1W, helpLeftRightY, 20);
+				0, helpLeftRightX+sapceLeftRight+achRight1W, helpLeftRightY, 20);*/
 		if(pageIndex == 0){
-			g.drawRegion(achievement_left_right, 0, 0, achLeftW, 		//翻页左按钮
+			g.drawRegion(achievement_left_right1, 0, 0, achLeftW, 		//翻页左按钮
 					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
 			g.drawString(String.valueOf(helpX+1),helpLeftRightX+achLeftW+3,helpLeftRightY+8, 20);
 			g.drawRegion(achievement_left_right, 1*achLeftW, 0, achLeftW,
-					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX+sapceLeftRight+achLeftW,
-					helpLeftRightY-helpShadowY, 20);
+					achievement_left_right.getHeight(), 0, helpLeftRightX/*-helpShadowX*/+sapceLeftRight+achLeftW,
+					helpLeftRightY/*-helpShadowY*/, 20);
 		}else if(pageIndex == 1){
 			g.drawRegion(achievement_left_right, 0, 0, achLeftW, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX, helpLeftRightY-helpShadowY, 20);
+					achievement_left_right.getHeight(), 0, helpLeftRightX/*-helpShadowX*/, helpLeftRightY/*-helpShadowY*/, 20);
 			g.drawString(String.valueOf(helpX+1),helpLeftRightX+achLeftW+3,helpLeftRightY+8, 20);
-			g.drawRegion(achievement_left_right, 1*achLeftW, 0, achLeftW,
+			g.drawRegion(achievement_left_right1, 1*achLeftW, 0, achLeftW,
 					achievement_left_right.getHeight(), 0, helpLeftRightX+sapceLeftRight+achLeftW,
 					helpLeftRightY, 20);
 		}
-		g.drawImage(game_help, 194,18, 20);
+		g.drawImage(game_help, 220,18, 20);
 		g.drawImage(achievement_out1, 17,498, 20);
-		g.setColor(0xffffff);
-		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 6,150, 135, 359, 333);	
+		g.setColor(0x000000);
+		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 6,160, 135, 359, 333);	
 		engine.setDefaultFont();
 	}
 	
@@ -191,7 +191,7 @@ public class StateHelp implements Common{
 	}*/
 	
 	private void clear() {
-    	Resource.freeImage(Resource.id_game_bg);
+    	Resource.freeImage(Resource.id_achievement_bottom);
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_shop_big);
     	Resource.freeImage(Resource.id_game_help);

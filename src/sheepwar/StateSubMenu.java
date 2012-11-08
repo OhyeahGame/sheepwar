@@ -46,17 +46,29 @@ public class StateSubMenu implements Common{
 	private void showSubMenu(SGraphics g) {
 		Image submenu_bg = Resource.loadImage(Resource.id_sub_menu_bg);
 		Image submenu = Resource.loadImage(Resource.id_sub_menu);
+		Image achievement_left1 = Resource.loadImage(Resource.id_achievement_left1);
+		Image achievement_left = Resource.loadImage(Resource.id_achievement_left);
 		
 		int sx = gameW/2-submenu_bg.getWidth()/2;
 		int sy = ScrH/2-submenu_bg.getHeight()/2;
 		g.drawImage(submenu_bg, sx, sy, 20);
 		
-		int sw = submenu.getWidth() / 2, sh = submenu.getHeight() / 4;
+		int sw = submenu.getWidth(), sh = submenu.getHeight() / 4;
 		sx = gameW/2-sw/2;
-		sy += 25;
+		sy += 35;
+		int  subSpaceY = 5;
+		int subStripeW = achievement_left.getWidth(),subStripeH = achievement_left.getHeight();
+//		int subW = submenu_bg.getWidth(),subH = submenu_bg.getHeight();
 		for (int i = 0; i < 4; ++i) {
-			g.drawRegion(submenu,(menuIndex != i) ? sw : 0, i * sh, sw, sh, 0, sx, sy, 0);
-			sy += sh+15;
+			if(menuIndex != i){
+				g.drawRegion(achievement_left, 0, 0, subStripeW, subStripeH, 0,
+						178, 160+(subSpaceY+subStripeH)*i, 20);
+			}else{
+				g.drawRegion(achievement_left1, 0, 0, subStripeW, subStripeH, 0,
+						178, 160 +(subSpaceY+subStripeH) * i, 20);
+			}
+			g.drawRegion(submenu,/*(menuIndex != i) ? sw : */0, i * sh, sw, sh, 0, sx, sy, 0);	//changed on 11-8 by Lee 
+			sy += sh+25;
 		}
 	}
 	

@@ -16,8 +16,8 @@ public class StateMain implements Common{
 		this.stateGame = engine.stateGame;
 	}
 	
-	public int menuAxis[][] = { { 475, 197 }, { 475, 252 }, { 475, 309 },
-			/*{ 475, 322 },*/ { 475, 366 }, { 475, 422 }, { 475, 467 },};
+	public int menuAxis[][] = { { 484, 178 }, { 484, 178+52 }, { 484, 178+2*52 },
+			{ 484, 178+3*52 }, { 484, 178+4*52 }, { 484, 178+5*52 }, { 484, 178+6*52 },};
 	
 	private int mainIndex;
 	
@@ -27,9 +27,9 @@ public class StateMain implements Common{
 			//clear();
 		}
 		if (keyState.containsAndRemove(KeyCode.UP)) {
-			mainIndex = (mainIndex + 6 - 1) % 6;
+			mainIndex = (mainIndex + 7 - 1) % 7;
 		} else if (keyState.containsAndRemove(KeyCode.DOWN)) {
-			mainIndex = (mainIndex + 1) % 6;
+			mainIndex = (mainIndex + 1) % 7;
 		} else if (keyState.containsAndRemove(KeyCode.OK)) {
 			processSubMenu();
 			clear();
@@ -41,8 +41,11 @@ public class StateMain implements Common{
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
 		/*Image main_select_right_base = Resource.loadImage(Resource.id_main_select_right_base);
 		Image main_select_left_base = Resource.loadImage(Resource.id_main_select_left_base);*/			//changed on 11-7 by Lee
+		Image main_select_base = Resource.loadImage(Resource.id_main_select_base);
+		Image main_select = Resource.loadImage(Resource.id_main_select);
 		g.drawImage(main_bg, 0, 0, 0);
-		int sw = main_menu.getWidth() / 2, sh = main_menu.getHeight() / 6;
+		int sw = main_menu.getWidth(), sh = main_menu.getHeight() / 7;
+//		System.out.println("sh:"+sh);
 
 		for (int i = 0; i < menuAxis.length; ++i) {
 		/*	if (i % 2 == 0 && mainIndex != i) {
@@ -56,13 +59,19 @@ public class StateMain implements Common{
 						main_select_left_base.getHeight(), 0,
 						menuAxis[i][0] - 19, menuAxis[i][1] - 14, 20);
 			}*/
-			g.drawRegion(main_menu, (mainIndex != i) ? sw : 0, i * sh, sw, sh,
-					0, menuAxis[i][0], menuAxis[i][1], 0);
+			if(mainIndex != i){
+				g.drawRegion(main_select, 0, 0, main_select.getWidth(), 
+						main_select.getHeight(), 0, menuAxis[i][0] - 11, menuAxis[i][1] - 14, 20);
+			}else{	//当被选中时的底色
+				g.drawRegion(main_select_base, 0, 0, main_select_base.getWidth(), 
+						main_select_base.getHeight(), 0, menuAxis[i][0] - 11, menuAxis[i][1] - 14, 20);
+			}
+			g.drawRegion(main_menu, /*(mainIndex != i) ? sw : */0, i * sh, sw, sh,
+					0, menuAxis[i][0], menuAxis[i][1]+12, 20);
 		}
 	}
 	
 	public void execute(){
-		
 		/*mainIndex为0是开始游戏*/
 		/*if(mainIndex == 0){
 			stateGame.weapon = new Weapon(stateGame);
@@ -80,7 +89,7 @@ public class StateMain implements Common{
 			stateGame.batches = new Batches();
 			StateGame.own = stateGame.createRole.createSheep();
 			engine.state = STATUS_GAME_PLAYING;
-		} /*else if(mainIndex == 1){
+		} else if(mainIndex == 1){
 			engine.readRecord();
 			if(SheepWarGameEngine.result){
 				stateGame.weapon = new Weapon(stateGame);
@@ -97,20 +106,20 @@ public class StateMain implements Common{
 				pt.popup();
 				mainIndex=0;
 			}
-		}*/ else if (mainIndex == 1) {// 道具商城
+		} else if (mainIndex == 2) {// 道具商城
 			StateShop ss =  new StateShop(engine);
 			ss.processShop();
-		} else if (mainIndex == 2){ //成就系统
+		} else if (mainIndex == 3){ //成就系统
 			engine.updateAttainmen();
 			StateAttainment sa = new StateAttainment();
 			sa.processAttainment();
-		} else if (mainIndex == 3) {// 排行榜
+		} else if (mainIndex == 4) {// 排行榜
 			StateRanking sr = new StateRanking();
 			sr.processRanking();
-		} else if (mainIndex == 4) {// 游戏帮助
+		} else if (mainIndex == 5) {// 游戏帮助
 			StateHelp sh = new StateHelp();
 			sh.processHelp();
-		}else if(mainIndex==5){//退出游戏
+		}else if(mainIndex==6){//退出游戏
 			exit = true;
 			
 			//保存数据
@@ -177,5 +186,7 @@ public class StateMain implements Common{
 		//Resource.freeImage(Resource.id_main_select_left);
 //		Resource.freeImage(Resource.id_main_select_right_base);
 //		Resource.freeImage(Resource.id_main_select_left_base);
+		Resource.freeImage(Resource.id_main_select);
+		Resource.freeImage(Resource.id_main_select_base);
 	}
 }

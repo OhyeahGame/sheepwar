@@ -24,7 +24,7 @@ public class StateRanking implements Common{
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
-			queryRanking();  //查询排行
+//			queryRanking();  //查询排行
 			while (running) {
 				handleRanking(keyState);
 				if (running) {
@@ -128,27 +128,28 @@ public class StateRanking implements Common{
 		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
 		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth();
 		for(int i=0;i<2;i++){//排行左侧条目
-			g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
-					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);
+			/*g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
+					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);*/
 			if(rankY ==i){     		
-				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
+				g.drawRegion(ranking_option1, 0, 0, optionW, optionH, 0,
 						rankLeftX, rankLeftY+(optionH+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
-						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
+				/*g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
+						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);*/
 			}else{
 				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
-						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(optionH+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
-						rankLeftY-rankShadowY+7+(optionH+rankLeftYSpace)*i, 20);
+						rankLeftX/*-rankShadowX*/, rankLeftY/*-rankShadowY*/+(optionH+rankLeftYSpace)*i, 20);
+				/*g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
+						rankLeftY-rankShadowY+7+(optionH+rankLeftYSpace)*i, 20);*/
 			}
-
+			g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
+					rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 		}
 		
 		/*排行数据*/
 		g.drawImage(shop_big, 233,101, 20);
 		g.drawImage(ranking_show,260,116, 20);
 		for(int i=0;i<5;i++){
-			g.drawImage(ranking_stripe,240,151+i*56, 20);
+			g.drawImage(ranking_stripe,240+18,151+i*56, 20);
 		}
 		g.drawImage(current_ranking, 253,448, 20);
 		engine.setFont(25,true);
@@ -159,7 +160,7 @@ public class StateRanking implements Common{
 		}
 		RankInfo info = null;
 		int offY = 155;
-		for(int m=0;m<rankList.list.length;m++){
+	/*	for(int m=0;m<rankList.list.length;m++){
 			info = rankList.list[m];
 			String id = info.getUserID();
 			int rank = info.getRankNo();
@@ -168,12 +169,12 @@ public class StateRanking implements Common{
 			g.drawString(id, 380, offY, 20);
 			g.drawString(String.valueOf(scores), 505, offY, 20);
 			offY += 28;
-		}
-		String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
-		g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
+		}*/
+		//String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
+	//	g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
 		g.setColor(red);
 		engine.setDefaultFont();
-		g.drawImage(ranking, 194,18, 20);
+		g.drawImage(ranking, 220,18, 20);
 		g.drawImage(achievement_out1, 447,447, 20);
 	}
 	

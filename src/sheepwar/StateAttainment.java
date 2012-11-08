@@ -61,7 +61,7 @@ public class StateAttainment implements Common{
 		Image archivement_hoof1 = Resource.loadImage(Resource.id_archivement_hoof1);
 		Image achievement_word = Resource.loadImage(Resource.id_achievement_word);
 		Image slash = Resource.loadImage(Resource.id_slash);
-		Image achievement_left1 = Resource.loadImage(Resource.id_shop_out_base);
+		Image achievement_left1 = Resource.loadImage(Resource.id_achievement_left1);
 		/*Ìí¼ÓÔÆ¶äÔªËØ*/
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		//Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
@@ -114,27 +114,27 @@ public class StateAttainment implements Common{
 			g.drawRegion(pass_cloud1, 0, 0, cloudIndex, cloud1H, 0, cloud1W-cloudIndex, cloud1Y, 20);
 		}*/
 		
-		g.drawImage(achievement, 222, 19, 20);
+		g.drawImage(achievement, 220, 19, 20);
 		g.drawImage(shop_midding, 28, 102, 20);
-		g.drawImage(achievement_out1, 55, 451, 20);
+		g.drawImage(achievement_out1, 55, 451+15, 20);
 		g.drawImage(shop_big, 235, 102, 20);
 		g.drawImage(achievement_points, 250, 448, 20);
 		g.setColor(0xffffff);
 		g.drawString(String.valueOf(StateGame.attainment), 250+achievement_points.getWidth()+5, 448+5, 20);
 		
 		g.setColor(0xcccccc);
-		int leftX = 52,leftY = 122,leftSpace = 15,shadowX = 4,shadowY = 4, mapx, mapy;   
+		int leftX = 60,leftY = 130,leftSpace = 10,shadowX = 4,shadowY = 4, mapx, mapy;   
 		
 		//³É¾Í×ó²àÌõÄ¿
 		int left1H = achievement_left1.getHeight(), left1W = achievement_left1.getWidth();
 		int leftW = achievement_left.getWidth(), leftH = achievement_left.getHeight();
 		int achW = achievement_word.getWidth()/2, achH = achievement_word.getHeight() / 6;
 		for(int i=0;i<6;i++){       
-			g.drawRegion(achievement_left1, 0, 0, left1W, left1H, 0, leftX, leftY+(leftSpace+left1H)*i, 20);
+//			g.drawRegion(achievement_left1, 0, 0, left1W, left1H, 0, leftX, leftY+(leftSpace+left1H)*i, 20);
 			if(!isRight && archY==i){
 				mapx = leftX+8;
 				mapy = leftY+7+(leftH+leftSpace)*i;
-				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0, leftX, leftY+(leftH+leftSpace)*i, 20);
+				g.drawRegion(achievement_left1, 0, 0, leftW, leftH, 0, leftX, leftY+(leftH+leftSpace)*i, 20);
 				g.drawRegion(achievement_word,0, i*achH, achW, achH, 0, mapx,	mapy, 20);
 			}else{
 				mapx = leftX-shadowX+8;
@@ -146,7 +146,7 @@ public class StateAttainment implements Common{
 		}
 
 		
-		int x=247,y=116,spaceY=4;
+		int x=260,y=125,spaceY=4;
 		int /*achLongW = achievement_long.getWidth(),*/ achLongH = achievement_long.getHeight();
 		int achLong1W = achievement_long1.getWidth(), achLong1H = achievement_long1.getHeight();
 		int achHoof1W = archivement_hoof1.getWidth(), achHoof1H = archivement_hoof1.getHeight(); 
@@ -162,9 +162,9 @@ public class StateAttainment implements Common{
 					g.drawRegion(achievement_long1, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*i, 20);
 					g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
 				}
-				g.drawString(engine.attainments[archY][i].getName(), x+10, y+(achLongH+spaceY)*i+15, 20);
-				g.drawString(engine.attainments[archY][i].getDesc(), x+10, y+(achLongH+spaceY)*i+40, 20);
-				g.drawString(String.valueOf(engine.attainments[archY][i].getAward()), 546, y+(achLongH+spaceY)*i+26, 20);
+				g.drawString(engine.attainments[archY][i].getName(), x+20, y+(achLongH+spaceY)*i+15, 20);
+				g.drawString(engine.attainments[archY][i].getDesc(), x+20, y+(achLongH+spaceY)*i+40, 20);
+				g.drawString(String.valueOf(engine.attainments[archY][i].getAward()), 558, y+(achLongH+spaceY)*i+26, 20);
 				g.setColor(col);
 			}
 		}else{
@@ -176,27 +176,27 @@ public class StateAttainment implements Common{
 				g.drawRegion(achievement_long1, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*0, 20);
 				g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*0, 20);
 			}
-			g.drawString(engine.attainments[archY][4].getName(), x+10, y+(achLongH+spaceY)*0+15, 20);
-			g.drawString(engine.attainments[archY][4].getDesc(), x+10, y+(achLongH+spaceY)*0+40, 20);
-			g.drawString(String.valueOf(engine.attainments[archY][4].getAward()), 546, y+(achLongH+spaceY)*0+26, 20);
+			g.drawString(engine.attainments[archY][4].getName(), x+20, y+(achLongH+spaceY)*0+15, 20);
+			g.drawString(engine.attainments[archY][4].getDesc(), x+20, y+(achLongH+spaceY)*0+40, 20);
+			g.drawString(String.valueOf(engine.attainments[archY][4].getAward()), 558, y+(achLongH+spaceY)*0+26, 20);
 			g.setColor(col);
 		}
 		
-		int leftRightX = 459,leftRightY = 441,distanceLAR = 60;									
+		int leftRightX = 459,leftRightY = 451,distanceLAR = 60;									
 		int achRight1W = achievement_left_right1.getWidth()/2, achRight1H = achievement_left_right1.getHeight();
 		int achRightW = achievement_left_right.getWidth()/2, achRightH = achievement_left_right.getHeight();
 		int achRightX = leftRightX+distanceLAR+achRight1W;
-		g.drawRegion(achievement_left_right1, 0, 0, achRight1W,	achRight1H, 0, leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥µ×²¿
-		g.drawRegion(achievement_left_right1, achRight1W, 0, achRight1W, achRight1H, 0, achRightX, leftRightY, 20);//·­Ò³ÓÒ°´Å¥µ×²¿
+//		g.drawRegion(achievement_left_right1, 0, 0, achRight1W,	achRight1H, 0, leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥µ×²¿
+//		g.drawRegion(achievement_left_right1, achRight1W, 0, achRight1W, achRight1H, 0, achRightX, leftRightY, 20);//·­Ò³ÓÒ°´Å¥µ×²¿
 		
 		int achX = leftRightX+distanceLAR+achRightW, numX = leftRightX+distanceLAR+11;
 		if(isRight){	
 			if(bX == 0){				
-				g.drawRegion(achievement_left_right, 0, 0, achRightW,achRightH, 0,leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥
+				g.drawRegion(achievement_left_right1, 0, 0, achRightW,achRightH, 0,leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥
 				g.drawRegion(achievement_left_right,  1*achRightW, 0, achRightW,achRightH, 0,achX-shadowX, leftRightY-shadowY, 20);
 			}else if(bX == 1){
 				g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX-shadowX, leftRightY-shadowY, 20);
-				g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0,achX, leftRightY, 20);
+				g.drawRegion(achievement_left_right1, 1*achRightW, 0, achRightW,	achRightH, 0,achX, leftRightY, 20);
 			}
 			
 		}else{
@@ -204,9 +204,9 @@ public class StateAttainment implements Common{
 			g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0, achX-shadowX, leftRightY-shadowY, 20);	//·­Ò³ÓÒ°´Å¥
 		}
 		g.setColor(0x000000);
-		g.drawString(String.valueOf(bX+1), numX-28, leftRightY+8, 20);
-		g.drawImage(slash, 510, 447, 20);
-		g.drawString(String.valueOf(2), numX, leftRightY+8, 20);
+		g.drawString(String.valueOf(bX+1), numX-28, leftRightY+4, 20);
+		g.drawImage(slash, 510, 451, 20);
+		g.drawString(String.valueOf(2), numX, leftRightY+4, 20);
 		g.setColor(0xffffff);		//ÐÞ¸Ä×ÖÌåÑÕÉ«
 		engine.setDefaultFont();
 		
