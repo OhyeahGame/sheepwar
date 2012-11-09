@@ -245,7 +245,6 @@ public class StateShop implements Common{
 		Resource.freeImage(Resource.id_shop_balance);
 		Resource.freeImage(Resource.id_shop_big);
 		Resource.freeImage(Resource.id_shop_figure);
-		Resource.freeImage(Resource.id_shop_balance);
 		Resource.freeImage(Resource.id_shop_go_pay);
 		Resource.freeImage(Resource.id_shop_midding);
 		Resource.freeImage(Resource.id_shop_out);
@@ -255,6 +254,11 @@ public class StateShop implements Common{
 		Resource.freeImage(Resource.id_pass_cloud1);       
 		Resource.freeImage(Resource.id_pass_cloud1);   
 		Resource.freeImage(Resource.id_shop_selected);   
-		Resource.freeImage(Resource.id_return_selected);   
+		Resource.freeImage(Resource.id_shop_bottom);   
+		Resource.freeImage(Resource.id_achievement_left);   
+		Resource.freeImage(Resource.id_achievement_left1);   
+		Resource.freeImage(Resource.id_shop_small_base);   
+		Resource.freeImage(Resource.id_shop_small);   
+//		Resource.freeImage(Resource.id_return_selected);   
 	}
 }

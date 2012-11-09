@@ -261,6 +261,6 @@ public class StateNextLevel implements Common{
 		Resource.freeImage(Resource.id_balloon_red);
 		Resource.freeImage(Resource.id_balloon_green);
 		Resource.freeImage(Resource.id_balloon_blue);
-		
+		Resource.freeImage(Resource.id_achievement_left);
 	}
 }

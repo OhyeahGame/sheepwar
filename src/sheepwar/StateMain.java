@@ -16,8 +16,8 @@ public class StateMain implements Common{
 		this.stateGame = engine.stateGame;
 	}
 	
-	public int menuAxis[][] = { { 484, 178 }, { 484, 178+52 }, { 484, 178+2*52 },
-			{ 484, 178+3*52 }, { 484, 178+4*52 }, { 484, 178+5*52 }, { 484, 178+6*52 },};
+	public int menuAxis[][] = { { 484, 97 }, { 484, 97+52 }, { 484, 97+2*52 },
+			{ 484, 97+3*52 }, { 484, 97+4*52 }, { 484, 97+5*52 }, { 484, 97+6*52 },};
 	
 	private int mainIndex;
 	

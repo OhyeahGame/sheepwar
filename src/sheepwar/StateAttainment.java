@@ -193,15 +193,15 @@ public class StateAttainment implements Common{
 		if(isRight){	
 			if(bX == 0){				
 				g.drawRegion(achievement_left_right1, 0, 0, achRightW,achRightH, 0,leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥
-				g.drawRegion(achievement_left_right,  1*achRightW, 0, achRightW,achRightH, 0,achX-shadowX, leftRightY-shadowY, 20);
+				g.drawRegion(achievement_left_right,  1*achRightW, 0, achRightW,achRightH, 0,achX/*-shadowX*/, leftRightY/*-shadowY*/, 20);
 			}else if(bX == 1){
-				g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX-shadowX, leftRightY-shadowY, 20);
+				g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX/*-shadowX*/, leftRightY/*-shadowY*/, 20);
 				g.drawRegion(achievement_left_right1, 1*achRightW, 0, achRightW,	achRightH, 0,achX, leftRightY, 20);
 			}
 			
 		}else{
-			g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX-shadowX, leftRightY-shadowY, 20); //·­Ò³×ó°´Å¥
-			g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0, achX-shadowX, leftRightY-shadowY, 20);	//·­Ò³ÓÒ°´Å¥
+			g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX/*-shadowX*/, leftRightY/*-shadowY*/, 20); //·­Ò³×ó°´Å¥
+			g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0, achX/*-shadowX*/, leftRightY/*-shadowY*/, 20);	//·­Ò³ÓÒ°´Å¥
 		}
 		g.setColor(0x000000);
 		g.drawString(String.valueOf(bX+1), numX-28, leftRightY+4, 20);

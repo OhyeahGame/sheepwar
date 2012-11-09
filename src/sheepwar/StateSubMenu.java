@@ -88,5 +88,7 @@ public class StateSubMenu implements Common{
 	private void clear() {
 		Resource.freeImage(Resource.id_sub_menu);
 		Resource.freeImage(Resource.id_sub_menu_bg);
+		Resource.freeImage(Resource.id_achievement_left1);
+		Resource.freeImage(Resource.id_achievement_left);
 	}
 }

@@ -201,7 +201,6 @@ public class StateHelp implements Common{
     	Resource.freeImage(Resource.id_slash);
     	Resource.freeImage(Resource.id_pass_cloud);       
 		Resource.freeImage(Resource.id_pass_cloud1);       
-		Resource.freeImage(Resource.id_pass_cloud1);
-	
+		Resource.freeImage(Resource.id_pass_cloud2);
 	}
 }

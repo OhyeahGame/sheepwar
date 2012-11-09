@@ -1357,11 +1357,11 @@ public class StateGame implements Common{
 		Image playing_lift = Resource.loadImage(Resource.id_playing_lift);
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1);
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu);
-		//Image playing_stop = Resource.loadImage(Resource.id_playing_stop);
+//		Image playing_stop = Resource.loadImage(Resource.id_playing_stop);
 		Image ladder = Resource.loadImage(Resource.id_ladder);
 		Image playing_level = Resource.loadImage(Resource.id_playing_level);
 		Image playing_level2 = Resource.loadImage(Resource.id_playing_level2);
-		Image playing_point = Resource.loadImage(Resource.id_playing_point);
+//		Image playing_point = Resource.loadImage(Resource.id_playing_point);
 		Image sheep_head = Resource.loadImage(Resource.id_sheep_head);
 		Image wolf_head = Resource.loadImage(Resource.id_wolf_head);
 		Image multiply = Resource.loadImage(Resource.id_multiply);
@@ -1379,6 +1379,8 @@ public class StateGame implements Common{
 		
 		g.drawImage(game_bg, 0, 0, 20);
 		int nanW = pumpkin.getWidth()/5, nanH = pumpkin.getHeight();
+		int sW = stop.getWidth()/2, sH = stop.getHeight();
+		
 		if((isRewardLevel && !isNextLevel) || isReward){		//画出奖励关卡界面
 			g.drawImage(pass_cloud, 50, 80, 20);
 			g.drawImage(pass_cloud, 216, 80, 20);
@@ -1452,6 +1454,7 @@ public class StateGame implements Common{
 			}
 			g.drawImage(playing_menu, 491, 0, 20);
 			g.drawImage(playing_level2, 491+12, 18, 20);								//游戏中 左侧的关卡图片
+			g.drawRegion(stop, 0, 0, sW, sH, 0,498+29, 467+9, 20);
 			if(isNextLevel){
 				drawNum(g, rewardLevel-1, 491+32+playing_level.getWidth()+30, 18);
 			}else{
@@ -1519,6 +1522,10 @@ public class StateGame implements Common{
 			}
 			
 			g.drawImage(playing_menu, 491, 0, 20);
+			if(!SheepWarGameEngine.isFirstGame){
+				g.drawRegion(stop, 0, 0, sW, sH, 0,498+29, 467+9, 20);
+			}
+			
 			if(SheepWarGameEngine.isFirstGame){
 				g.drawImage(teach_level, 491+32, 18, 20);	
 			}else{
@@ -1602,6 +1609,8 @@ public class StateGame implements Common{
 				drawNum(g, 0, 55+multiply.getWidth(), 12);
 				g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像
 			}
+//			g.drawRegion(stop, 0, 0, sW, sH, 0,498+21, 467+18, 20);
+			
 		}
 		
 		if(own.status == ROLE_ALIVE){
@@ -1613,7 +1622,7 @@ public class StateGame implements Common{
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(), 0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
-		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 504+35, 59, 20);
+//		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 504+35, 59, 20);
 		if(own.scores>99999){
 			drawNum(g, own.scores, 499+22, 89);
 		}else if(own.scores<1000){
@@ -1638,9 +1647,9 @@ public class StateGame implements Common{
 		}
 		
 		if(SheepWarGameEngine.isFirstGame){
-			int sW = stop.getWidth()/2, sH = stop.getHeight();
+			
 			int aW = arrowhead.getWidth()/2, aH = arrowhead.getHeight();
-			g.drawRegion(stop, sW, 0, sW, sH, 0, 498, 467, 20);
+			g.drawRegion(stop, sW, 0, sW, sH, 0, 498+29, 467+9, 20);
 			if(arrowFlag<3){
 				arrowFlag++;
 				arrowIndex=0;
@@ -1655,6 +1664,7 @@ public class StateGame implements Common{
 				g.drawRegion(arrowhead, arrowIndex * aW, 0, aW, aH, 0, 555, 166, 20);
 			}
 		}
+		
 		
 		
 		/*道具数量*/
