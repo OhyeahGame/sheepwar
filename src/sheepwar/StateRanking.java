@@ -24,7 +24,7 @@ public class StateRanking implements Common{
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
-//			queryRanking();  //查询排行
+			queryRanking();  //查询排行
 			while (running) {
 				handleRanking(keyState);
 				if (running) {
@@ -55,6 +55,9 @@ public class StateRanking implements Common{
 		{
 			ranklist_month = STBAPI.GetRankList(STBAPI.SysConfig.RankID,0,1,10);
 			ranklist_week = STBAPI.GetRankList(STBAPI.SysConfig.RankID,2,1,10);
+			if(ranklist_month==null||ranklist_week==null){
+				return;
+			}
 		    System.out.println("GetRankList:");
 		    System.out.println("   Result  ="   + Integer.toString(ranklist_month.getResult()));
 		    System.out.println("   TotalNum="  + Integer.toString(ranklist_month.getTotalNum()));
@@ -76,7 +79,13 @@ public class StateRanking implements Common{
 		} 
 		catch (Exception e)
 		{
-		    e.printStackTrace();
+			String str="";
+			if(ranklist_month==null||ranklist_week==null){
+				str = e.getMessage();
+			}else{
+				str = ""+ranklist_week.getResult()+ranklist_week.getResult();
+			}
+		   System.out.println("查询排行失败，原因："+str);
 		} 
 	}
 
@@ -122,24 +131,16 @@ public class StateRanking implements Common{
 		g.drawImage(pass_cloud, x3, 265, 20);
 		
 		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX 左侧x坐标，rankLeftYSpace 上下间距
-		int rankShadowX = 4,rankShadowY = 4;								//排行阴影效果坐标差
 		
-		int option1W = ranking_option1.getWidth(), option1H = ranking_option1.getHeight();
 		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
 		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth();
 		for(int i=0;i<2;i++){//排行左侧条目
-			/*g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
-					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);*/
 			if(rankY ==i){     		
 				g.drawRegion(ranking_option1, 0, 0, optionW, optionH, 0,
 						rankLeftX, rankLeftY+(optionH+rankLeftYSpace)*i, 20);
-				/*g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
-						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);*/
 			}else{
 				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
 						rankLeftX/*-rankShadowX*/, rankLeftY/*-rankShadowY*/+(optionH+rankLeftYSpace)*i, 20);
-				/*g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
-						rankLeftY-rankShadowY+7+(optionH+rankLeftYSpace)*i, 20);*/
 			}
 			g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
 					rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
@@ -160,18 +161,21 @@ public class StateRanking implements Common{
 		}
 		RankInfo info = null;
 		int offY = 155;
-	/*	for(int m=0;m<rankList.list.length;m++){
-			info = rankList.list[m];
-			String id = info.getUserID();
-			int rank = info.getRankNo();
-			int scores = info.getScore();
-			g.drawString(String.valueOf(rank), 270, offY, 20);
-			g.drawString(id, 380, offY, 20);
-			g.drawString(String.valueOf(scores), 505, offY, 20);
-			offY += 28;
-		}*/
-		//String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
-	//	g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
+		
+		if(rankList!=null){
+			for(int m=0;m<rankList.list.length;m++){
+				info = rankList.list[m];
+				String id = info.getUserID();
+				int rank = info.getRankNo();
+				int scores = info.getScore();
+				g.drawString(String.valueOf(rank), 270, offY, 20);
+				g.drawString(id, 380, offY, 20);
+				g.drawString(String.valueOf(scores), 505, offY, 20);
+				offY += 28;
+			}
+			String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
+			g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
+		}
 		g.setColor(red);
 		engine.setDefaultFont();
 		g.drawImage(ranking, 220,18, 20);
@@ -210,18 +214,13 @@ public class StateRanking implements Common{
     	Resource.freeImage(Resource.id_rank_bottom);
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_shop_big);
-    	Resource.freeImage(Resource.id_achievement_left_right);
-    	Resource.freeImage(Resource.id_achievement_left_right1);
     	Resource.freeImage(Resource.id_current_ranking);
     	Resource.freeImage(Resource.id_ranking_option);
     	Resource.freeImage(Resource.id_ranking_option1);
     	Resource.freeImage(Resource.id_ranking_stripe);
     	Resource.freeImage(Resource.id_ranking);
     	Resource.freeImage(Resource.id_ranking_show);
-    	Resource.freeImage(Resource.id_slash);
-    	Resource.freeImage(Resource.id_shop_figure);
+    	Resource.freeImage(Resource.id_ranking_word);
     	Resource.freeImage(Resource.id_pass_cloud);       
-//		Resource.freeImage(Resource.id_pass_cloud1);       
-//		Resource.freeImage(Resource.id_pass_cloud1);     
 	}
 }

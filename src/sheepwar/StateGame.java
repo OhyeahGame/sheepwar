@@ -414,14 +414,10 @@ public class StateGame implements Common{
 		weapon.showNet(g);
 		weapon.showProtect(g, own);
 		weapon.showGlare(g, own, batches);
-		//weapon.showHarp(g, batches);
-		//weapon.showMagnetEffect(g, batches);
 		if(batches.redWolf!=null){
 			batches.showRedWolf(g,weapon);				
 		}
-		//if(isShowGlove){
-			weapon.showGloveCreate(g, own);
-		//}
+		weapon.showGloveCreate(g, own);
 		weapon.showGloves(g, own);
 		
 		//显示动态效果
@@ -487,7 +483,6 @@ public class StateGame implements Common{
 				batches = new Batches();
 				own = createRole.createSheep();
 				engine.state = STATUS_GAME_PLAYING;
-				//engine.state = STATUS_MAIN_MENU;
 				//clear();
 			}
 			if(e2 && (eEndTime-eStartTime)>10){

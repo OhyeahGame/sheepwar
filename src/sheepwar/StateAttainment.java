@@ -126,7 +126,7 @@ public class StateAttainment implements Common{
 		int leftX = 60,leftY = 130,leftSpace = 10,shadowX = 4,shadowY = 4, mapx, mapy;   
 		
 		//成就左侧条目
-		int left1H = achievement_left1.getHeight(), left1W = achievement_left1.getWidth();
+		//int left1H = achievement_left1.getHeight(), left1W = achievement_left1.getWidth();
 		int leftW = achievement_left.getWidth(), leftH = achievement_left.getHeight();
 		int achW = achievement_word.getWidth()/2, achH = achievement_word.getHeight() / 6;
 		for(int i=0;i<6;i++){       
@@ -183,9 +183,9 @@ public class StateAttainment implements Common{
 		}
 		
 		int leftRightX = 459,leftRightY = 451,distanceLAR = 60;									
-		int achRight1W = achievement_left_right1.getWidth()/2, achRight1H = achievement_left_right1.getHeight();
+		//int achRight1W = achievement_left_right1.getWidth()/2,achRight1H = achievement_left_right1.getHeight();
 		int achRightW = achievement_left_right.getWidth()/2, achRightH = achievement_left_right.getHeight();
-		int achRightX = leftRightX+distanceLAR+achRight1W;
+		//int achRightX = leftRightX+distanceLAR+achRight1W;
 //		g.drawRegion(achievement_left_right1, 0, 0, achRight1W,	achRight1H, 0, leftRightX, leftRightY, 20);		//翻页左按钮底部
 //		g.drawRegion(achievement_left_right1, achRight1W, 0, achRight1W, achRight1H, 0, achRightX, leftRightY, 20);//翻页右按钮底部
 		

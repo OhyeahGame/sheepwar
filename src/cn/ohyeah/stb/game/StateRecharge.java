@@ -558,8 +558,14 @@ public class StateRecharge {
 			}
 		}catch (Exception e)
 		{
+			String str = "";
+			if (engine.account==null){
+				str = e.getMessage();
+			}else{
+				str = engine.getErrorMessage(engine.account.getResult());
+			}
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-			pt.setText("充值失败，原因："+ engine.getErrorMessage(engine.account.getResult()));
+			pt.setText("充值失败，原因："+ str);
 			pt.popup();
 		}
 	}
@@ -666,10 +672,16 @@ public class StateRecharge {
 			back = true;
 			try {
 				engine.account = STBAPI.GetBalance();
-				System.out.println("查询余额为："+engine.account.getBalance());
+				//System.out.println("查询余额为："+engine.account.getBalance());
 			} catch (Exception e) {
+				String str="";
+				if(engine.account==null){
+					str = e.getMessage();
+				}else{
+					str = engine.getErrorMessage(engine.account.getResult());
+				}
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-				pt.setText("查询余额失败，原因："+engine.getErrorMessage(engine.account.getResult()));
+				pt.setText("查询余额失败，原因："+str);
 				pt.popup();
 			} 
 		}
