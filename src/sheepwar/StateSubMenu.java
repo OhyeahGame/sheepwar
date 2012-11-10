@@ -58,7 +58,6 @@ public class StateSubMenu implements Common{
 		sy += 35;
 		int  subSpaceY = 5;
 		int subStripeW = achievement_left.getWidth(),subStripeH = achievement_left.getHeight();
-//		int subW = submenu_bg.getWidth(),subH = submenu_bg.getHeight();
 		for (int i = 0; i < 4; ++i) {
 			if(menuIndex != i){
 				g.drawRegion(achievement_left, 0, 0, subStripeW, subStripeH, 0,

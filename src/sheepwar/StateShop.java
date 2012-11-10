@@ -20,12 +20,8 @@ public class StateShop implements Common{
 		this.engine = engine;
 	}
 	
-	//private int randCloud_1,randCloud_2,randCloud_3;
 	public void processShop(){
 		running = true;
-		/*randCloud_1 = RandomValue.getRandInt(8);
-		randCloud_2 = RandomValue.getRandInt(8);
-		randCloud_3 = RandomValue.getRandInt(8);*/
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
@@ -53,8 +49,6 @@ public class StateShop implements Common{
 		}
 	}
 
-	/*private int cloudIndex, cloud2Index;
-	private int down_cloudIndex, down_cloud2Index;*/
 	int x1 = 20, x2 = 550, x3 = 424;
 	private void showShop(SGraphics g) {
 		Image game_bg = Resource.loadImage(Resource.id_shop_bottom);
@@ -65,15 +59,12 @@ public class StateShop implements Common{
 		Image shop_go_pay_base1 = Resource.loadImage(Resource.id_achievement_left1);				//单纯的 按钮图片
 		
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{434,103}
-//		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);
 		Image shop_out = Resource.loadImage(Resource.id_shop_out);//{457,429}					//9/29被修改为单纯的文字图片“返回”
-		Image shop_small_base = Resource.loadImage(Resource.id_shop_small_base);
 		Image shop_small = Resource.loadImage(Resource.id_shop_small);
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
 		Image shop_selected=Resource.loadImage(Resource.id_shop_selected);
-//		Image return_selected=Resource.loadImage(Resource.id_return_selected);
 		g.setColor(0xffffff);
 		g.drawImage(game_bg, 0, 0, 20);
 	
@@ -82,52 +73,40 @@ public class StateShop implements Common{
 		g.drawImage(shop_balance, 46, 457, 20);
 		g.drawImage(shop_midding, 434-12, 103, 20);
 		
-		int x =42, y = 130, spaceX = 15, spaceY = 5;
-//		int mapx=37,mapy=115;       
+		int x =52, y = 130, spaceX = 15, spaceY = 5;
 		int smallW = shop_small.getWidth(), smallH = shop_small.getHeight();
 		int p_propW = playing_prop.getWidth()/8, p_propH = playing_prop.getHeight();
-		int baseW = shop_small_base.getWidth(), baseH = shop_small_base.getHeight();
-//		int outW = shop_out_base.getWidth(), outH = shop_out_base.getHeight();
 		int priAndQuW = price_quantity.getWidth()/2,priAndQuH = price_quantity.getHeight();
 		for(int i=0;i<4;i++){
 		     for(int j=0;j<2;j++){
-		    	 /*g.drawImage(shop_out_base, 457, 381+(spaceY+outH)*j, 20);
-		    	 g.drawImage(shop_small_base, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);*/ //按钮效果 -10-8
-				if(shopX==j && shopY==i){
-					engine.setFont(30,true);	
-					g.setColor(0xffffff);
-					g.drawImage(shop_selected, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
-					//g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
-//						g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
-					g.drawRegion(price_quantity, 0, 0, priAndQuW, priAndQuH, 0,  x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
-					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+8, y+(spaceY+smallH)*i+9, 20);
-					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
-							x+(spaceX+smallW)*j+124, y+(spaceY+smallH)*i+12, 20);
-					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
-							x+(spaceX+smallW)*j+124, y+(spaceY+smallH)*i+38, 20);
-					g.setColor(0x000000);
-					engine.setFont(25, true);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 130, 162, 220);
-					/*int textColor = g.getColor();
-					g.setColor(0xffffff);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 443, 130, 162, 220);*/
-					engine.setDefaultFont();
-//					g.setColor(textColor);
-				}else{
-					engine.setFont(30,true);
-					int col = g.getColor();
-					g.setColor(0x000000);
-					g.drawImage(shop_small, /*map*/x+(spaceX+smallW)*j, /*map*/y+(spaceY+smallH)*i, 20);
-//						g.drawImage(price_quantity, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12, 20);
-					g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, /*map*/x+(spaceX+smallW)*j+65, /*map*/y+(spaceY+smallH)*i+12,20);
-					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,/*map*/x+(spaceX+smallW)*j+8, /*map*/y+(spaceY+smallH)*i+9, 20);
-					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
-							/*map*/x+(spaceX+smallW)*j+124, /*map*/y+(spaceY+smallH)*i+12, 20);
-					g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
-							/*map*/x+(spaceX+smallW)*j+124, /*map*/y+(spaceY+smallH)*i+38, 20);
-					engine.setDefaultFont();
-					g.setColor(col);
-				}
+		    	 if(shopX==j && shopY==i){
+						engine.setFont(30,true);	
+						g.setColor(0xffffff);
+						g.drawImage(shop_selected, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
+						g.drawRegion(price_quantity, 0, 0, priAndQuW, priAndQuH, 0,  x+(spaceX+smallW)*j+80, y+(spaceY+smallH)*i+12, 20);
+						g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
+						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
+								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+17, 20);
+						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
+								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+43, 20);
+						g.setColor(0x000000);
+						engine.setFont(25, true);
+						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 130, 162, 220);
+						engine.setDefaultFont();
+					}else{
+						engine.setFont(30,true);
+						int col = g.getColor();
+						g.setColor(0x000000);
+						g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
+						g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, x+(spaceX+smallW)*j+80, y+(spaceY+smallH)*i+12,20);
+						g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
+						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
+								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+17, 20);
+						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
+								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+43, 20);
+						engine.setDefaultFont();
+						g.setColor(col);
+					}
 			}
 		}
 		if(shopX==2){          // changed on 11-7 by Lee : removed the slash effect
@@ -149,13 +128,13 @@ public class StateShop implements Common{
 	   	 g.drawImage(shop_out, 457+16, 429+7, 20);
 		}
 		 
+		int balance=0;
+		if(engine.account!=null){
+			balance = engine.account.getBalance();
+		}
 		engine.setFont(30, true);
 		g.setColor(0x000000);
-		int colorBalance = g.getColor();
-	//	g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,110,449+7, 20);//用户余额
-		g.setColor(0xffff00);
-	//	g.drawString(String.valueOf(engine.account.getBalance()/10)+engine.amountUnit,109,448+7, 20);
-		g.setColor(colorBalance);
+		g.drawString(String.valueOf(balance/10)+engine.amountUnit,110,449+7, 20);//用户余额
 		engine.setDefaultFont();
 	}
 	
@@ -241,24 +220,19 @@ public class StateShop implements Common{
 	}*/
 	
 	private void clear() {
-		Resource.freeImage(Resource.id_shop);
+		Resource.freeImage(Resource.id_shop_bottom);
 		Resource.freeImage(Resource.id_shop_balance);
 		Resource.freeImage(Resource.id_shop_big);
-		Resource.freeImage(Resource.id_shop_figure);
 		Resource.freeImage(Resource.id_shop_go_pay);
+		Resource.freeImage(Resource.id_achievement_left);
+		Resource.freeImage(Resource.id_achievement_left1);
 		Resource.freeImage(Resource.id_shop_midding);
 		Resource.freeImage(Resource.id_shop_out);
-		Resource.freeImage(Resource.id_price_quantity);
-		Resource.freeImage(Resource.id_playing_prop);    
-		Resource.freeImage(Resource.id_pass_cloud);       
-		Resource.freeImage(Resource.id_pass_cloud1);       
-		Resource.freeImage(Resource.id_pass_cloud1);   
+		Resource.freeImage(Resource.id_shop_small_base);    
+		Resource.freeImage(Resource.id_shop_small);       
+		Resource.freeImage(Resource.id_price_quantity);       
+		Resource.freeImage(Resource.id_shop);   
+		Resource.freeImage(Resource.id_playing_prop);   
 		Resource.freeImage(Resource.id_shop_selected);   
-		Resource.freeImage(Resource.id_shop_bottom);   
-		Resource.freeImage(Resource.id_achievement_left);   
-		Resource.freeImage(Resource.id_achievement_left1);   
-		Resource.freeImage(Resource.id_shop_small_base);   
-		Resource.freeImage(Resource.id_shop_small);   
-//		Resource.freeImage(Resource.id_return_selected);   
 	}
 }

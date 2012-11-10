@@ -371,50 +371,21 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	/*保存游戏成就*/
-	public void saveAttainment(){
+	public void saveAttainment() throws Exception{
 		/*存玩家道具和成就*/
-		try
-		{
-			setAttainmentData();
-			int res = STBAPI.SaveGameData(attainmentId,"成就和道具信息",attainmentData);
-			System.out.println("SaveGameData: res=" + Integer.toString(res));
-		} 
-		catch (Exception e)
-		{
-			String str="";
-			if(account==null){
-				str = e.getMessage();
-			}else{
-				str = getErrorMessage(account.getResult())+account.getResult();
-			}
-			 System.out.println("保存成就和道具信息失败，原因："+str/*getErrorMessage(account.getResult())+account.getResult()*/);
-			 state = STATUS_MAIN_MENU;
-		}
-		
-		/*上报用于排行的积分*/
-		reportScores();
+		setAttainmentData();
+		int res = STBAPI.SaveGameData(attainmentId,"成就和道具信息",attainmentData);
+		System.out.println("SaveGameData: res=" + Integer.toString(res));
 	}
 	
 	/*上报积分*/
-	public void reportScores(){
-		try
-		{	if(StateGame.scores>StateGame.scores3){
-				//int scores = StateGame.scores>StateGame.scores3?StateGame.scores:StateGame.scores3;
-				int res = STBAPI.ReportScore (STBAPI.SysConfig.RankID,StateGame.scores);
-				System.out.println("ReportScore: res=" + Integer.toString(res));
-			}
-		} 
-		catch (Exception e)
-		{
-			String str="";
-			if(account==null){
-				str = e.getMessage();
-			}else{
-				str = getErrorMessage(account.getResult())+account.getResult();
-			}
-			System.out.println("上报积分失败，原因："+str);
-			state = STATUS_MAIN_MENU;
+	public void reportScores() throws Exception{
+		if(StateGame.scores>StateGame.scores3){
+			//int scores = StateGame.scores>StateGame.scores3?StateGame.scores:StateGame.scores3;
+			int res = STBAPI.ReportScore (STBAPI.SysConfig.RankID,StateGame.scores);
+			System.out.println("ReportScore: res=" + Integer.toString(res));
 		}
+		
 	}
 	
 	private void setRecordData(){

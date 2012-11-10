@@ -70,6 +70,7 @@ public class StateGameSuccessOrFail implements Common{
 		Image game_return = Resource.loadImage(Resource.id_game_return);
 		//Image return_bg = Resource.loadImage(Resource.id_achievement_left);
 		Image return_bg=Resource.loadImage(Resource.id_ranking_option);
+		Image return_bg2=Resource.loadImage(Resource.id_ranking_option1);
 		g.drawImage(pass_bg, 0, 0, 20);
 		
 		/*上面第二层云*/
@@ -211,12 +212,21 @@ public class StateGameSuccessOrFail implements Common{
 		int bgX = 115, bgY = 390;
 		int gameW = game_return.getWidth()/2, gameH = game_return.getHeight()/3;
 		int gameX = bgX+20;
-		g.drawImage(return_bg, bgX, bgY, 20);
+		
+		if(index==0){
+			g.drawImage(return_bg2, bgX, bgY, 20);
+		}else{
+			g.drawImage(return_bg, bgX, bgY, 20);
+		}
 		g.drawRegion(game_return, i*gameW, gameH, gameW, gameH, 0, gameX, 398, 20);
 		
 		bgX = 355;
 		gameX = bgX+20;
-		g.drawImage(return_bg, bgX, bgY, 20);
+		if(index==1){
+			g.drawImage(return_bg2, bgX, bgY, 20);
+		}else{
+			g.drawImage(return_bg, bgX, bgY, 20);
+		}
 		g.drawRegion(game_return, j*gameW, 2*gameH, gameW, gameH, 0, gameX, 398, 20);
 	}
 	
@@ -258,6 +268,7 @@ public class StateGameSuccessOrFail implements Common{
 		Resource.freeImage(Resource.id_game_result);
 		Resource.freeImage(Resource.id_game_return);
 		Resource.freeImage(Resource.id_ranking_option);
+		Resource.freeImage(Resource.id_ranking_option1);
 	}
 
 }
