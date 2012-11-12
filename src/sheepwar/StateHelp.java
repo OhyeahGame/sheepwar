@@ -48,6 +48,7 @@ public class StateHelp implements Common{
 	private void showHelp(SGraphics g) {
 		Image help_bg = Resource.loadImage(Resource.id_achievement_bottom);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
+		Image help_cloth = Resource.loadImage(Resource.id_help_cloth);       //{137,108}
 		Image game_help = Resource.loadImage(Resource.id_game_help);     //{214,18}
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);   //{17,498}
 		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);   //{}
@@ -79,6 +80,7 @@ public class StateHelp implements Common{
 		g.drawImage(pass_cloud, x3, 265, 20);
 		
 		g.drawImage(shop_big, 137, 108, 20);
+		g.drawImage(help_cloth, 157, 108+26, 20);
 		
 		int helpLeftRightX = 380,helpLeftRightY = 452,sapceLeftRight = 52;				//帮助界面中的按钮横纵坐标,sapceLeftRight左右间距
 		int achLeftW = achievement_left_right.getWidth()/2;
@@ -134,5 +136,6 @@ public class StateHelp implements Common{
     	Resource.freeImage(Resource.id_achievement_left_right1);
     	Resource.freeImage(Resource.id_slash);
     	Resource.freeImage(Resource.id_pass_cloud);       
+    	Resource.freeImage(Resource.id_help_cloth);       
 	}
 }

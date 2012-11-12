@@ -55,9 +55,10 @@ public class StateAttainment implements Common{
 		Image achievement_long1 = Resource.loadImage(Resource.id_achievement_long1);
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{55,451}
 		Image achievement_points = Resource.loadImage(Resource.id_achievement_points);//{250,448}
-		Image archivement_hoof = Resource.loadImage(Resource.id_archivement_hoof);//{539,130},{539,211},{539,293},{539,378}
-		Image archivement_hoof1 = Resource.loadImage(Resource.id_archivement_hoof1);
+//		Image archivement_hoof = Resource.loadImage(Resource.id_archivement_hoof);//{539,130},{539,211},{539,293},{539,378}
+//		Image archivement_hoof1 = Resource.loadImage(Resource.id_archivement_hoof1);
 		Image achievement_word = Resource.loadImage(Resource.id_achievement_word);
+		Image achievement_word1 = Resource.loadImage(Resource.id_achievement_word1);
 		Image slash = Resource.loadImage(Resource.id_slash);
 		Image achievement_left1 = Resource.loadImage(Resource.id_achievement_left1);
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
@@ -96,19 +97,21 @@ public class StateAttainment implements Common{
 		engine.stateGame.drawNum(g, StateGame.attainment, 255+achievement_points.getWidth(), 453);
 		
 		g.setColor(0xcccccc);
-		int leftX = 60,leftY = 130,leftSpace = 10, mapx, mapy;   
-		
+		int leftX = 52,leftY = 130,leftSpace = 10, mapx, mapy;   
+		int shadowX = 2,shadowY = 2;
 		int leftW = achievement_left.getWidth(), leftH = achievement_left.getHeight();
-		int achW = achievement_word.getWidth()/2, achH = achievement_word.getHeight() / 6;
+		int achW = achievement_word.getWidth(), achH = achievement_word.getHeight() / 6;
 		for(int i=0;i<6;i++){       
 			mapx = leftX+8;
 			mapy = leftY+7+(leftH+leftSpace)*i;
 			if(!isRight && archY==i){
 				g.drawRegion(achievement_left1, 0, 0, leftW, leftH, 0, leftX, leftY+(leftH+leftSpace)*i, 20);
+				g.drawRegion(achievement_word1,0, i*achH, achW, achH, 0, mapx+shadowX,	mapy+shadowY, 20);
 				g.drawRegion(achievement_word,0, i*achH, achW, achH, 0, mapx,	mapy, 20);
 			}else{
 				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0, leftX, leftY+(leftH+leftSpace)*i, 20);
-				g.drawRegion(achievement_word,achW, i*achH, achW, achH, 0, mapx,	mapy, 20);
+//				g.drawRegion(achievement_word1,0, i*achH, achW, achH, 0, mapx,	mapy, 20);
+				g.drawRegion(achievement_word,/*achW*/0, i*achH, achW, achH, 0, mapx,	mapy, 20);
 			}
 		}
 
@@ -116,36 +119,36 @@ public class StateAttainment implements Common{
 		int x=260,y=125,spaceY=4;
 		int /*achLongW = achievement_long.getWidth(),*/ achLongH = achievement_long.getHeight();
 		int achLong1W = achievement_long1.getWidth(), achLong1H = achievement_long1.getHeight();
-		int achHoof1W = archivement_hoof1.getWidth(), achHoof1H = archivement_hoof1.getHeight(); 
+//		int achHoof1W = archivement_hoof1.getWidth(), achHoof1H = archivement_hoof1.getHeight(); 
 		
 		int col = g.getColor();
 		if(bX==0){
 			for(int i=0;i<4;i++){	
 				if(engine.attainments[archY][i].isResult()){
 					g.drawRegion(achievement_long, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*i, 20);
-					g.drawRegion(archivement_hoof, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
+//					g.drawRegion(archivement_hoof, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
 					g.setColor(0x000000);
 				}else{
 					g.drawRegion(achievement_long1, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*i, 20);
-					g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
+//					g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
 				}
 				g.drawString(engine.attainments[archY][i].getName(), x+20, y+(achLongH+spaceY)*i+15, 20);
 				g.drawString(engine.attainments[archY][i].getDesc(), x+20, y+(achLongH+spaceY)*i+40, 20);
-				g.drawString(String.valueOf(engine.attainments[archY][i].getAward()), 558, y+(achLongH+spaceY)*i+26, 20);
+				g.drawString(String.valueOf(engine.attainments[archY][i].getAward()), 553, y+(achLongH+spaceY)*i+26, 20);
 				g.setColor(col);
 			}
 		}else{
 			if(engine.attainments[archY][4].isResult()){
 				g.drawRegion(achievement_long, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*0, 20);
-				g.drawRegion(archivement_hoof, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*0, 20);
+//				g.drawRegion(archivement_hoof, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*0, 20);
 				g.setColor(0x000000);
 			}else{
 				g.drawRegion(achievement_long1, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*0, 20);
-				g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*0, 20);
+//				g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*0, 20);
 			}
 			g.drawString(engine.attainments[archY][4].getName(), x+20, y+(achLongH+spaceY)*0+15, 20);
 			g.drawString(engine.attainments[archY][4].getDesc(), x+20, y+(achLongH+spaceY)*0+40, 20);
-			g.drawString(String.valueOf(engine.attainments[archY][4].getAward()), 558, y+(achLongH+spaceY)*0+26, 20);
+			g.drawString(String.valueOf(engine.attainments[archY][4].getAward()), 553, y+(achLongH+spaceY)*0+26, 20);
 			g.setColor(col);
 		}
 		
@@ -183,14 +186,14 @@ public class StateAttainment implements Common{
     	Resource.freeImage(Resource.id_achievement_long1);
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_achievement_points);
-    	Resource.freeImage(Resource.id_archivement_hoof);
-    	Resource.freeImage(Resource.id_archivement_hoof1);
+//    	Resource.freeImage(Resource.id_archivement_hoof);
+//    	Resource.freeImage(Resource.id_archivement_hoof1);
     	Resource.freeImage(Resource.id_achievement_left);
     	Resource.freeImage(Resource.id_achievement_word);
     	Resource.freeImage(Resource.id_slash);
     	Resource.freeImage(Resource.id_achievement_left1);
     	Resource.freeImage(Resource.id_pass_cloud);
-    	Resource.freeImage(Resource.id_achievement_bottom);       
+    	Resource.freeImage(Resource.id_achievement_word1);       
     }
 
 	private void handleAttainment(KeyState keyState) {

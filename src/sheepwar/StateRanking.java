@@ -104,6 +104,7 @@ public class StateRanking implements Common{
 		Image ranking=Resource.loadImage(Resource.id_ranking);//{232,18}
 		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
 		Image ranking_word=Resource.loadImage(Resource.id_ranking_word);    
+		Image ranking_word1=Resource.loadImage(Resource.id_ranking_word1);    
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		g.drawImage(game_bg, 0, 0, 20);
 		
@@ -130,17 +131,24 @@ public class StateRanking implements Common{
 		
 		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX 左侧x坐标，rankLeftYSpace 上下间距
 		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
+		int shadowX = 3,shadowY = 3;
 		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth();
 		for(int i=0;i<2;i++){//排行左侧条目
 			if(rankY ==i){     		
 				g.drawRegion(ranking_option1, 0, 0, optionW, optionH, 0,
 						rankLeftX, rankLeftY+(optionH+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_word1,0,i*workH, workW,	workH, 0, rankLeftX+8+shadowX,
+						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i+shadowY, 20);
+				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
+						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 			}else{
 				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
 						rankLeftX/*-rankShadowX*/, rankLeftY/*-rankShadowY*/+(optionH+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
+						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 			}
-			g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
-					rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
+			/*g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
+					rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);*/
 		}
 		
 		/*排行数据*/
@@ -151,15 +159,15 @@ public class StateRanking implements Common{
 		}
 		g.drawImage(current_ranking, 253,448, 20);
 		engine.setFont(25,true);
-		if(rankY==0){
-			rankList = ranklist_month;
-		}else{
-			rankList = ranklist_week;
-		}
-		RankInfo info = null;
-		int offY = 159;
-		
-		if(rankList!=null){
+//		if(rankY==0){
+//			rankList = ranklist_month;
+//		}else{
+//			rankList = ranklist_week;
+//		}
+//		RankInfo info = null;
+//		int offY = 159;
+//		
+	/*	if(rankList!=null){
 			for(int m=0;m<rankList.list.length;m++){
 				g.setColor(0x000000);
 				info = rankList.list[m];
@@ -173,7 +181,7 @@ public class StateRanking implements Common{
 			}
 			String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
 			g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
-		}
+		}*/
 		engine.setDefaultFont();
 		g.drawImage(ranking, 220,18, 20);
 		g.drawImage(achievement_out1, 447,447, 20);
@@ -218,6 +226,7 @@ public class StateRanking implements Common{
     	Resource.freeImage(Resource.id_ranking);
     	Resource.freeImage(Resource.id_ranking_show);
     	Resource.freeImage(Resource.id_ranking_word);
+    	Resource.freeImage(Resource.id_ranking_word1);
     	Resource.freeImage(Resource.id_pass_cloud);       
 	}
 }

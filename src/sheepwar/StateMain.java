@@ -40,21 +40,32 @@ public class StateMain implements Common{
 	public void show(SGraphics g) {
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
+		Image main_menu1 = Resource.loadImage(Resource.id_main_menu1);		//µ×É«×ÖÌå
 		Image main_select_base = Resource.loadImage(Resource.id_main_select_base);
 		Image main_select = Resource.loadImage(Resource.id_main_select);
 		g.drawImage(main_bg, 0, 0, 0);
 		int sw = main_menu.getWidth(), sh = main_menu.getHeight() / 7;
-
+		int shadowX = 2,shadowY = 2;
 		for (int i = 0; i < menuAxis.length; ++i) {
+			/*g.drawRegion(main_menu1, (mainIndex != i) ? sw : 0, i * sh, sw, sh,
+					0, menuAxis[i][0], menuAxis[i][1]+12, 20);*/
 			if(mainIndex != i){
 				g.drawRegion(main_select, 0, 0, main_select.getWidth(), 
 						main_select.getHeight(), 0, menuAxis[i][0] - 11, menuAxis[i][1] - 14, 20);
+				/*g.drawRegion(main_menu1, (mainIndex != i) ? sw : 0, i * sh, sw, sh,
+						0, menuAxis[i][0], menuAxis[i][1]+12, 20);*/
+				g.drawRegion(main_menu, /*(mainIndex != i) ? sw : */0, i * sh, sw, sh,
+						0, menuAxis[i][0], menuAxis[i][1]+12, 20);
 			}else{	
 				g.drawRegion(main_select_base, 0, 0, main_select_base.getWidth(), 
 						main_select_base.getHeight(), 0, menuAxis[i][0] - 11, menuAxis[i][1] - 14, 20);
+				g.drawRegion(main_menu1, /*(mainIndex != i) ? sw : */0, i * sh, sw, sh,
+						0, menuAxis[i][0]+shadowX, menuAxis[i][1]+12+shadowY, 20);
+				g.drawRegion(main_menu, /*(mainIndex != i) ? sw : */0, i * sh, sw, sh,
+						0, menuAxis[i][0], menuAxis[i][1]+12, 20);
 			}
-			g.drawRegion(main_menu, /*(mainIndex != i) ? sw : */0, i * sh, sw, sh,
-					0, menuAxis[i][0], menuAxis[i][1]+12, 20);
+			/*g.drawRegion(main_menu, (mainIndex != i) ? sw : 0, i * sh, sw, sh,
+					0, menuAxis[i][0], menuAxis[i][1]+12, 20);*/
 		}
 	}
 	

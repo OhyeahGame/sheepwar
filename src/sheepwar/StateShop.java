@@ -59,11 +59,13 @@ public class StateShop implements Common{
 		Image shop_go_pay_base1 = Resource.loadImage(Resource.id_achievement_left1);				//单纯的 按钮图片
 		
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{434,103}
+		Image shop_cloth = Resource.loadImage(Resource.id_shop_cloth);//{434,103}
 		Image shop_out = Resource.loadImage(Resource.id_shop_out);//{457,429}					//9/29被修改为单纯的文字图片“返回”
 		Image shop_small = Resource.loadImage(Resource.id_shop_small);
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
+		Image shop_stroke=Resource.loadImage(Resource.id_stroke);					//添加的描边 11-12 by Lee
 		Image shop_selected=Resource.loadImage(Resource.id_shop_selected);
 		g.setColor(0xffffff);
 		g.drawImage(game_bg, 0, 0, 20);
@@ -72,11 +74,13 @@ public class StateShop implements Common{
 		g.drawImage(shop_big, 29-12, 103, 20);
 		g.drawImage(shop_balance, 46, 457, 20);
 		g.drawImage(shop_midding, 434-12, 103, 20);
+		g.drawImage(shop_cloth, 434+10, 103+26, 20);
 		
 		int x =52, y = 130, spaceX = 15, spaceY = 5;
 		int smallW = shop_small.getWidth(), smallH = shop_small.getHeight();
 		int p_propW = playing_prop.getWidth()/8, p_propH = playing_prop.getHeight();
-		int priAndQuW = price_quantity.getWidth()/2,priAndQuH = price_quantity.getHeight();
+		int  strokeW = shop_stroke.getWidth(),strokeH = shop_stroke.getHeight();
+		int priAndQuW = price_quantity.getWidth(),priAndQuH = price_quantity.getHeight();
 		for(int i=0;i<4;i++){
 		     for(int j=0;j<2;j++){
 		    	 if(shopX==j && shopY==i){
@@ -85,10 +89,11 @@ public class StateShop implements Common{
 						g.drawImage(shop_selected, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
 						g.drawRegion(price_quantity, 0, 0, priAndQuW, priAndQuH, 0,  x+(spaceX+smallW)*j+80, y+(spaceY+smallH)*i+12, 20);
 						g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
+//						g.drawRegion(shop_stroke, /*getPropIndex(i, j)*p_propW*/0, 0, strokeW, strokeH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
 						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
-								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+17, 20);
+								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+13, 20);
 						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
-								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+43, 20);
+								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+39, 20);
 						g.setColor(0x000000);
 						engine.setFont(25, true);
 						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 130, 162, 220);
@@ -98,15 +103,16 @@ public class StateShop implements Common{
 						int col = g.getColor();
 						g.setColor(0x000000);
 						g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
-						g.drawRegion(price_quantity, priAndQuW, 0, priAndQuW, priAndQuH, 0, x+(spaceX+smallW)*j+80, y+(spaceY+smallH)*i+12,20);
+						g.drawRegion(price_quantity,0/* priAndQuW*/, 0, priAndQuW, priAndQuH, 0, x+(spaceX+smallW)*j+80, y+(spaceY+smallH)*i+12,20);
 						g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
 						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getPrice()),
-								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+17, 20);
+								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+13, 20);
 						g.drawString(String.valueOf(engine.props[getPropIndex(i, j)].getNums()), 
-								x+(spaceX+smallW)*j+134, y+(spaceY+smallH)*i+43, 20);
+								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+39, 20);
 						engine.setDefaultFont();
 						g.setColor(col);
 					}
+		    	 g.drawRegion(shop_stroke, /*getPropIndex(i, j)*p_propW*/0, 0, strokeW, strokeH, 0,x+(spaceX+smallW)*j+16, y+(spaceY+smallH)*i+6, 20);
 			}
 		}
 		if(shopX==2){          // changed on 11-7 by Lee : removed the slash effect
@@ -234,5 +240,7 @@ public class StateShop implements Common{
 		Resource.freeImage(Resource.id_shop);   
 		Resource.freeImage(Resource.id_playing_prop);   
 		Resource.freeImage(Resource.id_shop_selected);   
+		Resource.freeImage(Resource.id_shop_cloth);   
+		Resource.freeImage(Resource.id_stroke);   
 	}
 }

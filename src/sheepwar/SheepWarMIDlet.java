@@ -25,7 +25,7 @@ public class SheepWarMIDlet extends MIDlet {
 	protected void pauseApp() {}
 
 	protected void startApp() throws MIDletStateChangeException {
-		STBAPI.Init(this);
+		//STBAPI.Init(this);
 		Display.getDisplay(this).setCurrent(SheepWarGameEngine.instance);
 		new Thread(SheepWarGameEngine.instance).start();
 	}

@@ -141,6 +141,12 @@ public class Resource implements Common {
 	public static short id_main_select_base = NUMS++;     				
 	public static short id_main_select = NUMS++;     				
 	public static short id_achievement_left1 = NUMS++;     				
+	public static short id_main_menu1 = NUMS++;     				
+	public static short id_achievement_word1 = NUMS++;     				
+	public static short id_ranking_word1 = NUMS++;     				
+	public static short id_help_cloth = NUMS++;     				
+	public static short id_shop_cloth = NUMS++;     				
+	public static short id_stroke = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -270,6 +276,12 @@ public class Resource implements Common {
 		"/main_select_base.png",             
 		"/main_select.png",             
 		"/achievement_left1.png",             
+		"/main_menu1.png",             
+		"/achievement_word1.png",             
+		"/ranking_word1.png",             
+		"/help_cloth.png",             
+		"/shop_cloth.png",             
+		"/stroke.png",             
 	};
 	
 	private static final Image[] images = new Image[NUMS];
@@ -297,7 +309,7 @@ public class Resource implements Common {
 		"【操作说明】#r上下方向键：控制玩家的移动。#r确定键：发射飞镖或无敌拳套。#r数字键1至8：使用道具。#r数字键0：退出游戏。#r" +
 		"数字键9:游戏帮助。",
 		
-		"【道具说明】#r光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。#r防狼套装：开启后有30秒的无敌效果，抵御各种攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱狼竖琴：使用后清除所有的梯子或者正在推南瓜的灰太狼。#r连发:使用后连续发射四颗子弹，单关有效。#r强力磁石：击落所有空中的灰太狼。",
+		"【道具说明】#r时光闹钟：时间静止10秒。#r捕狼网：发射一张大网网住灰太狼。#r防狼套装：使用后抵抗子弹的攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱狼竖琴：使用后清除所有的梯子或者正在推南瓜的灰太狼。#r连发:使用后连续发射四颗子弹，单关有效。#r强力磁石：击落所有空中的灰太狼。",
 		
 		"【游戏简介】#r喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
 		"",
