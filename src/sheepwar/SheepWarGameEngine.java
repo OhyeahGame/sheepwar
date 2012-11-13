@@ -259,7 +259,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			}else{
 				str = getErrorMessage(account.getResult())+account.getResult();
 			}
-			System.out.println("查询余额失败，原因："+str/*getErrorMessage(account.getResult())+account.getResult()*/);
+			System.out.println("查询余额失败，原因："+str);
 			state = STATUS_MAIN_MENU; 
 		} 
 	}
@@ -513,7 +513,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			}else{
 				str = getErrorMessage(account.getResult())+account.getResult();
 			}
-			System.out.println("获取加载游戏数据失败，原因："+str/*getErrorMessage(account.getResult())+account.getResult()*/);
+			System.out.println("获取加载游戏数据失败，原因："+str);
 			state = STATUS_MAIN_MENU; 
 			result = false;
 		} 

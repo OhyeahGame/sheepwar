@@ -159,15 +159,15 @@ public class StateRanking implements Common{
 		}
 		g.drawImage(current_ranking, 253,448, 20);
 		engine.setFont(25,true);
-//		if(rankY==0){
-//			rankList = ranklist_month;
-//		}else{
-//			rankList = ranklist_week;
-//		}
-//		RankInfo info = null;
-//		int offY = 159;
-//		
-	/*	if(rankList!=null){
+		if(rankY==0){
+			rankList = ranklist_month;
+		}else{
+			rankList = ranklist_week;
+		}
+		RankInfo info = null;
+		int offY = 159;
+		
+		if(rankList!=null){
 			for(int m=0;m<rankList.list.length;m++){
 				g.setColor(0x000000);
 				info = rankList.list[m];
@@ -181,7 +181,7 @@ public class StateRanking implements Common{
 			}
 			String myRankNo = rankList.getMyRankNo()==0?"":String.valueOf(rankList.getMyRankNo());
 			g.drawString(myRankNo, 260+current_ranking.getWidth(), 448, 20);
-		}*/
+		}
 		engine.setDefaultFont();
 		g.drawImage(ranking, 220,18, 20);
 		g.drawImage(achievement_out1, 447,447, 20);

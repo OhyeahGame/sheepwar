@@ -615,27 +615,35 @@ public class StateRecharge {
 			if (confirmIndex == 1) {
 				confirmIndex = 0;
 			}
-		}
-		
-		if (key.containsAndRemove(KeyCode.RIGHT)) {
+		}else if (key.containsAndRemove(KeyCode.RIGHT)) {
 			if (confirmIndex == 0) {
 				confirmIndex = 1;
 			}
-		}
-		
-		if (key.containsAndRemove(KeyCode.NUM0|KeyCode.BACK)) {
+		}else if (key.containsAndRemove(KeyCode.NUM0|KeyCode.BACK)) {
 			key.clear();
 			resource.freeImage(PIC_ID_RECHARGE_BG);
 			resource.freeImage(PIC_ID_OK0);
 			resource.freeImage(PIC_ID_CANCEL0);
 			state=STATE_SELECT_AMOUNT;
-		}
-		
-		if (key.containsAndRemove(KeyCode.OK)) {
+		}else if (key.containsAndRemove(KeyCode.OK)) {
 			key.clear();
 			if (confirmIndex == 0) {
-				gotoStatePassword();
-				state = STATE_INPUT_PWD;
+				gotoRecharge();
+				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+				if(engine.account.getResult()==0){
+					pt.setText("充值成功!");
+					pt.popup();
+					resource.freeImage(PIC_ID_PASSWORD_BG);
+					state = STATE_SELECT_AMOUNT;
+				}else if(engine.account.getResult()==9103){
+					gotoStatePassword();
+					state = STATE_INPUT_PWD;
+				}else{
+					pt.setText("充值失败，原因："+getErrorMessage(engine.account.getResult()));
+					pt.popup();
+					resource.freeImage(PIC_ID_PASSWORD_BG);
+					state = STATE_SELECT_AMOUNT;
+				}
 			}
 			else {
 				resource.freeImage(PIC_ID_CONFIRM_BG);
@@ -654,9 +662,7 @@ public class StateRecharge {
 			else if (groupIndex == 2){
 				groupIndex = 1;
 			}
-		}
-		
-		if (key.containsAndRemove(KeyCode.DOWN)) {
+		}else if (key.containsAndRemove(KeyCode.DOWN)) {
 			if (groupIndex == 1) {
 				if (amountIndex < count-1) {
 					++amountIndex;
@@ -665,8 +671,7 @@ public class StateRecharge {
 					groupIndex = 2;
 				}
 			}
-		}
-		if (key.containsAndRemove(KeyCode.NUM0|KeyCode.BACK)) {
+		}else if (key.containsAndRemove(KeyCode.NUM0|KeyCode.BACK)) {
 			key.clear();
 			clear();
 			back = true;
@@ -684,9 +689,7 @@ public class StateRecharge {
 				pt.setText("查询余额失败，原因："+str);
 				pt.popup();
 			} 
-		}
-		
-		if (key.containsAndRemove(KeyCode.OK)) {
+		}else if (key.containsAndRemove(KeyCode.OK)) {
 			key.clear();
 			if (groupIndex == 1) {
 				getFeeCode(amountIndex);

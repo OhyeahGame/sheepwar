@@ -96,7 +96,7 @@ public class StateShop implements Common{
 								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+39, 20);
 						g.setColor(0x000000);
 						engine.setFont(25, true);
-						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 130, 162, 220);
+						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 446, 140, 160, 220);
 						engine.setDefaultFont();
 					}else{
 						engine.setFont(30,true);
