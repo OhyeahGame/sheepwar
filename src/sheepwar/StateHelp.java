@@ -103,7 +103,7 @@ public class StateHelp implements Common{
 		g.drawImage(game_help, 220,18, 20);
 		g.drawImage(achievement_out1, 17,498, 20);
 		g.setColor(0x000000);
-		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 6,160, 135, 359, 333);	
+		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 5,165, 145, 350, 320);	
 		engine.setDefaultFont();
 	}
 	
