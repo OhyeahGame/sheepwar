@@ -564,9 +564,7 @@ public class StateRecharge {
 			}else{
 				str = engine.getErrorMessage(engine.account.getResult());
 			}
-			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-			pt.setText("充值失败，原因："+ str);
-			pt.popup();
+			System.out.println("recharge error:"+str);
 		}
 	}
 	
@@ -633,11 +631,9 @@ public class StateRecharge {
 				if(engine.account.getResult()==0){
 					pt.setText("充值成功!");
 					pt.popup();
-					resource.freeImage(PIC_ID_PASSWORD_BG);
 					state = STATE_SELECT_AMOUNT;
 				}else if(engine.account.getResult()==9103){
 					gotoStatePassword();
-					state = STATE_INPUT_PWD;
 				}else{
 					pt.setText("充值失败，原因："+getErrorMessage(engine.account.getResult()));
 					pt.popup();
