@@ -96,7 +96,7 @@ public class StateShop implements Common{
 								x+(spaceX+smallW)*j+136, y+(spaceY+smallH)*i+39, 20);
 						g.setColor(0x000000);
 						engine.setFont(25, true);
-						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 446, 140, 160, 220);
+						TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 2, 452, 142, 140, 195);
 						engine.setDefaultFont();
 					}else{
 						engine.setFont(30,true);
@@ -202,6 +202,7 @@ public class StateShop implements Common{
 				engine.state = STATUS_GAME_RECHARGE;
 				engine.isRecharge = false;
 				running = false;*/
+				clear();
 				StateRecharge sr = new StateRecharge(engine);
 				sr.recharge();
 			}else if(shopX==2 && shopY==1){

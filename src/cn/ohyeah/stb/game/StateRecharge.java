@@ -65,13 +65,14 @@ public class StateRecharge {
 	private byte subState;
 	private byte pwdGroupIndex;
 	private byte pwdBtnIndex;
-	private boolean back;
+	//private boolean back;
 	private ResourceManager resource;
 	private String password;
 	private int pwdCharIndex;
 	private char[] pwdChars;
 	private int cursorFrame;
 	private int count = 4;
+	boolean run = true;
 	
 	//充值参数
 	private String feeCode;
@@ -88,7 +89,6 @@ public class StateRecharge {
 		SGraphics g = engine.getSGraphics();
 		KeyState KeyState = engine.getKeyState();
 		groupIndex = 1;
-		boolean run = true;
 		try {
 			while (run) {
 				handle(KeyState);
@@ -96,9 +96,6 @@ public class StateRecharge {
 				engine.flushGraphics();
 				execute();
 				
-				if (back) {
-					break;
-				}
 				engine.trySleep();
 			}
 		}
@@ -669,8 +666,7 @@ public class StateRecharge {
 			}
 		}else if (key.containsAndRemove(KeyCode.NUM0|KeyCode.BACK)) {
 			key.clear();
-			clear();
-			back = true;
+			run = false;
 			try {
 				engine.account = STBAPI.GetBalance();
 				//System.out.println("查询余额为："+engine.account.getBalance());
@@ -692,8 +688,7 @@ public class StateRecharge {
 				state = STATE_CONFIRM;
 			}
 			else {
-				back = true;
-				resource.freeImage(PIC_ID_RECHARGE_BG);
+				run = false;
 			}
 		}
 	}

@@ -46,6 +46,8 @@ public class Exploder implements Common {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else{
+			Resource.freeImage(Resource.id_burn);
 		}
 	}
 	
@@ -56,6 +58,8 @@ public class Exploder implements Common {
 		if (j < 4) {	
 			g.drawRegion(magnetEffect, frame2[j]*effectW, 0, effectW, effectH, 0, mapx, mapy, 20);
 			j++;
+		}else{
+			Resource.freeImage(Resource.id_prop_7_effect);
 		}
 		
 	}
@@ -80,6 +84,8 @@ public class Exploder implements Common {
 		if(tempy-mapy<65){
 			g.drawRegion(prop, (propId)*pW, 0, pW, pH, 0, mapx, mapy, 20);
 			mapy -= 15;
+		}else{
+			Resource.freeImage(Resource.id_prop);
 		}
 		
 	}

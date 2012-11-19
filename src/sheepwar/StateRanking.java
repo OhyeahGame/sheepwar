@@ -184,7 +184,7 @@ public class StateRanking implements Common{
 		}
 		engine.setDefaultFont();
 		g.drawImage(ranking, 220,18, 20);
-		g.drawImage(achievement_out1, 447,447, 20);
+		g.drawImage(achievement_out1, 463,431, 20);
 	}
 	
 	private void handleRanking(KeyState keyState) {
