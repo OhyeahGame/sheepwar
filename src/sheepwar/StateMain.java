@@ -189,6 +189,7 @@ public class StateMain implements Common{
 	private void clear() {
 		Resource.freeImage(Resource.id_main_bg);
 		Resource.freeImage(Resource.id_main_menu);
+		Resource.freeImage(Resource.id_main_menu1);
 		Resource.freeImage(Resource.id_main_select);
 		Resource.freeImage(Resource.id_main_select_base);
 	}

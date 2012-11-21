@@ -95,7 +95,7 @@ public class StateAttainment implements Common{
 		
 		g.setColor(0xcccccc);
 		int leftX = 52,leftY = 130,leftSpace = 10, mapx, mapy;   
-		int shadowX = 2,shadowY = 2;
+		int shadowX = 7,shadowY = 5;
 		int leftW = achievement_left.getWidth(), leftH = achievement_left.getHeight();
 		int achW = achievement_word.getWidth(), achH = achievement_word.getHeight() / 6;
 		for(int i=0;i<6;i++){       

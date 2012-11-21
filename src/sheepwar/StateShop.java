@@ -217,15 +217,7 @@ public class StateShop implements Common{
 			}
 		}
 	}
-	/*private void drawNum(SGraphics g, int num, int x, int y) {
-		Image imgNumeber = Resource.loadImage(Resource.id_shop_figure);
-		String number = String.valueOf(num);
-		for (byte i = 0; i < number.length(); i++) {
-			g.drawRegion(imgNumeber, (number.charAt(i) - '0') * imgNumeber.getWidth()/10, 0, 
-					imgNumeber.getWidth()/10, imgNumeber.getHeight(), 0, x + i * (imgNumeber.getWidth()/10 + 1), y, 0);
-		}
-	}*/
-	
+
 	private void clear() {
 		Resource.freeImage(Resource.id_shop_bottom);
 		Resource.freeImage(Resource.id_shop_balance);
