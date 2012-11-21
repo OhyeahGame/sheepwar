@@ -74,6 +74,7 @@ public class StateMain implements Common{
 			stateGame.batches = new Batches();
 			StateGame.own = stateGame.createRole.createSheep();
 			engine.state = STATUS_GAME_PLAYING;
+			stateGame.gamePassTime = System.currentTimeMillis()/1000;
 		} else if(mainIndex == 1){
 			engine.readRecord();
 			if(SheepWarGameEngine.result){
@@ -85,6 +86,7 @@ public class StateMain implements Common{
 				setWolfInLadder(); 		//恢复原有梯子上的狼
 				engine.state = STATUS_GAME_PLAYING;
 				SheepWarGameEngine.isFirstGame = false;
+				stateGame.gamePassTime = System.currentTimeMillis()/1000;
 			}else{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录，请重新开始游戏!");
@@ -106,7 +108,7 @@ public class StateMain implements Common{
 			sh.processHelp();
 		}else if(mainIndex==6){//退出游戏
 			exit = true;
-			
+			engine.gameEndTime = System.currentTimeMillis()/1000;
 			//保存数据
 			try {
 				engine.saveAttainment();

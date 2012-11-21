@@ -92,6 +92,9 @@ public class StateGame implements Common{
 		{6,16,2,-1},			
 		{7,16,2,-1},			
 	};
+
+	/*游戏通关时间*/
+	public long gamePassTime, gamePassTime2;
 	
 	/*游戏过度时间*/
 	private long gameBufferTimeS, gameBufferTimeE;
@@ -343,7 +346,7 @@ public class StateGame implements Common{
 					}
 					
 					//保存游戏记录
-					engine.saveRecord();
+					engine.saveRecord("退出游戏时保存游戏记录",true);
 					
 					/*更新玩家成就*/
 					engine.updateAttainmen();
@@ -448,7 +451,7 @@ public class StateGame implements Common{
 			eEndTime = System.currentTimeMillis()/1000;
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			if(a){	//教学关卡第一个提示
-				pt.setText("欢迎进入教学关卡，#R按确认键#W继续教学，#R按0键#W退出教学关卡。");
+				pt.setText("欢迎进入教学关卡，按确认键#W继续教学，按0键#W退出教学关卡。");
 				pt.popup();
 				a = false;
 				b2 = true;
@@ -487,6 +490,7 @@ public class StateGame implements Common{
 				e2 = false;
 				SheepWarGameEngine.isFirstGame = false;
 				initDataGameOver();
+				gamePassTime = System.currentTimeMillis()/1000;
 				weapon = new Weapon(this);
 				createRole = new CreateRole();
 				batches = new Batches();
@@ -599,6 +603,9 @@ public class StateGame implements Common{
 	}
 
 	public void execute(){
+		
+		/*游戏通关时间*/
+		gamePassTime2 = System.currentTimeMillis()/1000;
 		
 		/*道具使用提示*/
 		promptUseProp();
@@ -902,6 +909,8 @@ public class StateGame implements Common{
 							isRewardLevel = true;
 							System.out.println("下一关为奖励关卡");
 						}
+						engine.saveRecord("通过第"+level+"关时保存游戏#通关用时"+(gamePassTime2-gamePassTime)+"秒", false);
+						gamePassTime = System.currentTimeMillis()/1000;
 						level++;
 					}
 				}

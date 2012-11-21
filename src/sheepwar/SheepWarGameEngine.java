@@ -49,6 +49,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Account account;
 	public static String record_tag = "gameRecord";
 	public static String attaintment_tag = "gameAttainment";
+	public long gameStartTime, gameEndTime;
 	
 	/**
 	 * 存放成就的二维数组，第一维是成就类型，第二维是某一成就类型中的一个成就对象
@@ -58,7 +59,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	private SheepWarGameEngine(MIDlet midlet) {
 		super(midlet);
-		setRelease(false);
+		setRelease(true);
 		ScrW = screenWidth;
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
@@ -92,9 +93,9 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		/*显示界面*/
 		switch (state) {
 		case STATUS_INIT:
-			//showInit(g);
 			break;
 		case STATUS_MAIN_MENU:
+			System.out.println(Resource.LoadString("/txt/test.txt"));
 			stateMain.show(g);
 			break;
 		case STATUS_GAME_PLAYING:
@@ -123,8 +124,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		/*退出游戏*/
 		exit();
 	}
-	
-	
+
 	private void exit(){
 		if(stateMain.exit){
 			exit = true;
@@ -225,6 +225,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
+		
+		gameStartTime = System.currentTimeMillis()/1000;
 		
 		/*查用户余额*/
 		queryBalance();
@@ -461,12 +463,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	/*保存游戏记录*/
-	public void saveRecord(){
+	public void saveRecord(String s, boolean isQuit){
 		try
 		{
 			setRecordData();
 			printGameInfo();
-			int res = STBAPI.SaveGameData(recordId,"游戏记录信息",recordData);
+			int res = STBAPI.SaveGameData(recordId,s,recordData);
 			System.out.println("SaveGameData: res=" + Integer.toString(res));
 		} 
 		catch (Exception e)
@@ -478,7 +480,9 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 				str = getErrorMessage(account.getResult())+account.getResult();
 			}
 			 System.out.println("保存游戏记录失败，原因："+str);
-			 state = STATUS_MAIN_MENU;
+			 if(isQuit){
+				 state = STATUS_MAIN_MENU;
+			 }
 		}
 	}
 	
