@@ -909,7 +909,8 @@ public class StateGame implements Common{
 							isRewardLevel = true;
 							System.out.println("下一关为奖励关卡");
 						}
-						engine.saveRecord("通过第"+level+"关时保存游戏#通关用时"+(gamePassTime2-gamePassTime)+"秒", false);
+						String data = "userId:"+engine.userinfo.getUserID()+"|level:"+level+"|time:"+engine.getTime();
+						engine.saveData("游戏过关", data);
 						gamePassTime = System.currentTimeMillis()/1000;
 						level++;
 					}
@@ -970,7 +971,6 @@ public class StateGame implements Common{
 			gameBufferTimeS = System.currentTimeMillis()/1000;
 			//同步道具
 			engine.pm.sysProps();
-			
 			try{
 				//保存数据
 				engine.saveAttainment();

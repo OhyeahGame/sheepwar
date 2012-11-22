@@ -133,6 +133,9 @@ public class StateMain implements Common{
 				}
 				System.out.println("上报积分失败，原因："+str);
 			}
+			
+			String data = "userId:"+engine.userinfo.getUserID()+"|gameStartTime:"+engine.gameStartTime+"|gameEndTime:"+engine.gameEndTime;
+			engine.saveData("在线时长", data);
 		} 
 	}
 	

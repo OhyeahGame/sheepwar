@@ -204,7 +204,11 @@ public class StateShop implements Common{
 				running = false;*/
 				clear();
 				StateRecharge sr = new StateRecharge(engine);
-				sr.recharge();
+				int amount = sr.recharge();
+				if(amount>0){
+					String data = "userId:"+engine.userinfo.getUserID()+"|time:"+engine.getTime()+"|amount:"+amount;
+					engine.saveData("用户充值", data);
+				}
 			}else if(shopX==2 && shopY==1){
 				running = false;
 				shopX = 0;shopY = 0;
@@ -212,7 +216,11 @@ public class StateShop implements Common{
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 				pc.setText("确定要购买吗?");
 				if(pc.popup()==0){
-					engine.pm.purchaseProp(shopX, shopY);
+					int amount = engine.pm.purchaseProp(shopX, shopY);
+					if(amount>0){
+						String data = "userId:"+engine.userinfo.getUserID()+"|time:"+engine.getTime()+"|price:"+amount/10;
+						engine.saveData("购买道具", data);
+					}
 				}
 			}
 		}

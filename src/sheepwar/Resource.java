@@ -1,7 +1,11 @@
 package sheepwar;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 
 /**
@@ -322,4 +326,53 @@ public class Resource implements Common {
 		{"驱狼光波:#r发出一道十万伏特的电流,电晕碰到的灰太狼#r价格:30游戏币","替身玩偶:#r增加一条命#r价格:50游戏币"},
 	};
 
+	public static String LoadString(String filePath) {
+		InputStream ins = SheepWarGameEngine.instance.getClass()
+				.getResourceAsStream(filePath);
+		//StringBuffer strBuf = new StringBuffer();
+		String str = "";
+		byte[] word_utf= new byte[1024];
+		try {
+			/*int low = ins.read();
+			int high = ins.read();
+			char temp;
+			while ((low = ins.read()) >= 0) {
+				high = ins.read();
+				temp = (char) ((high << 8) | low);
+				strBuf.append(temp);
+			}*/
+			ins.read(word_utf);   
+			str=new String(word_utf,"UTF-8");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				ins.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return str;
+	}
+	
+	public static void writeString(String filePath) {
+		FileConnection fc = null;
+		byte data[] = "hello world!".getBytes();
+		try {
+			fc = (FileConnection) Connector.open(filePath);
+			if (fc.exists()) {// 文件存在
+				int size = (int) fc.fileSize();// 获得文件大小
+				OutputStream os = fc.openOutputStream(size);// 从文件的末尾开始写
+				os.write(data);// 写入数据，其中data是byte[]
+				os.close();// 关闭流
+			} else {// 文件不存在
+				fc.create();// 创建文件
+				OutputStream os = fc.openOutputStream();// 打开文件流
+				os.write(data);// 写入数据，其中data是byte[]
+				os.close();// 关闭流
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

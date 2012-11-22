@@ -4,6 +4,7 @@ import javax.microedition.midlet.MIDlet;
 import com.zte.iptv.j2me.stbapi.Account;
 import com.zte.iptv.j2me.stbapi.GameData;
 import com.zte.iptv.j2me.stbapi.STBAPI;
+import com.zte.iptv.j2me.stbapi.UserInfo;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.util.ConvertUtil;
@@ -37,6 +38,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private String attainmentId;
 	private String recordData;
 	private String attainmentData;
+	private String dataId;
 	
 	public String achi[];
 	public String p[];
@@ -47,6 +49,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public static boolean isFirstGame = true;   //是否第一次玩游戏
 	
 	public Account account;
+	public UserInfo userinfo;
 	public static String record_tag = "gameRecord";
 	public static String attaintment_tag = "gameAttainment";
 	public long gameStartTime, gameEndTime;
@@ -95,7 +98,6 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		case STATUS_INIT:
 			break;
 		case STATUS_MAIN_MENU:
-			System.out.println(Resource.LoadString("/txt/test.txt"));
 			stateMain.show(g);
 			break;
 		case STATUS_GAME_PLAYING:
@@ -146,6 +148,30 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		return false;
 	}
 	
+	public void getUserInfo(){
+		try
+		{
+		    userinfo = STBAPI.GetUserInfo();
+		    System.out.println("GetUserInfo:");
+		    System.out.println("    Result   ="   + userinfo.getResult());
+		    System.out.println("    UserID   ="   + userinfo.getUserID());
+		    System.out.println("    UserName ="  + userinfo.getUserName());
+		    System.out.println("    UserIcon ="  + userinfo.getUserIcon());
+		    System.out.println("    UserLevel="  + Integer.toString(userinfo.getUserLevel()));
+		    System.out.println("    Balance  ="  + Integer.toString(userinfo.getBalance()));
+		} 
+		catch (Exception e)
+		{
+			String str="";
+			if(userinfo==null){
+				str = e.getMessage();
+			}else{
+				str = getErrorMessage(userinfo.getResult())+userinfo.getResult();
+			}
+			System.out.println("获取用户信息失败，原因："+str);
+			state = STATUS_MAIN_MENU; 
+		}
+	}
 	
 
 	/*初始化玩家成就*/
@@ -227,6 +253,9 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void init() {
 		
 		gameStartTime = System.currentTimeMillis()/1000;
+		
+		/*获取用户信息*/
+		getUserInfo();
 		
 		/*查用户余额*/
 		queryBalance();
@@ -372,6 +401,29 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 	
+	/*获取服务器时间*/
+	public String getTime(){
+		String Date="";
+		try
+		{
+		    Date = STBAPI.GetServiceDate();
+		    System.out.println("GetServiceDate: Date=" + Date);
+		    System.out.println("GetServiceDate: Date=" + recordId);
+		    return Date;
+		} 
+		catch (Exception e)
+		{
+			String str="";
+			if(Date==null){
+				str = e.getMessage();
+			}else{
+				str = getErrorMessage(account.getResult())+account.getResult();
+			}
+		   System.out.println("获取系统时间失败，原因："+str);
+		   return null;
+		}
+	}
+	
 	/*保存游戏成就*/
 	public void saveAttainment() throws Exception{
 		/*存玩家道具和成就*/
@@ -483,6 +535,29 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			 if(isQuit){
 				 state = STATUS_MAIN_MENU;
 			 }
+		}
+	}
+	
+	/*保存需求数据*/
+	public void saveData(String desc, String data){
+		try
+		{
+			dataId = getTime();
+			if(dataId==null||dataId==""){
+				return;
+			}
+			int res = STBAPI.SaveGameData(dataId,desc,data);
+			System.out.println("SaveGameData: res=" + Integer.toString(res));
+		} 
+		catch (Exception e)
+		{
+			String str="";
+			if(account==null){
+				str = e.getMessage();
+			}else{
+				str = getErrorMessage(account.getResult())+account.getResult();
+			}
+			 System.out.println("保存需求数据失败，原因："+str);
 		}
 	}
 	

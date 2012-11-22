@@ -73,6 +73,7 @@ public class StateRecharge {
 	private int cursorFrame;
 	private int count = 4;
 	boolean run = true;
+	private int amount;
 	
 	//充值参数
 	private String feeCode;
@@ -85,7 +86,7 @@ public class StateRecharge {
 	}
 	
 	public int recharge() {
-		int result = 0;
+		//int result = 0;
 		SGraphics g = engine.getSGraphics();
 		KeyState KeyState = engine.getKeyState();
 		groupIndex = 1;
@@ -98,15 +99,15 @@ public class StateRecharge {
 				
 				engine.trySleep();
 			}
+			return amount;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			result = -1;
+			return -1;
 		}
 		finally {
 			clear();
 		}
-		return result;
 	}
 	
 	public void clear() {
@@ -570,18 +571,22 @@ public class StateRecharge {
 			feeCode = STBAPI.SysConfig.Fee100;
 			productName = "10"+engine.amountUnit;
 			priceDesc = "1元";
+			amount = 1;
 		}else if(index==1){
 			feeCode = STBAPI.SysConfig.Fee200;
 			productName = "20"+engine.amountUnit;
 			priceDesc = "2元";
+			amount = 2;
 		}else if(index==2){
 			feeCode = STBAPI.SysConfig.Fee500;
 			productName = "50"+engine.amountUnit;
 			priceDesc = "5元";
+			amount = 5;
 		}else if(index==3){
 			feeCode = STBAPI.SysConfig.Fee1000;
 			productName = "100"+engine.amountUnit;
 			priceDesc = "10元";
+			amount = 10;
 		} 
 	}
 	

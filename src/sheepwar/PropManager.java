@@ -104,57 +104,59 @@ public class PropManager implements Common{
 	
 	
 	/*购买道具*/
-	public void purchaseProp(int shopX, int shopY) {
+	public int purchaseProp(int shopX, int shopY) {
 		
 		if (shopX == 0 && shopY == 0) {
 			int propId = propIds[0];
 			if (buyProp(propId, 1, propPrice[0], "时光闹钟")) {
 				props[0].setNums(props[0].getNums()+1);
+				return propPrice[0];
 			}
-		}
-		if (shopX == 0 && shopY == 1) {
+		}else if (shopX == 0 && shopY == 1) {
 			int propId = propIds[1];
 			if (buyProp(propId, 1, propPrice[1], "捕狼网")) {
 				props[1].setNums(props[1].getNums()+1);
+				return propPrice[1];
 			}
-		}
-		if (shopX == 0 && shopY == 2) {
+		}else if (shopX == 0 && shopY == 2) {
 			int propId = propIds[2];
 			if (buyProp(propId, 1, propPrice[2], "防狼套装")) {
 				props[2].setNums(props[2].getNums()+1);
+				return propPrice[2];
 			}
-		}
-		if (shopX == 0 && shopY == 3) {
+		}else if (shopX == 0 && shopY == 3) {
 			int propId = propIds[3];
 			if (buyProp(propId, 1, propPrice[3], "驱狼光波")) {
 				props[3].setNums(props[3].getNums()+1);
+				return propPrice[3];
 			}
-		}
-		if (shopX == 1 && shopY == 0) {
+		}else if (shopX == 1 && shopY == 0) {
 			int propId = propIds[4];
 			if (buyProp(propId, 1, propPrice[4], "驱狼竖琴")) {
 				props[4].setNums(props[4].getNums()+1);
+				return propPrice[4];
 			}
-		}
-		if (shopX == 1 && shopY == 1) {
+		}else if (shopX == 1 && shopY == 1) {
 			int propId = propIds[5];
 			if (buyProp(propId, 1, propPrice[5], "连发")) {
 				props[5].setNums(props[5].getNums()+1);
+				return propPrice[5];
 			}
-		}
-		if (shopX == 1 && shopY == 2) {
+		}else if (shopX == 1 && shopY == 2) {
 			int propId = propIds[6];
 			if (buyProp(propId, 1, propPrice[6], "强力磁石")) {
 				props[6].setNums(props[6].getNums()+1);
+				return propPrice[6];
 			}
-		}
-		if (shopX == 1 && shopY == 3) {
+		}else if (shopX == 1 && shopY == 3) {
 			int propId = propIds[7];
 			if (buyProp(propId, 1, propPrice[7], "替身玩偶")) {
 				props[7].setNums(props[7].getNums()+1);
+				return propPrice[7];
 			}
 		}
 		engine.queryBalance(); //购买失败后重新查用户余额
+		return -1;
 	}
 	
 
