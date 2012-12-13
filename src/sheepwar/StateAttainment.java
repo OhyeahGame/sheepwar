@@ -166,7 +166,7 @@ public class StateAttainment implements Common{
 	}
 
 	private void clear() {
-    	Resource.freeImage(Resource.id_achievement_bottom);
+		Resource.freeImage(Resource.id_achievement_bottom);
     	Resource.freeImage(Resource.id_shop_midding);
     	Resource.freeImage(Resource.id_shop_big);
     	Resource.freeImage(Resource.id_achievement_left);
@@ -177,14 +177,14 @@ public class StateAttainment implements Common{
     	Resource.freeImage(Resource.id_achievement_long1);
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_achievement_points);
-//    	Resource.freeImage(Resource.id_archivement_hoof);
-//    	Resource.freeImage(Resource.id_archivement_hoof1);
+    	Resource.freeImage(Resource.id_archivement_hoof);
+    	Resource.freeImage(Resource.id_archivement_hoof1);
     	Resource.freeImage(Resource.id_achievement_left);
     	Resource.freeImage(Resource.id_achievement_word);
     	Resource.freeImage(Resource.id_slash);
     	Resource.freeImage(Resource.id_achievement_left1);
     	Resource.freeImage(Resource.id_pass_cloud);
-    	Resource.freeImage(Resource.id_achievement_word1);       
+    	Resource.freeImage(Resource.id_achievement_bottom);          
     }
 
 	private void handleAttainment(KeyState keyState) {

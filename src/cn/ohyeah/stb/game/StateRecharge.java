@@ -59,7 +59,7 @@ public class StateRecharge {
 	
 	private SheepWarGameEngine engine;
 	private byte groupIndex;
-	private byte confirmIndex;
+	private byte confirmIndex=1;
 	private byte amountIndex;
 	private byte state;
 	private byte subState;
@@ -519,11 +519,13 @@ public class StateRecharge {
 						pt.popup();
 						resource.freeImage(PIC_ID_PASSWORD_BG);
 						state = STATE_SELECT_AMOUNT;
+						confirmIndex=1;
 					}
 				}
 				else {
 					resource.freeImage(PIC_ID_PASSWORD_BG);
 					state = STATE_SELECT_AMOUNT;
+					confirmIndex=1;
 				}
 			}
 		}
@@ -641,11 +643,13 @@ public class StateRecharge {
 					pt.popup();
 					resource.freeImage(PIC_ID_PASSWORD_BG);
 					state = STATE_SELECT_AMOUNT;
+					confirmIndex=1;
 				}
 			}
 			else {
 				resource.freeImage(PIC_ID_CONFIRM_BG);
 				state=STATE_SELECT_AMOUNT;
+				confirmIndex=1;
 			}
 		}
 	}
